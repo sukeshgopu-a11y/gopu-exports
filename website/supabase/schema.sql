@@ -4,6 +4,7 @@ create extension if not exists pgcrypto;
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   new.updated_at = now();
@@ -165,7 +166,12 @@ with check (exists (select 1 from public.admin_users where id = (select auth.uid
 drop policy if exists "Anyone can create inquiries" on public.inquiries;
 create policy "Anyone can create inquiries"
 on public.inquiries for insert
-with check (true);
+to anon, authenticated
+with check (
+  length(trim(name)) > 0
+  and length(trim(email)) > 3
+  and position('@' in email) > 1
+);
 
 drop policy if exists "Admins can manage inquiries" on public.inquiries;
 create policy "Admins can manage inquiries"
@@ -177,7 +183,12 @@ with check (exists (select 1 from public.admin_users where id = (select auth.uid
 drop policy if exists "Anyone can create quotes" on public.quotes;
 create policy "Anyone can create quotes"
 on public.quotes for insert
-with check (true);
+to anon, authenticated
+with check (
+  length(trim(name)) > 0
+  and length(trim(email)) > 3
+  and position('@' in email) > 1
+);
 
 drop policy if exists "Admins can manage quotes" on public.quotes;
 create policy "Admins can manage quotes"
