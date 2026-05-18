@@ -263,13 +263,15 @@ export default async function HomePage() {
             {WHY_FEATURES.map((f) => (
               <div
                 key={f.title}
-                className="group rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6 transition hover:border-[#0E7490]/40 hover:bg-white/[0.06]"
+                className="group rounded-2xl border border-white/[0.10] bg-white/[0.06] p-6 shadow-sm shadow-black/10 transition hover:border-[#67C9D8]/50 hover:bg-white/[0.09]"
               >
-                <span className="text-3xl">{f.icon}</span>
-                <h3 className="mt-4 text-[15px] font-bold text-white">
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#67C9D8]/25 bg-[#67C9D8]/14 text-sm font-black tracking-wide text-[#9EE7EF]">
+                  {f.icon}
+                </span>
+                <h3 className="mt-4 text-[16px] font-black tracking-[-0.01em] text-white">
                   {f.title}
                 </h3>
-                <p className="mt-2 text-[13px] leading-[1.75] text-slate-400">
+                <p className="mt-2 text-[13px] leading-[1.75] text-slate-300">
                   {f.desc}
                 </p>
               </div>

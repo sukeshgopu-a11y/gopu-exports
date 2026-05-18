@@ -7,34 +7,6 @@ import BrandLogo from "./BrandLogo";
 /* ------------------------------------------------------------------ */
 type IconProps = { className?: string };
 
-function Facebook({ className }: IconProps) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-    </svg>
-  );
-}
-function Instagram({ className }: IconProps) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-    </svg>
-  );
-}
-function Linkedin({ className }: IconProps) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-      <rect width="4" height="12" x="2" y="9" />
-      <circle cx="4" cy="4" r="2" />
-    </svg>
-  );
-}
 function WhatsAppIcon({ className }: IconProps) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -57,7 +29,7 @@ const NAV_LINKS = [
 ];
 const PRODUCT_LINKS = [
   { href: "/products/basmati-rice", label: "Basmati Rice" },
-  { href: "/products/turmeric-finger", label: "Turmeric" },
+  { href: "/products/turmeric-powder", label: "Turmeric" },
   { href: "/products/red-chilli", label: "Red Chilli" },
   { href: "/products/cumin-seeds", label: "Cumin Seeds" },
   { href: "/products/coriander-seeds", label: "Coriander Seeds" },
@@ -70,11 +42,11 @@ const CERTIFICATIONS = [
   { label: "IEC Registered", icon: Globe2 },
 ];
 const SOCIALS = [
-  { href: "", label: "LinkedIn", Icon: Linkedin, color: "#0A66C2" },
-  { href: "", label: "Facebook", Icon: Facebook, color: "#1877F2" },
-  { href: "", label: "Instagram", Icon: Instagram, color: "#E1306C" },
-].filter((social) => social.href);
-const WHATSAPP_NUMBER = "+918712816876";
+  { href: "https://wa.me/918712816876", label: "WhatsApp", Icon: WhatsAppIcon, color: "#25D366", external: true },
+  { href: "mailto:admin@gopuexports.com", label: "Email", Icon: Mail, color: "#FBBF24", external: false },
+  { href: "tel:+918712816876", label: "Phone", Icon: Phone, color: "#67C9D8", external: false },
+];
+const WHATSAPP_NUMBER = "918712816876";
 
 
 /* ------------------------------------------------------------------ */
@@ -231,7 +203,7 @@ export default function Footer() {
 
       {/* ── Footer ── */}
       <footer itemScope itemType="https://schema.org/Organization"
-        className="relative min-h-[1430px] overflow-hidden bg-[#060E18] text-slate-300 md:min-h-0">
+        className="relative overflow-hidden bg-[#060E18] text-slate-300">
 
         {/* ── Aurora background ── */}
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">
@@ -303,8 +275,8 @@ export default function Footer() {
 
             {/* Social icons */}
             {SOCIALS.length > 0 && <div className="mt-5 flex gap-2">
-              {SOCIALS.map(({ href, label, Icon, color }) => (
-                <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
+              {SOCIALS.map(({ href, label, Icon, color, external }) => (
+                <a key={label} href={href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined} aria-label={label}
                   className="group relative flex h-9 w-9 items-center justify-center overflow-hidden
                     rounded-full border border-white/10 bg-white/5 text-slate-400 backdrop-blur-sm
                     transition-all duration-300 hover:scale-110 hover:border-transparent hover:text-white"

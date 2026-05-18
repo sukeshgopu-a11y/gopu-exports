@@ -58,6 +58,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     metaTitle: "How to Import Indian Spices in Bulk | Buyer Guide",
     metaDescription: "Learn how to import Indian spices in bulk, compare grades, request documents, plan packaging, and place professional export enquiries.",
     tags: ["Indian spices", "bulk import", "spice export"],
+    image: "/blog/import-indian-spices.webp",
     sections: [
       {
         heading: "Start with the right spice specification",
@@ -103,7 +104,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     metaTitle: "Rice Export from India | Varieties and Packaging Guide",
     metaDescription: "Buyer checklist for importing rice from India, including basmati, non-basmati, packaging, specifications, and documentation.",
     tags: ["rice export", "basmati rice", "Indian rice"],
-    image: "/products/rice.webp",
+    image: "/blog/rice-export-guide.webp",
     sections: [
       {
         heading: "Choose the correct rice category",
@@ -149,6 +150,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     metaTitle: "APEDA Products Export Guide for International Buyers",
     metaDescription: "Understand APEDA product categories, buyer documentation, and sourcing questions for Indian agricultural exports.",
     tags: ["APEDA products", "agricultural exports", "India sourcing"],
+    image: "/blog/apeda-products-guide.webp",
     sections: [
       {
         heading: "What APEDA product categories cover",
@@ -194,7 +196,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     metaTitle: "Spice Board Products from India | Importer Guide",
     metaDescription: "Learn how global importers can discuss Indian spice products, specifications, testing, packaging, and documentation.",
     tags: ["Spices Board India", "spice import", "Indian spices"],
-    image: "/products/red-chilli.webp",
+    image: "/blog/spice-board-products.webp",
     sections: [
       {
         heading: "Use official spice scope as a product reference",
@@ -240,6 +242,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     metaTitle: "How to Choose a Reliable Agricultural Exporter from India",
     metaDescription: "Evaluate Indian agricultural exporters using product clarity, documentation, communication, packaging, and shipment readiness.",
     tags: ["agricultural exporter", "India sourcing", "buyer checklist"],
+    image: "/blog/reliable-agri-exporter.webp",
     sections: [
       {
         heading: "Look for specification discipline",
@@ -285,6 +288,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     metaTitle: "Export Packaging Standards for Spices, Rice, Fruits and Vegetables",
     metaDescription: "Understand packaging choices for Indian agri exports including spices, rice, fresh produce, bulk bags, cartons, and private label packs.",
     tags: ["export packaging", "private label", "agri exports"],
+    image: "/blog/export-packaging-standards.webp",
     sections: [
       {
         heading: "Packaging must match product behaviour",
@@ -330,6 +334,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     metaTitle: "Indian Millets for Export | Types, Uses and Buyer Guide",
     metaDescription: "Explore Indian millets for export, including types, uses, quality parameters, packing, and buyer enquiry details.",
     tags: ["millets", "Indian grains", "agri export"],
+    image: "/blog/indian-millets-export.webp",
     sections: [
       {
         heading: "Millet categories buyers discuss",
@@ -375,6 +380,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     metaTitle: "Fresh Fruits and Vegetables Export from India | Buyer Guide",
     metaDescription: "A buyer guide to fresh fruits and vegetables export from India, including quality, cartons, cold chain and shipping basics.",
     tags: ["fresh produce", "vegetable export", "fruit export"],
+    image: "/blog/fresh-fruits-vegetables.webp",
     sections: [
       {
         heading: "Fresh produce needs shipment planning",
@@ -420,6 +426,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     metaTitle: "Documents Required for Importing Food Products from India",
     metaDescription: "Importer checklist for Indian food product documents including invoice, packing list, COA, COO, phytosanitary and fumigation documents.",
     tags: ["export documents", "food import", "India export"],
+    image: "/blog/food-import-documents.webp",
     sections: [
       {
         heading: "Start with commercial documents",
@@ -465,7 +472,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     metaTitle: "Private Label Spice Manufacturing and Export from India",
     metaDescription: "Guide for importers planning private label spice products from India, including formulations, packaging, labels and export documentation.",
     tags: ["private label spices", "spice manufacturing", "export opportunities"],
-    image: "/products/turmeric.webp",
+    image: "/blog/private-label-spices.webp",
     sections: [
       {
         heading: "Private label starts with product positioning",

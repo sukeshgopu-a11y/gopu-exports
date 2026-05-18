@@ -11,7 +11,11 @@ export default function BrandLogo({
   priority = false,
   variant = "default",
 }: BrandLogoProps) {
-  const src = markOnly ? "/logos/gopu-mark.svg" : "/logos/gopu-exports-logo.svg";
+  const src = markOnly
+    ? "/logos/gopu-mark.svg"
+    : variant === "light"
+      ? "/logos/gopu-exports-logo-light.svg"
+      : "/logos/gopu-exports-logo.svg";
   const alt = markOnly ? "GOPU Exports logo mark" : "GOPU Exports";
 
   return (
@@ -24,7 +28,7 @@ export default function BrandLogo({
       decoding="async"
       width={markOnly ? 56 : 220}
       height={markOnly ? 56 : 72}
-      className={`${markOnly ? "h-12 w-12" : "h-12 w-auto"} object-contain ${variant === "light" ? "brightness-0 invert" : ""} ${className}`}
+      className={`${markOnly ? "h-12 w-12" : "h-12 w-auto"} object-contain ${className}`}
     />
   );
 }

@@ -21,31 +21,6 @@ const NAV_LINKS = [
 ];
 
 /* ─── SOCIAL ICON COMPONENTS ──────────────────────────────── */
-function IconInstagram() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect width="20" height="20" x="2" y="2" rx="5" />
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-    </svg>
-  );
-}
-function IconFacebook() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-    </svg>
-  );
-}
-function IconLinkedin() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-      <rect width="4" height="12" x="2" y="9" />
-      <circle cx="4" cy="4" r="2" />
-    </svg>
-  );
-}
 function IconWhatsApp() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -53,12 +28,27 @@ function IconWhatsApp() {
     </svg>
   );
 }
+function IconMail() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect width="20" height="16" x="2" y="4" rx="2" />
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+    </svg>
+  );
+}
+function IconPhone() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16.92z" />
+    </svg>
+  );
+}
 
 const SOCIALS = [
-  { label: "Instagram", href: "", Icon: IconInstagram },
-  { label: "Facebook", href: "", Icon: IconFacebook },
-  { label: "LinkedIn", href: "", Icon: IconLinkedin },
-].filter((social) => social.href);
+  { label: "WhatsApp", href: `https://wa.me/${WHATSAPP_NUMBER}`, Icon: IconWhatsApp, external: true },
+  { label: "Email", href: `mailto:${CONTACT_EMAIL}`, Icon: IconMail, external: false },
+  { label: "Phone", href: `tel:${CONTACT_PHONE.replace(/\s/g, "")}`, Icon: IconPhone, external: false },
+];
 
 /* ─── LOGO MARK ────────────────────────────────────────────── */
 function LogoMark() {
@@ -121,7 +111,7 @@ export default function Navbar() {
                   <rect width="20" height="16" x="2" y="4" rx="2" />
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
-                <span className="hidden sm:inline">{CONTACT_EMAIL}</span>
+                <span>{CONTACT_EMAIL}</span>
               </a>
               <div className="h-3 w-px bg-white/15 hidden sm:block" />
               <a
@@ -137,13 +127,13 @@ export default function Navbar() {
 
             {/* RIGHT — social icons only */}
             {SOCIALS.length > 0 && <div className="hidden md:flex items-center gap-3">
-              <span className="text-[10px] text-white/30 font-medium mr-1">Follow:</span>
-              {SOCIALS.map(({ label, href, Icon }) => (
+              <span className="text-[10px] text-white/30 font-medium mr-1">Contact:</span>
+              {SOCIALS.map(({ label, href, Icon, external }) => (
                 <a
                   key={label}
                   href={href}
-                  target="_blank"
-                  rel="noreferrer"
+                  target={external ? "_blank" : undefined}
+                  rel={external ? "noreferrer" : undefined}
                   aria-label={label}
                   className="text-white/50 hover:text-[#67C9D8] transition-colors duration-150 hover:scale-110 transform"
                 >
