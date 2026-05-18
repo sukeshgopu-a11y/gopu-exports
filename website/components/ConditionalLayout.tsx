@@ -1,10 +1,8 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-
-const Navbar = dynamic(() => import("./Navbar"));
-const Footer = dynamic(() => import("./Footer"));
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 export default function ConditionalLayout({
   children,
