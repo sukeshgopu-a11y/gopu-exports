@@ -84,12 +84,23 @@ Do not deploy until `npm run build` passes.
 
 ## Vercel Deployment
 
+Production deployment has been completed on Vercel:
+
+- Project: `gopu-exports`
+- Production URL: `https://gopu-exports.vercel.app`
+- Custom domains: `https://gopuexports.com` and `https://www.gopuexports.com`
+- Framework preset: Next.js
+- Production Supabase public environment variables: configured
+
+For a new deployment, repeat these steps:
+
 1. Push the repository to GitHub.
 2. Import the project in Vercel.
 3. Set the root directory to the Next.js project folder if the repository root is not already `website`.
-4. Add the Supabase environment variables in Vercel Project Settings.
-5. Deploy from `main`.
-6. Add the production domain in Vercel Domains and configure DNS.
+4. Set the framework preset to Next.js.
+5. Add the Supabase environment variables in Vercel Project Settings.
+6. Deploy from `main`.
+7. Add the production domain in Vercel Domains and configure DNS.
 
 ## Post-Deploy Tests
 
@@ -107,8 +118,6 @@ Do not deploy until `npm run build` passes.
 
 ## Remaining Business Launch Tasks
 
-- Add final Vercel production environment variables.
-- Connect final domain, DNS, and SSL.
 - Submit `/sitemap.xml` in Google Search Console.
 - Add an email provider key if automated enquiry notification emails are required.
 - Replace any temporary product imagery with approved business photography.

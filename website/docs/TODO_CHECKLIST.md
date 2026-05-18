@@ -47,11 +47,14 @@ Use this as the current Supabase-era launch checklist. Older MongoDB tasks are n
 - [x] Run `npm run build`.
 - [x] Run `npm run dev`.
 - [x] Run manual API smoke tests for auth, products, inquiries, quotes, certifications, and gallery.
+- [x] Add production Supabase environment variables in Vercel.
+- [x] Configure Vercel project for the Next.js framework preset.
+- [x] Deploy production build to Vercel.
+- [x] Add `gopuexports.com` and `www.gopuexports.com` to Vercel.
+- [x] Verify both custom domains return `200 OK`.
 
-## Remaining Deployment/Business Tasks
+## Remaining Manual Business Tasks
 
-- [ ] Add production environment variables in Vercel.
-- [ ] Connect the final domain and verify DNS/SSL.
 - [ ] Submit `https://gopuexports.com/sitemap.xml` to Google Search Console.
 - [ ] Add a real email provider API key if enquiry email alerts are required before launch.
 - [ ] Replace placeholder/stock product imagery with final approved business photography when available.
@@ -61,3 +64,4 @@ Use this as the current Supabase-era launch checklist. Older MongoDB tasks are n
 
 - Email notification is not enabled because no Resend/SMTP API key or verified sending domain was provided.
 - `SUPABASE_SERVICE_ROLE_KEY` is documented but normal dashboard CRUD uses authenticated Supabase sessions plus RLS.
+- Vercel production is live at `https://gopu-exports.vercel.app`, `https://gopuexports.com`, and `https://www.gopuexports.com`.
