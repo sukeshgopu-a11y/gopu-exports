@@ -779,7 +779,7 @@ export default function ProductsPage() {
                 <Field label="Hero Image URL">
                   <div className="flex gap-2">
                     <Input
-                      placeholder="/products/red-chilli.jpg or https://..."
+                      placeholder="/products/red-chilli.webp or https://..."
                       value={form.image}
                       onChange={set("image")}
                     />

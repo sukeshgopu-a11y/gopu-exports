@@ -6,19 +6,19 @@ export default function ProductCategories() {
   const products = [
     {
       title: "Basmati Rice",
-      image: "/products/rice.jpg",
+      image: "/products/rice.webp",
       description:
         "Premium export-quality rice with international packaging support.",
     },
     {
       title: "Indian Spices",
-      image: "/products/red-chilli.jpg",
+      image: "/products/red-chilli.webp",
       description:
         "Carefully sourced spices suitable for wholesale global distribution.",
     },
     {
       title: "Turmeric Products",
-      image: "/products/turmeric.jpg",
+      image: "/products/turmeric.webp",
       description:
         "Export-ready turmeric products for food and retail industries.",
     },

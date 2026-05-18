@@ -14,6 +14,7 @@ import {
   BookOpen,
   FileText,
 } from "lucide-react";
+import BrandLogo from "@/components/BrandLogo";
 
 const NAV = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -42,9 +43,9 @@ export default function Sidebar() {
 
       {/* Logo */}
       <div className="mb-10 px-2">
-        <div className="text-[26px] font-black tracking-tight text-white">GOPU</div>
-        <div className="text-[9px] font-semibold tracking-[0.35em] text-[#0E7490] mt-0.5">
-          EXPORTS ADMIN
+        <BrandLogo variant="light" className="h-12 w-auto" />
+        <div className="mt-2 text-[9px] font-semibold tracking-[0.35em] text-[#67C9D8]">
+          ADMIN
         </div>
       </div>
 

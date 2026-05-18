@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
+import BrandLogo from "./BrandLogo";
 
 /* ─── CONFIG ──────────────────────────────────────────────── */
 const CONTACT_EMAIL = "admin@gopuexports.com";
@@ -55,23 +55,14 @@ function IconWhatsApp() {
 }
 
 const SOCIALS = [
-  { label: "Instagram", href: "https://instagram.com/gopuexports", Icon: IconInstagram },
-  { label: "Facebook", href: "https://facebook.com/gopuexports", Icon: IconFacebook },
-  { label: "LinkedIn", href: "https://linkedin.com/company/gopuexports", Icon: IconLinkedin },
-];
+  { label: "Instagram", href: "", Icon: IconInstagram },
+  { label: "Facebook", href: "", Icon: IconFacebook },
+  { label: "LinkedIn", href: "", Icon: IconLinkedin },
+].filter((social) => social.href);
 
 /* ─── LOGO MARK ────────────────────────────────────────────── */
 function LogoMark() {
-  return (
-    <Image
-      src="/logos/logo.png"
-      alt="GOPU Exports"
-      width={160}
-      height={64}
-      priority
-      className="h-12 w-auto object-contain"
-    />
-  );
+  return <BrandLogo priority className="h-12 w-auto" />;
 }
 
 /* ─── COMPONENT ────────────────────────────────────────────── */
@@ -145,7 +136,7 @@ export default function Navbar() {
             </div>
 
             {/* RIGHT — social icons only */}
-            <div className="hidden md:flex items-center gap-3">
+            {SOCIALS.length > 0 && <div className="hidden md:flex items-center gap-3">
               <span className="text-[10px] text-white/30 font-medium mr-1">Follow:</span>
               {SOCIALS.map(({ label, href, Icon }) => (
                 <a
@@ -159,7 +150,7 @@ export default function Navbar() {
                   <Icon />
                 </a>
               ))}
-            </div>
+            </div>}
           </div>
         </div>
 

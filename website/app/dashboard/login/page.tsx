@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function DashboardLoginPage() {
   const router = useRouter();
@@ -41,11 +42,11 @@ export default function DashboardLoginPage() {
       <div className="bg-white w-full max-w-md rounded-3xl shadow-xl p-10">
 
         <div className="mb-8 text-center">
-          <div className="text-[32px] font-black tracking-[-0.03em] text-[#0F172A]">
-            GOPU
+          <div className="flex justify-center">
+            <BrandLogo priority className="h-16 w-auto" />
           </div>
-          <div className="text-[10px] font-semibold tracking-[0.35em] text-[#0E7490]">
-            EXPORTS ADMIN
+          <div className="mt-3 text-[10px] font-semibold tracking-[0.35em] text-[#0E7490]">
+            ADMIN
           </div>
           <p className="mt-4 text-sm text-[#64748B]">
             Sign in to your dashboard

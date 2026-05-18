@@ -1,20 +1,24 @@
 "use client";
 
 import { Bell, Search, UserCircle } from "lucide-react";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function Topbar() {
   return (
     <header className="h-24 bg-white border-b border-gray-100 px-10 flex items-center justify-between">
 
       {/* Left */}
-      <div>
-        <h2 className="text-3xl font-bold text-[#0F172A]">
-          Dashboard
-        </h2>
+      <div className="flex items-center gap-4">
+        <BrandLogo markOnly className="hidden h-11 w-11 md:block" />
+        <div>
+          <h2 className="text-3xl font-bold text-[#0F172A]">
+            Dashboard
+          </h2>
 
-        <p className="text-gray-500 mt-1">
-          Welcome back, Admin
-        </p>
+          <p className="text-gray-500 mt-1">
+            Welcome back, Admin
+          </p>
+        </div>
       </div>
 
       {/* Right */}

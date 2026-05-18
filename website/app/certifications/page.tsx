@@ -126,7 +126,7 @@ export default async function CertificationsPage() {
       <section className="relative overflow-hidden bg-[#071624]">
         <div className="absolute inset-0">
           <Image
-            src="/images/hero-bg.jpg"
+            src="/images/hero-bg.webp"
             alt="Quality and Certifications"
             fill
             priority

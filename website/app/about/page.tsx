@@ -63,7 +63,7 @@ export default function AboutPage() {
       <section className="relative overflow-hidden bg-[#071624]">
         <div className="absolute inset-0">
           <Image
-            src="/images/hero-bg.jpg"
+            src="/images/hero-bg.webp"
             alt="GOPU Exports Operations"
             fill
             priority
@@ -143,7 +143,7 @@ export default function AboutPage() {
             <div className="relative">
               <div className="overflow-hidden rounded-2xl">
                 <Image
-                  src="/images/hero-bg.jpg"
+                  src="/images/hero-bg.webp"
                   alt="GOPU Exports warehouse and operations"
                   width={700}
                   height={500}

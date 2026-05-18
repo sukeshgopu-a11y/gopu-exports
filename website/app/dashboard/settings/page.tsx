@@ -24,9 +24,9 @@ const DEFAULTS: ContactSettings = {
   website: "https://gopuexports.com",
   iec: "",
   address: "Hasanparthy, Warangal, Telangana, 506244, India",
-  linkedin: "https://linkedin.com/company/gopuexports",
-  instagram: "https://instagram.com/gopuexports",
-  facebook: "https://facebook.com/gopuexports",
+  linkedin: "",
+  instagram: "",
+  facebook: "",
 };
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {

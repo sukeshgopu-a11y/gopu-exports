@@ -107,7 +107,7 @@ export const PRODUCTS: Product[] = [
     slug: "turmeric-powder",
     title: "Turmeric Powder",
     category: "Spices & Herbs",
-    image: "/products/turmeric.jpg",
+    image: "/products/turmeric.webp",
     tagline: "High Curcumin — Food & Industrial Grade",
     description:
       "Premium turmeric powder processed from Nizamabad and Erode varieties known globally for high curcumin content, deep color, and clean processing standards.",
@@ -141,7 +141,7 @@ export const PRODUCTS: Product[] = [
     slug: "red-chilli",
     title: "Red Chilli (Whole)",
     category: "Spices & Herbs",
-    image: "/products/red-chilli.jpg",
+    image: "/products/red-chilli.webp",
     tagline: "Guntur S4 Grade — Premium Heat & Color",
     description:
       "Export-grade whole Guntur red chillies celebrated globally for their fiery heat, vivid color, and strong market demand in food processing and condiment industries.",
@@ -334,7 +334,7 @@ export const PRODUCTS: Product[] = [
     slug: "basmati-rice",
     title: "Basmati Rice",
     category: "Rice & Grains",
-    image: "/products/rice.jpg",
+    image: "/products/rice.webp",
     tagline: "Aged Premium Basmati — Long Grain Export",
     description:
       "Aged long-grain basmati rice with natural aroma, non-sticky texture, and elongation ratio ideal for restaurant chains, wholesalers, and branded retail buyers worldwide.",

@@ -100,7 +100,7 @@ export default async function HomePage() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="/images/hero-bg.jpg"
+            src="/images/hero-bg.webp"
             alt="Global Export Logistics"
             fill
             priority
@@ -302,7 +302,7 @@ export default async function HomePage() {
               <div className="relative min-h-[340px] overflow-hidden bg-[#F0F9FA]">
                 <div className="absolute inset-0 flex items-center justify-center p-10">
                   <Image
-                    src="/images/world-map.png"
+                    src="/images/world-map.webp"
                     alt="GOPU Exports Global Reach"
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
@@ -381,7 +381,7 @@ export default async function HomePage() {
           <div className="relative overflow-hidden rounded-2xl">
             <div className="absolute inset-0">
               <Image
-                src="/images/cta-ship.jpg"
+                src="/images/cta-ship.webp"
                 alt="Container Ship"
                 fill
                 sizes="100vw"

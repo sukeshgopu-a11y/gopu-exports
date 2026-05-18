@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Mail, Phone, Send, ShieldCheck, Globe2 } from "lucide-react";
 import { useState } from "react";
+import BrandLogo from "./BrandLogo";
 
 /* ------------------------------------------------------------------ */
 /*  Brand icons                                                         */
@@ -24,14 +25,6 @@ function Instagram({ className }: IconProps) {
       <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
       <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-    </svg>
-  );
-}
-function Twitter({ className }: IconProps) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
     </svg>
   );
 }
@@ -80,11 +73,10 @@ const CERTIFICATIONS = [
   { label: "IEC Registered", icon: Globe2 },
 ];
 const SOCIALS = [
-  { href: "https://linkedin.com", label: "LinkedIn", Icon: Linkedin, color: "#0A66C2" },
-  { href: "https://facebook.com", label: "Facebook", Icon: Facebook, color: "#1877F2" },
-  { href: "https://instagram.com", label: "Instagram", Icon: Instagram, color: "#E1306C" },
-  { href: "https://twitter.com", label: "Twitter", Icon: Twitter, color: "#1DA1F2" },
-];
+  { href: "", label: "LinkedIn", Icon: Linkedin, color: "#0A66C2" },
+  { href: "", label: "Facebook", Icon: Facebook, color: "#1877F2" },
+  { href: "", label: "Instagram", Icon: Instagram, color: "#E1306C" },
+].filter((social) => social.href);
 const WHATSAPP_NUMBER = "+918712816876";
 
 
@@ -92,7 +84,7 @@ const WHATSAPP_NUMBER = "+918712816876";
 /*  Floating particles background                                       */
 /* ------------------------------------------------------------------ */
 function Particles() {
-  const particles = Array.from({ length: 22 }, (_, i) => ({
+  const particles = Array.from({ length: 8 }, (_, i) => ({
     id: i,
     left: `${5 + (i * 4.3) % 90}%`,
     delay: `${(i * 0.7) % 8}s`,
@@ -101,7 +93,7 @@ function Particles() {
     opacity: 0.15 + (i % 5) * 0.07,
   }));
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div className="pointer-events-none absolute inset-0 hidden overflow-hidden md:block" aria-hidden="true">
       {particles.map((p) => (
         <span
           key={p.id}
@@ -331,6 +323,12 @@ export default function Footer() {
         }
         .wa-pulse { animation: pulse-ring 2.2s cubic-bezier(0.455,0.03,0.515,0.955) infinite; }
         .glow-amber { animation: glow-pulse 3s ease-in-out infinite; }
+        @media (max-width: 767px), (prefers-reduced-motion: reduce) {
+          .aurora-1,.aurora-2,.aurora-3,.shimmer-bar,.wa-pulse,.glow-amber,
+          .footer-col-0,.footer-col-1,.footer-col-2,.footer-col-3 {
+            animation: none !important;
+          }
+        }
       `}</style>
 
       {/* ── Floating WhatsApp ── */}
@@ -391,14 +389,10 @@ export default function Footer() {
           {/* ── Brand column ── */}
           <div className="footer-col-0 sm:col-span-2 lg:col-span-1">
             {/* Logo with glow */}
-            <div className="relative inline-flex items-baseline gap-1.5">
+            <div className="relative inline-flex">
               <div className="glow-amber absolute -inset-3 rounded-xl bg-amber-400/5 blur-xl" />
-              <span itemProp="name"
-                className="relative bg-gradient-to-r from-white via-amber-100 to-white bg-clip-text text-3xl
-                  font-black tracking-tight text-transparent">
-                GOPU
-              </span>
-              <span className="relative text-[10px] font-semibold tracking-[0.35em] text-amber-400">EXPORTS</span>
+              <BrandLogo variant="light" className="relative h-14 w-auto" />
+              <span itemProp="name" className="sr-only">GOPU Exports</span>
             </div>
 
             <p itemProp="description" className="mt-5 text-[13px] leading-6 text-slate-400">
@@ -419,7 +413,7 @@ export default function Footer() {
             </div>
 
             {/* Social icons */}
-            <div className="mt-5 flex gap-2">
+            {SOCIALS.length > 0 && <div className="mt-5 flex gap-2">
               {SOCIALS.map(({ href, label, Icon, color }) => (
                 <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
                   className="group relative flex h-9 w-9 items-center justify-center overflow-hidden
@@ -431,7 +425,7 @@ export default function Footer() {
                   <Icon className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
                 </a>
               ))}
-            </div>
+            </div>}
           </div>
 
           {/* ── Navigation ── */}
