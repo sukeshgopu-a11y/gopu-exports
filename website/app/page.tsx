@@ -34,64 +34,44 @@ async function getFeatured(): Promise<FeaturedProduct[]> {
 
 const WHY_FEATURES = [
   {
-    icon: "🏅",
-    title: "Export-Grade Quality",
-    desc: "Every shipment passes multi-point quality inspection before dispatch — moisture, colour, foreign matter, and grade certification.",
+    icon: "QC",
+    title: "Quality-Focused Exports",
+    desc: "Product sourcing, grading, and dispatch are handled with clear quality checks before export.",
   },
   {
-    icon: "📦",
-    title: "Flexible Packaging",
-    desc: "Custom pack sizes from 1 kg retail to 50 kg industrial bags, branded or private-label, in jute, PP, or vacuum-sealed options.",
+    icon: "SN",
+    title: "Reliable Supplier Network",
+    desc: "Supplier relationships are managed to support consistent sourcing across agricultural categories.",
   },
   {
-    icon: "🌍",
-    title: "Global Export Network",
-    desc: "Active buyer relationships across USA, UAE, EU, Southeast Asia, and Africa — built on a consistent track record of successful shipments.",
+    icon: "PK",
+    title: "Export-Compliant Packaging",
+    desc: "Packaging options are planned around buyer requirements, product handling, and export documentation needs.",
   },
   {
-    icon: "📋",
-    title: "Full Documentation",
-    desc: "Phytosanitary, COA, MSDS, fumigation, bill of lading, and COO prepared in-house for smooth customs clearance worldwide.",
+    icon: "SC",
+    title: "Timely Shipment Coordination",
+    desc: "Orders are coordinated with attention to readiness, logistics communication, and shipment milestones.",
   },
   {
-    icon: "⏱️",
-    title: "On-Time Delivery",
-    desc: "Dedicated logistics coordinators manage container booking, freight, and port handling to meet every shipping deadline.",
+    icon: "BC",
+    title: "Buyer-Centric Communication",
+    desc: "Enquiries and order discussions are handled with practical updates and clear next steps.",
   },
   {
-    icon: "🔬",
-    title: "Lab-Tested Produce",
-    desc: "Third-party lab testing for pesticide residues, aflatoxins, heavy metals, and microbiology on all food commodities.",
+    icon: "FS",
+    title: "Flexible Product Sourcing",
+    desc: "The sourcing process supports standard catalogue items as well as specific buyer requirements.",
   },
   {
-    icon: "🤝",
-    title: "Long-Term Partnerships",
-    desc: "We build multi-year supply agreements with importers — stable pricing, priority allocation, and dedicated account managers.",
+    icon: "GT",
+    title: "Global Trade Readiness",
+    desc: "Export workflows are structured for international buyers, import documentation, and B2B trade expectations.",
   },
   {
-    icon: "📑",
-    title: "FSSAI & APEDA Certified",
-    desc: "Fully compliant with Indian food safety standards and APEDA export registration for all regulated agri-commodities.",
-  },
-  {
-    icon: "💬",
-    title: "Responsive Buyer Support",
-    desc: "WhatsApp, email, and video-call support across time zones — your questions answered promptly by a dedicated team.",
-  },
-  {
-    icon: "🚢",
-    title: "Multi-Port Shipping",
-    desc: "We ship from Chennai, Mumbai, Mundra, JNPT, and Kolkata — choose the port that minimises your freight cost.",
-  },
-  {
-    icon: "📊",
-    title: "Market Intelligence",
-    desc: "Price reports, crop forecasts, and seasonal availability alerts to help you plan procurement budgets effectively.",
-  },
-  {
-    icon: "🌱",
-    title: "Sustainably Sourced",
-    desc: "Direct farmer partnerships and traceable supply chains — ethically sourced produce from verified growing regions.",
+    icon: "DS",
+    title: "Professional Documentation Support",
+    desc: "Documentation support is aligned with product type, buyer destination, and standard export requirements.",
   },
 ];
 

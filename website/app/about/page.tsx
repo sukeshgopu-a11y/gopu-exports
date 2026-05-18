@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 };
 
 const VALUES = [
-  { icon: "🏅", title: "Quality First", desc: "Every product is tested and inspected before leaving our facility — zero compromise on grade, moisture, or purity specifications." },
-  { icon: "🤝", title: "Integrity", desc: "We honour every commitment — on pricing, quantity, and delivery timelines. Our word is our contract." },
-  { icon: "🌱", title: "Sustainability", desc: "Direct farmer partnerships and traceable supply chains support sustainable agriculture and fair trade practices." },
-  { icon: "🌍", title: "Global Standards", desc: "Our team understands import regulations, phytosanitary norms, and customs requirements across destination countries worldwide." },
-  { icon: "⚡", title: "Reliability", desc: "Consistent quality, on-time shipments, and complete documentation on every order — our track record earns long-term buyer trust." },
+  { icon: "🏅", title: "Quality First", desc: "We keep product quality, grading, and buyer requirements central to every sourcing discussion." },
+  { icon: "🤝", title: "Integrity", desc: "We communicate clearly on pricing, quantity, timelines, and documentation requirements." },
+  { icon: "🌱", title: "Responsible Sourcing", desc: "We work with supplier networks that can support product availability, packaging, and trade requirements." },
+  { icon: "🌍", title: "Trade Readiness", desc: "Our export process is built around buyer destinations, documentation needs, and shipment coordination." },
+  { icon: "⚡", title: "Reliability", desc: "We focus on organised communication, practical timelines, and clear shipment planning." },
   { icon: "💡", title: "Continuous Improvement", desc: "We constantly refine packaging, traceability, and logistics to meet evolving global food safety standards." },
 ];
 
@@ -21,37 +21,37 @@ const STRENGTHS = [
   {
     icon: "🔬",
     title: "Quality-Focused Exports",
-    desc: "Multi-point quality checks at farm level, warehouse grading, and pre-shipment inspection by accredited third-party agencies.",
+    desc: "Product checks and grading are coordinated around buyer specifications and export handling needs.",
   },
   {
     icon: "🤝",
     title: "Reliable Supplier Network",
-    desc: "Direct relationships with verified farmers across Andhra Pradesh, Kerala, Karnataka, Maharashtra, and Tamil Nadu.",
+    desc: "Supplier relationships are managed to support consistent sourcing across agricultural categories.",
   },
   {
     icon: "📦",
     title: "Export-Compliant Packaging",
-    desc: "Custom packaging from 1 kg retail to 50 kg bulk — jute bags, PP bags, vacuum-sealed, and private-label options.",
+    desc: "Packaging options are planned around product handling, buyer requirements, and export documentation needs.",
   },
   {
     icon: "📋",
-    title: "Professional Documentation",
-    desc: "In-house documentation team prepares phytosanitary certificates, COA, COO, fumigation reports, MSDS, and bill of lading.",
+    title: "Professional Documentation Support",
+    desc: "Documentation support is aligned with product type, buyer destination, and standard export requirements.",
   },
   {
     icon: "🚢",
     title: "Timely Shipment Coordination",
-    desc: "Dedicated logistics coordinators manage container booking, freight forwarding, and port handling across five major Indian ports.",
+    desc: "Orders are coordinated with attention to readiness, logistics communication, and shipment milestones.",
   },
   {
     icon: "🎯",
     title: "Flexible Product Sourcing",
-    desc: "Wide sourcing network allows us to supply seasonal commodities and custom product specifications on request.",
+    desc: "The sourcing process supports standard catalogue items as well as specific buyer requirements.",
   },
   {
     icon: "💬",
     title: "Buyer-Centric Communication",
-    desc: "Responsive WhatsApp, email, and video-call support in your time zone — with a dedicated account manager for every buyer.",
+    desc: "Enquiries and order discussions are handled with practical updates and clear next steps.",
   },
 ];
 
@@ -180,9 +180,8 @@ export default function AboutPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#0E7490]/20 text-2xl">🌏</div>
               <h2 className="mt-5 text-[22px] font-black tracking-[-0.03em] text-white">Our Vision</h2>
               <p className="mt-3 text-[15px] leading-[1.8] text-slate-400">
-                To be recognised as India&apos;s most trusted agricultural export brand — known
-                across every importing country for consistency, food safety compliance,
-                and transparent supply chains from farm to port.
+                To build a trusted agricultural export brand through consistent sourcing,
+                food safety awareness, and transparent supply-chain communication.
               </p>
             </div>
 
@@ -191,9 +190,8 @@ export default function AboutPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#0E7490] text-2xl">🤝</div>
               <h2 className="mt-5 text-[22px] font-black tracking-[-0.03em] text-[#0F172A]">Our Promise</h2>
               <p className="mt-3 text-[15px] leading-[1.8] text-[#64748B]">
-                Every enquiry receives a detailed response within 24 hours. Every order ships
-                with complete phytosanitary, COA, and customs documentation. Every shipment
-                arrives on specification — or we make it right.
+                Every enquiry receives practical follow-up, clear documentation guidance,
+                and coordinated support from product selection through shipment planning.
               </p>
             </div>
           </div>
@@ -232,18 +230,17 @@ export default function AboutPage() {
                 End-to-End Export<br />Management
               </h2>
               <p className="mt-5 text-[15px] leading-[1.9] text-slate-400">
-                We handle the entire export process — from farmer sourcing and quality
-                inspection to container booking, documentation, and tracking to port of
-                discharge. Our in-house team eliminates the complexity of international trade.
+                We coordinate key export steps from supplier sourcing and quality checks
+                to packaging, documentation, logistics communication, and buyer updates.
               </p>
               <ul className="mt-7 space-y-3">
                 {[
                   "Farm-level quality grading and moisture testing",
-                  "Third-party lab testing (pesticide, aflatoxin, heavy metals)",
-                  "Custom packaging: retail 1 kg to bulk 50 kg",
-                  "Full phytosanitary, COA, fumigation, MSDS documentation",
-                  "Multi-port shipping: Chennai, Mumbai, Mundra, JNPT, Kolkata",
-                  "EXIM bank financed shipments and LC handling",
+                  "Quality-focused sourcing and product checks",
+                  "Packaging guidance based on buyer requirements",
+                  "Export documentation planning and support",
+                  "Shipment coordination with logistics partners",
+                  "Buyer communication from enquiry to dispatch",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3 text-[14px] text-slate-300">
                     <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#0E7490]/30 text-[10px] text-[#67C9D8]">✓</span>
@@ -257,7 +254,7 @@ export default function AboutPage() {
               {[
                 { label: "Quality Inspection", icon: "🔬", desc: "Multi-point checks at source, warehouse, and pre-shipment stages." },
                 { label: "Documentation", icon: "📋", desc: "Phytosanitary, COO, COA, HACCP, fumigation — all managed in-house." },
-                { label: "Logistics", icon: "🚢", desc: "Container booking, freight forwarding, and port handling across 5 major ports." },
+                { label: "Logistics", icon: "🚢", desc: "Shipment planning and coordination with logistics partners." },
                 { label: "Buyer Support", icon: "💬", desc: "Dedicated account manager, WhatsApp updates, and responsive communication." },
               ].map((item) => (
                 <div

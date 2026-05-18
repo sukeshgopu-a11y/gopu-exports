@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { Plus, Pencil, Trash2, X, Check, Upload } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Check, Upload, Download, Database } from "lucide-react";
 
 type Cert = {
   _id: string;
@@ -46,6 +46,35 @@ const PRESET_CERTS = [
   "ISO 22000", "HACCP", "ORGANIC INDIA",
 ];
 
+const WEBSITE_CERTS: Omit<Cert, "_id">[] = [
+  { name: "APEDA", issuer: "Agricultural & Processed Food Products Export Development Authority", logo: "", description: "Registration for export of agricultural and processed food products from India.", active: true, order: 1 },
+  { name: "FSSAI", issuer: "Food Safety and Standards Authority of India", logo: "", description: "Food safety registration for food product handling and supply.", active: true, order: 2 },
+  { name: "ISO 22000", issuer: "Food Safety Management System", logo: "", description: "Food safety management system standard for supply chain processes.", active: true, order: 3 },
+  { name: "HACCP", issuer: "Hazard Analysis & Critical Control Points", logo: "", description: "Preventive food safety approach for identifying and controlling hazards.", active: true, order: 4 },
+  { name: "IEC", issuer: "Director General of Foreign Trade", logo: "", description: "Import Export Code used for Indian import and export operations.", active: true, order: 5 },
+  { name: "Spice Board of India", issuer: "Spice Board of India", logo: "", description: "Registration relevant to spice export compliance and trade.", active: true, order: 6 },
+];
+
+function isValidImageSrc(value: string) {
+  const src = value.trim();
+  return src.startsWith("/") || src.startsWith("http://") || src.startsWith("https://") || src.startsWith("data:image/");
+}
+
+async function createWebsiteDefaults(existing: Cert[]) {
+  const existingNames = new Set(existing.map((cert) => cert.name.toLowerCase()));
+  let created = 0;
+  for (const cert of WEBSITE_CERTS) {
+    if (existingNames.has(cert.name.toLowerCase())) continue;
+    const res = await fetch("/api/certifications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(cert),
+    });
+    if (res.ok) created++;
+  }
+  return created;
+}
+
 export default function CertificationsPage() {
   const [certs, setCerts] = useState<Cert[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,24 +82,37 @@ export default function CertificationsPage() {
   const [editing, setEditing] = useState<Cert | null>(null);
   const [form, setForm] = useState<Omit<Cert, "_id">>(EMPTY);
   const [saving, setSaving] = useState(false);
+  const [autoImportTried, setAutoImportTried] = useState(false);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch("/api/certifications");
       const data = await res.json();
-      setCerts(Array.isArray(data) ? data : []);
+      if (Array.isArray(data)) {
+        if (data.length === 0 && !autoImportTried) {
+          setAutoImportTried(true);
+          await createWebsiteDefaults([]);
+          const retry = await fetch("/api/certifications");
+          const retryData = await retry.json();
+          setCerts(Array.isArray(retryData) ? retryData : []);
+        } else {
+          setCerts(data);
+        }
+      } else {
+        setCerts([]);
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [autoImportTried]);
 
   useEffect(() => {
     const id = window.setTimeout(() => {
       void load();
     }, 0);
     return () => window.clearTimeout(id);
-  }, []);
+  }, [load]);
 
   const openNew = (name?: string) => {
     setEditing(null);
@@ -142,6 +184,31 @@ export default function CertificationsPage() {
     setCerts((prev) => prev.filter((c) => c._id !== id));
   };
 
+  const importWebsiteData = async () => {
+    setSaving(true);
+    try {
+      const created = await createWebsiteDefaults(certs);
+      await load();
+      if (created === 0) alert("Website certifications are already imported.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const exportCSV = () => {
+    const headers = ["Name", "Issuer", "Logo", "Description", "Active", "Order"];
+    const rows = certs.map((c) => [c.name, c.issuer, c.logo, c.description, c.active, c.order]);
+    const csv = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${String(cell ?? "").replaceAll('"', '""')}"`).join(","))
+      .join("\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "certifications.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -151,13 +218,30 @@ export default function CertificationsPage() {
             Shown on the website certifications page and product pages
           </p>
         </div>
-        <button
-          onClick={() => openNew()}
-          className="flex items-center gap-2 bg-[#0E7490] hover:bg-[#0A5A70] transition text-white px-5 py-3 rounded-xl font-medium text-sm"
-        >
-          <Plus size={16} />
-          Add Certification
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={exportCSV}
+            className="flex items-center gap-2 border border-gray-200 text-gray-600 hover:bg-gray-50 transition px-4 py-3 rounded-xl font-medium text-sm"
+          >
+            <Download size={16} />
+            Export
+          </button>
+          <button
+            onClick={importWebsiteData}
+            disabled={saving}
+            className="flex items-center gap-2 border border-[#0E7490] text-[#0E7490] hover:bg-[#0E7490]/5 transition px-4 py-3 rounded-xl font-medium text-sm disabled:opacity-50"
+          >
+            <Database size={16} />
+            Import Website Data
+          </button>
+          <button
+            onClick={() => openNew()}
+            className="flex items-center gap-2 bg-[#0E7490] hover:bg-[#0A5A70] transition text-white px-5 py-3 rounded-xl font-medium text-sm"
+          >
+            <Plus size={16} />
+            Add Certification
+          </button>
+        </div>
       </div>
 
       {/* Quick add presets */}
@@ -203,7 +287,7 @@ export default function CertificationsPage() {
                   <tr key={c._id} className="border-b border-gray-100 hover:bg-gray-50 transition">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        {c.logo && (
+                        {c.logo && isValidImageSrc(c.logo) && (
                           <Image src={c.logo} alt={c.name} width={32} height={32} className="h-8 w-8 object-contain rounded" />
                         )}
                         <div>

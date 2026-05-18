@@ -3,11 +3,12 @@
 import { useState } from "react";
 
 const INCOTERMS = ["FOB", "CIF", "CFR", "EXW", "DDP"];
+const OTHER = "Others";
 
-function StatCard({ number, label }: { number: string; label: string }) {
+function TrustCard({ title, label }: { title: string; label: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur px-4 py-4">
-      <div className="text-white text-[22px] font-black leading-none">{number}</div>
+      <div className="text-white text-[15px] font-black leading-tight">{title}</div>
       <div className="mt-2 text-white/60 text-[12px] leading-5">{label}</div>
     </div>
   );
@@ -110,10 +111,13 @@ export default function ContactPage() {
     email: "",
     phone: "",
     country: "",
+    countryOther: "",
     port: "",
     product: "",
+    productOther: "",
     quantity: "",
     frequency: "",
+    frequencyOther: "",
     notes: "",
   });
 
@@ -130,8 +134,15 @@ export default function ContactPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          product_name: form.product,
-          message: [form.notes, selectedInco ? `Incoterm: ${selectedInco}` : ""]
+          country: form.country === OTHER ? form.countryOther : form.country,
+          product: form.product === OTHER ? form.productOther : form.product,
+          product_name: form.product === OTHER ? form.productOther : form.product,
+          frequency: form.frequency === OTHER ? form.frequencyOther : form.frequency,
+          message: [
+            form.notes,
+            form.frequency ? `Frequency: ${form.frequency === OTHER ? form.frequencyOther : form.frequency}` : "",
+            selectedInco ? `Incoterm: ${selectedInco}` : "",
+          ]
             .filter(Boolean)
             .join("\n\n"),
         }),
@@ -184,10 +195,10 @@ export default function ContactPage() {
                 vegetables and agricultural commodities from India to global markets.
               </p>
               <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <StatCard number="25+" label="Export Products" />
-                <StatCard number="B2B" label="Export Trade" />
-                <StatCard number="Docs" label="Compliance Support" />
-                <StatCard number="Quote" label="Prompt Response" />
+                <TrustCard title="Quality-Focused" label="Export sourcing" />
+                <TrustCard title="Compliant" label="Packaging support" />
+                <TrustCard title="Buyer-Centric" label="Communication" />
+                <TrustCard title="Flexible" label="Product sourcing" />
               </div>
             </div>
 
@@ -273,7 +284,7 @@ export default function ContactPage() {
                   Thank you, {form.name}. Our team will respond within 12 hours.
                 </p>
                 <button
-                  onClick={() => { setSubmitted(false); setForm({ name:"",company:"",email:"",phone:"",country:"",port:"",product:"",quantity:"",frequency:"",notes:"" }); }}
+                  onClick={() => { setSubmitted(false); setForm({ name:"",company:"",email:"",phone:"",country:"",countryOther:"",port:"",product:"",productOther:"",quantity:"",frequency:"",frequencyOther:"",notes:"" }); }}
                   className="mt-6 px-6 py-3 rounded-xl bg-[#0E7490] text-white text-sm font-bold hover:bg-[#0A5A70] transition"
                 >
                   Submit Another
@@ -300,7 +311,16 @@ export default function ContactPage() {
                       {["Australia","United Arab Emirates","Saudi Arabia","Germany","United Kingdom","USA","Canada","Singapore","Netherlands","South Africa"].map((c) => (
                         <option key={c}>{c}</option>
                       ))}
+                      <option value={OTHER}>{OTHER}</option>
                     </Select>
+                    {form.country === OTHER && (
+                      <Input
+                        required
+                        placeholder="Enter destination country"
+                        value={form.countryOther}
+                        onChange={set("countryOther")}
+                      />
+                    )}
                   </Field>
                   <Field label="Destination port / city">
                     <Input placeholder="e.g. Sydney, Dubai, Rotterdam" value={form.port} onChange={set("port")} />
@@ -311,7 +331,16 @@ export default function ContactPage() {
                       {["Guntur Red Chilli (S4)","Turmeric (Nizamabad)","Basmati Rice","Fresh Vegetables","Black Pepper","Cumin Seeds","Pulses"].map((p) => (
                         <option key={p}>{p}</option>
                       ))}
+                      <option value={OTHER}>{OTHER}</option>
                     </Select>
+                    {form.product === OTHER && (
+                      <Input
+                        required
+                        placeholder="Enter product requirement"
+                        value={form.productOther}
+                        onChange={set("productOther")}
+                      />
+                    )}
                   </Field>
                   <Field label="Quantity required">
                     <Input placeholder="e.g. 5 MT, 1 FCL, 500 kg" value={form.quantity} onChange={set("quantity")} />
@@ -322,7 +351,16 @@ export default function ContactPage() {
                       {["One-time trial order","Monthly","Quarterly","Bi-annual","Annual Contract"].map((f) => (
                         <option key={f}>{f}</option>
                       ))}
+                      <option value={OTHER}>{OTHER}</option>
                     </Select>
+                    {form.frequency === OTHER && (
+                      <Input
+                        required
+                        placeholder="Enter shipment frequency"
+                        value={form.frequencyOther}
+                        onChange={set("frequencyOther")}
+                      />
+                    )}
                   </Field>
 
                   {/* INCOTERMS */}

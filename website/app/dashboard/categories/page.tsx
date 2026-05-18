@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, X, Check, GripVertical } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Check, GripVertical, Download, Database } from "lucide-react";
 
 type Category = {
   _id: string;
@@ -21,6 +21,20 @@ const EMPTY: Omit<Category, "_id"> = {
   active: true,
   order: 0,
 };
+
+const WEBSITE_CATEGORIES: Omit<Category, "_id">[] = [
+  { name: "Rice & Grains", slug: "rice-grains", description: "Export-ready rice, grains, and staple commodities.", image: "", active: true, order: 1 },
+  { name: "Millets", slug: "millets", description: "Nutritious millet varieties for global B2B buyers.", image: "", active: true, order: 2 },
+  { name: "Spices", slug: "spices", description: "Whole spices, seeds, and export-grade spice ingredients.", image: "", active: true, order: 3 },
+  { name: "Oil Seeds", slug: "oil-seeds", description: "Oil seeds and related agricultural commodities.", image: "", active: true, order: 4 },
+  { name: "Fresh Fruits", slug: "fresh-fruits", description: "Fresh produce handled for export supply chains.", image: "", active: true, order: 5 },
+  { name: "Fresh Vegetables", slug: "fresh-vegetables", description: "Vegetable sourcing for importers and distributors.", image: "", active: true, order: 6 },
+  { name: "Processed Foods", slug: "processed-foods", description: "Processed food products for international trade.", image: "", active: true, order: 7 },
+  { name: "Masala & Powders", slug: "masala-powders", description: "Ground spices, masala blends, and powdered ingredients.", image: "", active: true, order: 8 },
+  { name: "Herbal Products", slug: "herbal-products", description: "Herbal and natural product exports.", image: "", active: true, order: 9 },
+  { name: "Dry Fruits & Nuts", slug: "dry-fruits-nuts", description: "Dry fruits, nuts, and value-added food products.", image: "", active: true, order: 10 },
+  { name: "Organic Products", slug: "organic-products", description: "Organic agricultural products where certification is available.", image: "", active: true, order: 11 },
+];
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -131,6 +145,41 @@ export default function CategoriesPage() {
     setCategories((prev) => prev.filter((c) => c._id !== id));
   };
 
+  const importWebsiteData = async () => {
+    setSaving(true);
+    try {
+      const existingSlugs = new Set(categories.map((category) => category.slug));
+      let created = 0;
+      for (const category of WEBSITE_CATEGORIES) {
+        if (existingSlugs.has(category.slug)) continue;
+        const res = await fetch("/api/categories", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(category),
+        });
+        if (res.ok) created++;
+      }
+      await load();
+      if (created === 0) alert("Website categories are already imported.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const exportCSV = () => {
+    const headers = ["Name", "Slug", "Description", "Image", "Active", "Order"];
+    const rows = categories.map((c) => [c.name, c.slug, c.description, c.image, c.active, c.order]);
+    const csv = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${String(cell ?? "").replaceAll('"', '""')}"`).join(","))
+      .join("\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "categories.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -140,13 +189,30 @@ export default function CategoriesPage() {
             {categories.length} categories · {categories.filter((c) => c.active).length} active
           </p>
         </div>
-        <button
-          onClick={openNew}
-          className="flex items-center gap-2 bg-[#0E7490] hover:bg-[#0A5A70] transition text-white px-5 py-3 rounded-xl font-medium text-sm"
-        >
-          <Plus size={16} />
-          Add Category
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={exportCSV}
+            className="flex items-center gap-2 border border-gray-200 text-gray-600 hover:bg-gray-50 transition px-4 py-3 rounded-xl font-medium text-sm"
+          >
+            <Download size={16} />
+            Export
+          </button>
+          <button
+            onClick={importWebsiteData}
+            disabled={saving}
+            className="flex items-center gap-2 border border-[#0E7490] text-[#0E7490] hover:bg-[#0E7490]/5 transition px-4 py-3 rounded-xl font-medium text-sm disabled:opacity-50"
+          >
+            <Database size={16} />
+            Import Website Data
+          </button>
+          <button
+            onClick={openNew}
+            className="flex items-center gap-2 bg-[#0E7490] hover:bg-[#0A5A70] transition text-white px-5 py-3 rounded-xl font-medium text-sm"
+          >
+            <Plus size={16} />
+            Add Category
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
@@ -156,8 +222,8 @@ export default function CategoriesPage() {
           <div className="flex flex-col items-center justify-center h-48 text-gray-400 text-sm gap-3">
             <span className="text-3xl">📁</span>
             No categories yet.
-            <button onClick={openNew} className="text-[#0E7490] font-semibold hover:underline">
-              Add your first category →
+            <button onClick={importWebsiteData} className="text-[#0E7490] font-semibold hover:underline">
+              Import website categories
             </button>
           </div>
         ) : (

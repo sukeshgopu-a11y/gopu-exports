@@ -18,6 +18,7 @@ export type ProductRow = {
 export type CertificationRow = {
   id: string;
   name: string;
+  issuer: string | null;
   logo_url: string | null;
   description: string | null;
   is_active: boolean;
@@ -77,10 +78,15 @@ export function slugify(value: string) {
     .replace(/(^-|-$)/g, "");
 }
 
+export function isValidImageSrc(value: unknown) {
+  const src = String(value ?? "").trim();
+  return src.startsWith("/") || src.startsWith("http://") || src.startsWith("https://") || src.startsWith("data:image/");
+}
+
 export function productToApi(row: ProductRow) {
   const specs = (row.specifications ?? {}) as JsonObject;
   const title = row.name;
-  const image = row.image_url ?? "";
+  const image = isValidImageSrc(row.image_url) ? row.image_url ?? "" : "";
 
   return {
     ...specs,
@@ -185,14 +191,15 @@ export function productBodyToUpdate(body: JsonObject) {
 }
 
 export function certificationToApi(row: CertificationRow) {
+  const logo = isValidImageSrc(row.logo_url) ? row.logo_url ?? "" : "";
   return {
     _id: row.id,
     id: row.id,
     name: row.name,
-    logo: row.logo_url ?? "",
-    logo_url: row.logo_url ?? "",
+    logo,
+    logo_url: logo,
     description: row.description ?? "",
-    issuer: "",
+    issuer: row.issuer ?? "",
     active: row.is_active,
     is_active: row.is_active,
     order: row.sort_order,
@@ -205,6 +212,7 @@ export function certificationToApi(row: CertificationRow) {
 export function certificationBodyToRow(body: JsonObject) {
   return {
     name: String(body.name ?? "").trim(),
+    issuer: String(body.issuer ?? ""),
     logo_url: String(body.logo_url ?? body.logo ?? ""),
     description: String(body.description ?? ""),
     is_active: body.is_active ?? body.active ?? true,
@@ -215,6 +223,7 @@ export function certificationBodyToRow(body: JsonObject) {
 export function certificationBodyToUpdate(body: JsonObject) {
   const update: JsonObject = {};
   if ("name" in body) update.name = String(body.name ?? "").trim();
+  if ("issuer" in body) update.issuer = String(body.issuer ?? "");
   if ("logo_url" in body || "logo" in body) update.logo_url = String(body.logo_url ?? body.logo ?? "");
   if ("description" in body) update.description = String(body.description ?? "");
   if ("active" in body || "is_active" in body) update.is_active = body.is_active ?? body.active;

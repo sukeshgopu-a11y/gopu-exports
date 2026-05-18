@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Plus, Pencil, Trash2, X, Check, Search, Upload } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Check, Search, Upload, Download, FileUp, Save } from "lucide-react";
 
 type Spec = { label: string; value: string };
 
@@ -93,6 +93,32 @@ const EMPTY: Omit<Product, "_id"> = {
   metaDescription: "",
 };
 
+const CSV_FIELDS = [
+  "title",
+  "slug",
+  "category",
+  "image",
+  "description",
+  "shortDescription",
+  "origin",
+  "moq",
+  "packaging",
+  "lead",
+  "hs",
+  "shelfLife",
+  "containerCapacity",
+  "exportCountries",
+  "exportPorts",
+  "certifications",
+  "applications",
+  "benefits",
+  "keywords",
+  "featured",
+  "active",
+  "metaTitle",
+  "metaDescription",
+];
+
 function toLines(arr: string[]): string {
   return arr.join("\n");
 }
@@ -134,6 +160,74 @@ function SectionTitle({ title }: { title: string }) {
   );
 }
 
+function isValidImageSrc(value: string) {
+  const src = value.trim();
+  return src === "" || src.startsWith("/") || src.startsWith("http://") || src.startsWith("https://") || src.startsWith("data:image/");
+}
+
+function csvEscape(value: unknown) {
+  return `"${String(value ?? "").replaceAll('"', '""')}"`;
+}
+
+function parseCsv(text: string) {
+  const rows: string[][] = [];
+  let cell = "";
+  let row: string[] = [];
+  let quoted = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const next = text[i + 1];
+    if (char === '"' && quoted && next === '"') {
+      cell += '"';
+      i++;
+    } else if (char === '"') {
+      quoted = !quoted;
+    } else if (char === "," && !quoted) {
+      row.push(cell);
+      cell = "";
+    } else if ((char === "\n" || char === "\r") && !quoted) {
+      if (char === "\r" && next === "\n") i++;
+      row.push(cell);
+      if (row.some((value) => value.trim())) rows.push(row);
+      row = [];
+      cell = "";
+    } else {
+      cell += char;
+    }
+  }
+  row.push(cell);
+  if (row.some((value) => value.trim())) rows.push(row);
+  if (rows.length < 2) return [];
+  const headers = rows[0].map((header) => header.trim());
+  return rows.slice(1).map((values) =>
+    Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ""]))
+  );
+}
+
+function normalizeBulkProduct(raw: Partial<Product> & Record<string, unknown>): Omit<Product, "_id"> {
+  const title = String(raw.title ?? raw.name ?? "").trim();
+  const image = String(raw.image ?? raw.image_url ?? "").trim();
+  return {
+    ...EMPTY,
+    ...raw,
+    title,
+    slug: String(raw.slug ?? "").trim() || title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+    category: String(raw.category ?? EMPTY.category).trim() || EMPTY.category,
+    image: isValidImageSrc(image) ? image : "",
+    exportCountries: Array.isArray(raw.exportCountries) ? raw.exportCountries.join("\n") : String(raw.exportCountries ?? ""),
+    exportPorts: Array.isArray(raw.exportPorts) ? raw.exportPorts.join("\n") : String(raw.exportPorts ?? ""),
+    certifications: Array.isArray(raw.certifications) ? raw.certifications.join("\n") : String(raw.certifications ?? ""),
+    applications: Array.isArray(raw.applications) ? raw.applications.join("\n") : String(raw.applications ?? ""),
+    benefits: Array.isArray(raw.benefits) ? raw.benefits.join("\n") : String(raw.benefits ?? ""),
+    related: Array.isArray(raw.related) ? raw.related.join("\n") : String(raw.related ?? ""),
+    keywords: Array.isArray(raw.keywords) ? raw.keywords.join(", ") : String(raw.keywords ?? ""),
+    specs: Array.isArray(raw.specs) ? raw.specs : [],
+    featured: String(raw.featured ?? raw.is_featured ?? "false").toLowerCase() === "true",
+    active: String(raw.active ?? raw.is_active ?? "true").toLowerCase() !== "false",
+  };
+}
+
 export default function ProductsPage() {
   const [products, setProducts] = useState<ProductDB[]>([]);
   const [loading, setLoading] = useState(true);
@@ -144,6 +238,11 @@ export default function ProductsPage() {
   const [search, setSearch] = useState("");
   const [seeding, setSeeding] = useState(false);
   const [seedMsg, setSeedMsg] = useState<string | null>(null);
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const [bulkMode, setBulkMode] = useState<"upload" | "edit">("upload");
+  const [bulkText, setBulkText] = useState("");
+  const [bulkSaving, setBulkSaving] = useState(false);
+  const [bulkError, setBulkError] = useState("");
 
   const load = async () => {
     setLoading(true);
@@ -304,6 +403,108 @@ export default function ProductsPage() {
     }
   };
 
+  const productToBulkRow = (p: ProductDB) => ({
+    title: p.title,
+    slug: p.slug,
+    category: p.category,
+    image: p.image,
+    description: p.description,
+    shortDescription: p.shortDescription,
+    origin: p.origin,
+    moq: p.moq,
+    packaging: p.packaging,
+    lead: p.lead,
+    hs: p.hs,
+    shelfLife: p.shelfLife,
+    containerCapacity: p.containerCapacity,
+    exportCountries: toLines(p.exportCountries || []),
+    exportPorts: toLines(p.exportPorts || []),
+    certifications: toLines(p.certifications || []),
+    applications: toLines(p.applications || []),
+    benefits: toLines(p.benefits || []),
+    keywords: (p.keywords || []).join(", "),
+    featured: p.featured,
+    active: p.active,
+    metaTitle: p.metaTitle,
+    metaDescription: p.metaDescription,
+  });
+
+  const exportProducts = () => {
+    const csv = [
+      CSV_FIELDS.map(csvEscape).join(","),
+      ...products.map((p) => {
+        const row = productToBulkRow(p) as Record<string, unknown>;
+        return CSV_FIELDS.map((field) => csvEscape(row[field])).join(",");
+      }),
+    ].join("\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "products.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const openBulkUpload = () => {
+    setBulkMode("upload");
+    setBulkError("");
+    setBulkText(`${CSV_FIELDS.join(",")}\nExample Product,example-product,Spices,/products/example.jpg,Full description,Short description,India,1 MT,25 kg bags,10 days,0904,12 months,18 MT,USA; UAE,Nhava Sheva,APEDA; FSSAI,Culinary use,Quality product,example export,false,true,Example Product,Example meta description`);
+    setBulkOpen(true);
+  };
+
+  const openBulkEdit = () => {
+    setBulkMode("edit");
+    setBulkError("");
+    setBulkText(JSON.stringify(products.map(productToBulkRow), null, 2));
+    setBulkOpen(true);
+  };
+
+  const saveBulk = async () => {
+    setBulkSaving(true);
+    setBulkError("");
+    try {
+      const rows = bulkText.trim().startsWith("[")
+        ? JSON.parse(bulkText)
+        : parseCsv(bulkText);
+      if (!Array.isArray(rows) || rows.length === 0) throw new Error("Add at least one product row.");
+
+      let created = 0;
+      let updated = 0;
+      for (const raw of rows) {
+        const item = normalizeBulkProduct(raw);
+        if (!item.title) continue;
+        const payload = {
+          ...item,
+          exportCountries: fromLines(item.exportCountries.replaceAll(";", "\n")),
+          exportPorts: fromLines(item.exportPorts.replaceAll(";", "\n")),
+          certifications: fromLines(item.certifications.replaceAll(";", "\n")),
+          applications: fromLines(item.applications.replaceAll(";", "\n")),
+          benefits: fromLines(item.benefits.replaceAll(";", "\n")),
+          related: fromLines(item.related.replaceAll(";", "\n")),
+          keywords: item.keywords.split(",").map((k) => k.trim()).filter(Boolean),
+          metaTitle: item.metaTitle || item.title,
+        };
+        const existing = products.find((product) => product.slug === item.slug);
+        const res = await fetch(existing ? `/api/products/${existing._id}` : "/api/products", {
+          method: existing ? "PATCH" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error ?? `Failed to save ${item.title}`);
+        if (existing) updated++;
+        else created++;
+      }
+      setBulkOpen(false);
+      setSeedMsg(`Bulk save complete: ${created} created, ${updated} updated.`);
+      await load();
+    } catch (error) {
+      setBulkError(error instanceof Error ? error.message : "Bulk save failed.");
+    } finally {
+      setBulkSaving(false);
+    }
+  };
+
   const filtered = products.filter(
     (p) =>
       p.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -320,6 +521,27 @@ export default function ProductsPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <button
+            onClick={exportProducts}
+            className="flex items-center gap-2 border border-gray-200 text-gray-600 hover:bg-gray-50 transition px-4 py-3 rounded-xl font-medium text-sm"
+          >
+            <Download size={16} />
+            Export
+          </button>
+          <button
+            onClick={openBulkEdit}
+            className="flex items-center gap-2 border border-gray-200 text-gray-600 hover:bg-gray-50 transition px-4 py-3 rounded-xl font-medium text-sm"
+          >
+            <Save size={16} />
+            Bulk Edit
+          </button>
+          <button
+            onClick={openBulkUpload}
+            className="flex items-center gap-2 border border-[#0E7490] text-[#0E7490] hover:bg-[#0E7490]/5 transition px-4 py-3 rounded-xl font-medium text-sm"
+          >
+            <FileUp size={16} />
+            Bulk Upload
+          </button>
           <button
             onClick={seed}
             disabled={seeding}
@@ -402,7 +624,7 @@ export default function ProductsPage() {
                   <tr key={p._id} className="border-b border-gray-100 hover:bg-gray-50 transition">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        {p.image && (
+                        {isValidImageSrc(p.image) && (
                           <Image
                             src={p.image}
                             alt={p.title}
@@ -765,6 +987,54 @@ export default function ProductsPage() {
                 className="px-5 py-2.5 rounded-xl bg-[#0E7490] hover:bg-[#0A5A70] disabled:opacity-60 text-white text-sm font-semibold transition"
               >
                 {saving ? "Saving…" : editing ? "Update Product" : "Add Product"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {bulkOpen && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-5xl my-8">
+            <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100">
+              <div>
+                <h2 className="text-xl font-bold text-[#0F172A]">
+                  {bulkMode === "edit" ? "Bulk Edit Products" : "Bulk Upload Products"}
+                </h2>
+                <p className="mt-1 text-xs text-gray-500">
+                  Use CSV with headers or a JSON array. Existing products are updated by matching slug.
+                </p>
+              </div>
+              <button onClick={() => setBulkOpen(false)} className="text-gray-400 hover:text-gray-600">
+                <X size={22} />
+              </button>
+            </div>
+            <div className="px-8 py-6">
+              <Textarea
+                rows={18}
+                value={bulkText}
+                onChange={(e) => setBulkText(e.target.value)}
+                className="font-mono text-xs"
+              />
+              {bulkError && (
+                <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  {bulkError}
+                </div>
+              )}
+            </div>
+            <div className="px-8 py-5 border-t border-gray-100 flex justify-end gap-3">
+              <button
+                onClick={() => setBulkOpen(false)}
+                className="px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveBulk}
+                disabled={bulkSaving}
+                className="px-5 py-2.5 rounded-xl bg-[#0E7490] hover:bg-[#0A5A70] disabled:opacity-60 text-white text-sm font-semibold transition"
+              >
+                {bulkSaving ? "Saving..." : "Save Products"}
               </button>
             </div>
           </div>

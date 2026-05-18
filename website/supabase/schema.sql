@@ -60,6 +60,7 @@ create table if not exists public.quotes (
 create table if not exists public.certifications (
   id uuid primary key default gen_random_uuid(),
   name text not null,
+  issuer text,
   logo_url text,
   description text,
   is_active boolean not null default true,
@@ -67,6 +68,8 @@ create table if not exists public.certifications (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.certifications add column if not exists issuer text;
 
 -- Public gallery images shown on the gallery page and managed in the dashboard.
 create table if not exists public.gallery_images (

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Download, RefreshCw, Search, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { Download, Eye, RefreshCw, Search, Trash2 } from "lucide-react";
 
 type Quote = {
   _id: string;
@@ -161,9 +162,18 @@ export default function QuotesPage() {
                     </td>
                     <td className="px-6 py-4 text-gray-400 text-xs">{new Date(item.createdAt).toLocaleDateString()}</td>
                     <td className="px-6 py-4">
-                      <button onClick={() => deleteQuote(item._id)} className="text-red-400 hover:text-red-600 transition">
-                        <Trash2 size={16} />
-                      </button>
+                      <div className="flex items-center gap-3">
+                        <Link
+                          href={`/dashboard/quotes/${item._id}`}
+                          className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#0E7490] hover:bg-[#E6F4F7] transition"
+                        >
+                          <Eye size={15} />
+                          View
+                        </Link>
+                        <button onClick={() => deleteQuote(item._id)} className="text-red-400 hover:text-red-600 transition">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
