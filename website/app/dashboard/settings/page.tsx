@@ -1,7 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Save, Check } from "lucide-react";
+
+type ContactSettings = {
+  companyName: string;
+  email: string;
+  phone: string;
+  whatsapp: string;
+  website: string;
+  iec: string;
+  address: string;
+  linkedin: string;
+  instagram: string;
+  facebook: string;
+};
+
+const DEFAULTS: ContactSettings = {
+  companyName: "GOPU Exports",
+  email: "admin@gopuexports.com",
+  phone: "+91 87128 16876",
+  whatsapp: "918712816876",
+  website: "https://gopuexports.com",
+  iec: "",
+  address: "Hasanparthy, Warangal, Telangana, 506244, India",
+  linkedin: "https://linkedin.com/company/gopuexports",
+  instagram: "https://instagram.com/gopuexports",
+  facebook: "https://facebook.com/gopuexports",
+};
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -11,7 +37,6 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     </div>
   );
 }
-
 function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
@@ -22,55 +47,85 @@ function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
 }
 
 export default function SettingsPage() {
-  const [saved, setSaved] = useState(false);
+  const [contact, setContact] = useState<ContactSettings>(DEFAULTS);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/site-settings?key=contact")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.value) setContact({ ...DEFAULTS, ...data.value });
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const set = (key: keyof ContactSettings) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setContact((c) => ({ ...c, [key]: e.target.value }));
 
   const handleSave = async (e: { preventDefault(): void }) => {
     e.preventDefault();
     setSaving(true);
-    await new Promise((r) => setTimeout(r, 700));
-    setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    try {
+      await fetch("/api/site-settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "contact", value: contact }),
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64 text-gray-400 text-sm">
+        Loading settings…
+      </div>
+    );
+  }
 
   return (
     <div>
       <div className="mb-8">
         <h1 className="text-4xl font-extrabold text-[#0F172A]">Settings</h1>
-        <p className="text-gray-500 mt-1 text-sm">Manage company info and admin preferences</p>
+        <p className="text-gray-500 mt-1 text-sm">Company info and contact details shown on the website</p>
       </div>
 
       <form onSubmit={handleSave} className="space-y-6 max-w-3xl">
-
         {/* Company Info */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-7">
           <h2 className="text-base font-bold text-[#0F172A] mb-5">Company Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Field label="Company Name">
-              <Input defaultValue="GOPU Exports" />
+              <Input value={contact.companyName} onChange={set("companyName")} />
             </Field>
             <Field label="Business Email">
-              <Input type="email" defaultValue="admin@gopuexports.com" />
+              <Input type="email" value={contact.email} onChange={set("email")} />
             </Field>
             <Field label="Phone Number">
-              <Input defaultValue="+91 87128 16876" />
+              <Input value={contact.phone} onChange={set("phone")} />
             </Field>
-            <Field label="WhatsApp Number">
-              <Input defaultValue="+91 87128 16876" />
+            <Field label="WhatsApp Number (digits only)">
+              <Input value={contact.whatsapp} onChange={set("whatsapp")} placeholder="918712816876" />
             </Field>
             <Field label="Website URL">
-              <Input defaultValue="https://gopuexports.com" />
+              <Input value={contact.website} onChange={set("website")} />
             </Field>
             <Field label="IEC / Registration Number">
-              <Input defaultValue="" placeholder="IEC Number" />
+              <Input value={contact.iec} onChange={set("iec")} placeholder="IEC Number" />
             </Field>
           </div>
           <div className="mt-5">
             <Field label="Company Address">
               <textarea
                 rows={3}
-                defaultValue="Hasanparthy, Warangal, Telangana, 506244, India"
+                value={contact.address}
+                onChange={set("address")}
                 className="w-full border border-[#D9E2EC] rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#0E7490]/30 focus:border-[#0E7490] transition resize-none"
               />
             </Field>
@@ -82,27 +137,23 @@ export default function SettingsPage() {
           <h2 className="text-base font-bold text-[#0F172A] mb-5">Social & Contact Links</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Field label="LinkedIn">
-              <Input placeholder="https://linkedin.com/company/gopuexports" />
+              <Input value={contact.linkedin} onChange={set("linkedin")} />
             </Field>
             <Field label="Instagram">
-              <Input placeholder="https://instagram.com/gopuexports" />
+              <Input value={contact.instagram} onChange={set("instagram")} />
             </Field>
             <Field label="Facebook">
-              <Input placeholder="https://facebook.com/gopuexports" />
-            </Field>
-            <Field label="WhatsApp Link">
-              <Input defaultValue="https://wa.me/918712816876" />
+              <Input value={contact.facebook} onChange={set("facebook")} />
             </Field>
           </div>
         </div>
 
         {/* Security Note */}
         <div className="bg-amber-50 border border-amber-200 rounded-xl px-5 py-4 text-sm text-amber-800">
-          <strong>Admin credentials</strong> are configured via environment variables
-          (<code className="bg-amber-100 px-1 rounded">ADMIN_EMAIL</code> /{" "}
-          <code className="bg-amber-100 px-1 rounded">ADMIN_PASSWORD</code>) in{" "}
-          <code className="bg-amber-100 px-1 rounded">.env.local</code>. Update them there and
-          restart the server to change login credentials.
+          <strong>Admin access</strong> is managed through Supabase Auth and the{" "}
+          <code className="bg-amber-100 px-1 rounded">admin_users</code> table. Create or update
+          dashboard users in Supabase, then add their Auth UUID to{" "}
+          <code className="bg-amber-100 px-1 rounded">admin_users</code>.
         </div>
 
         <button
@@ -111,7 +162,7 @@ export default function SettingsPage() {
           className="flex items-center gap-3 bg-[#0E7490] hover:bg-[#0A5A70] disabled:opacity-60 transition text-white px-7 py-3 rounded-xl font-semibold text-sm"
         >
           {saved ? <Check size={18} /> : <Save size={18} />}
-          {saving ? "Saving…" : saved ? "Saved!" : "Save Settings"}
+          {saving ? "Saving..." : saved ? "Saved!" : "Save Settings"}
         </button>
       </form>
     </div>

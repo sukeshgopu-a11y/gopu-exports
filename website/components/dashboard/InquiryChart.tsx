@@ -1,27 +1,27 @@
 type DataPoint = { month: string; inquiries: number };
 
-const DATA: DataPoint[] = [
-  { month: "Jan", inquiries: 18 },
-  { month: "Feb", inquiries: 24 },
-  { month: "Mar", inquiries: 32 },
-  { month: "Apr", inquiries: 27 },
-  { month: "May", inquiries: 41 },
-  { month: "Jun", inquiries: 38 },
-  { month: "Jul", inquiries: 52 },
-  { month: "Aug", inquiries: 46 },
-  { month: "Sep", inquiries: 60 },
-  { month: "Oct", inquiries: 55 },
-  { month: "Nov", inquiries: 70 },
-  { month: "Dec", inquiries: 64 },
-];
+const EMPTY_YEAR: DataPoint[] = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+].map((month) => ({ month, inquiries: 0 }));
 
-export default function InquiryChart() {
-  const max = Math.max(...DATA.map((d) => d.inquiries));
+export default function InquiryChart({ data = EMPTY_YEAR }: { data?: DataPoint[] }) {
+  const max = Math.max(1, ...data.map((d) => d.inquiries));
 
   return (
     <div className="w-full">
       <div className="flex items-end gap-1.5 h-48">
-        {DATA.map(({ month, inquiries }) => {
+        {data.map(({ month, inquiries }) => {
           const pct = (inquiries / max) * 100;
           return (
             <div
@@ -41,7 +41,7 @@ export default function InquiryChart() {
         })}
       </div>
       <div className="flex gap-1.5 mt-2">
-        {DATA.map(({ month }) => (
+        {data.map(({ month }) => (
           <div key={month} className="flex-1 text-center text-[10px] text-gray-400">
             {month}
           </div>

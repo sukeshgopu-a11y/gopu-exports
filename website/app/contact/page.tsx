@@ -125,10 +125,16 @@ export default function ContactPage() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("/api/inquiries", {
+      const res = await fetch("/api/quotes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, incoterm: selectedInco }),
+        body: JSON.stringify({
+          ...form,
+          product_name: form.product,
+          message: [form.notes, selectedInco ? `Incoterm: ${selectedInco}` : ""]
+            .filter(Boolean)
+            .join("\n\n"),
+        }),
       });
       if (res.ok) {
         setSubmitted(true);
@@ -179,9 +185,9 @@ export default function ContactPage() {
               </p>
               <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <StatCard number="25+" label="Export Products" />
-                <StatCard number="18+" label="Markets" />
-                <StatCard number="24/7" label="Support" />
-                <StatCard number="12h" label="Response" />
+                <StatCard number="B2B" label="Export Trade" />
+                <StatCard number="Docs" label="Compliance Support" />
+                <StatCard number="Quote" label="Prompt Response" />
               </div>
             </div>
 

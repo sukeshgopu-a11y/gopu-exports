@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Export Markets",
   description:
-    "GOPU Exports supplies premium Indian agricultural commodities to importers across 18+ global markets including USA, UK, Australia, UAE, and Europe.",
+    "GOPU Exports supplies premium Indian agricultural commodities to importers in global markets including USA, UK, Australia, UAE, and Europe.",
 };
 
 const markets = [

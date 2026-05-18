@@ -1,26 +1,37 @@
-import { connectDB } from "@/lib/mongodb";
-import Inquiry from "@/models/Inquiry";
-import { NextResponse } from "next/server";
+import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
+import { inquiryToApi, toDbStatus, type InquiryRow } from "@/src/lib/supabase/data";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
-  req: Request,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  await connectDB();
+  const supabase = await requireAdminClient();
+  if (!supabase) return unauthorized();
   const { id } = await params;
   const body = await req.json();
-  const inquiry = await Inquiry.findByIdAndUpdate(id, body, { new: true });
-  if (!inquiry)
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
-  return NextResponse.json(inquiry);
+  const update = {
+    ...("status" in body ? { status: toDbStatus(body.status) } : {}),
+    ...("message" in body || "notes" in body ? { message: body.message ?? body.notes } : {}),
+  };
+  const { data, error } = await supabase
+    .from("inquiries")
+    .update(update)
+    .eq("id", id)
+    .select("*")
+    .single<InquiryRow>();
+  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  return NextResponse.json(inquiryToApi(data));
 }
 
 export async function DELETE(
-  _req: Request,
+  _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  await connectDB();
+  const supabase = await requireAdminClient();
+  if (!supabase) return unauthorized();
   const { id } = await params;
-  await Inquiry.findByIdAndDelete(id);
+  const { error } = await supabase.from("inquiries").delete().eq("id", id);
+  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   return NextResponse.json({ success: true });
 }

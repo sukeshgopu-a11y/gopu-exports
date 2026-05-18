@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
-import { getSupabaseAdmin } from "@/lib/Supabase";
+import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 
 export async function POST(req: Request) {
+  const supabase = await requireAdminClient();
+  if (!supabase) return unauthorized();
+
   try {
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
@@ -14,7 +17,6 @@ export async function POST(req: Request) {
     const ext = file.name.split(".").pop();
     const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
-    const supabase = getSupabaseAdmin();
     const { error } = await supabase.storage
       .from(bucket)
       .upload(filename, file, { contentType: file.type, upsert: false });
@@ -24,6 +26,16 @@ export async function POST(req: Request) {
     }
 
     const { data } = supabase.storage.from(bucket).getPublicUrl(filename);
+    if (bucket === "gallery") {
+      await supabase.from("gallery_images").insert({
+        title: file.name.replace(/\.[^.]+$/, ""),
+        alt_text: file.name.replace(/\.[^.]+$/, ""),
+        image_url: data.publicUrl,
+        storage_path: filename,
+        bucket,
+        is_active: true,
+      });
+    }
     return NextResponse.json({ url: data.publicUrl });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Upload failed";

@@ -1,6 +1,36 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getFeaturedProducts } from "@/lib/products";
+import { createPublicClient } from "@/src/lib/supabase/public";
+import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
+
+export const revalidate = 60;
+
+type FeaturedProduct = {
+  slug: string;
+  title: string;
+  tagline?: string;
+  category: string;
+  image?: string;
+  moq?: string;
+};
+
+async function getFeatured(): Promise<FeaturedProduct[]> {
+  try {
+    const supabase = createPublicClient();
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("is_featured", true)
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .limit(8)
+      .returns<ProductRow[]>();
+    if (error) return [];
+    return (data ?? []).map(productToApi) as FeaturedProduct[];
+  } catch {
+    return [];
+  }
+}
 
 const WHY_FEATURES = [
   {
@@ -80,8 +110,8 @@ const MARKETS = [
   { name: "New Zealand", flag: "🇳🇿" },
 ];
 
-export default function HomePage() {
-  const featured = getFeaturedProducts();
+export default async function HomePage() {
+  const featured = await getFeatured();
 
   return (
     <main className="bg-[#F5F7FA] text-[#0F172A]">
@@ -171,21 +201,31 @@ export default function HomePage() {
             </Link>
           </div>
 
+          {featured.length === 0 && (
+            <div className="col-span-4 rounded-2xl border border-dashed border-[#D9E2EC] bg-white py-16 text-center text-[#94A3B8]">
+              <p className="text-[15px]">No featured products yet.</p>
+              <p className="mt-1 text-[13px]">Add products and mark them as featured in the admin panel.</p>
+            </div>
+          )}
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-            {featured.map((product) => (
+            {featured.map((product: FeaturedProduct) => (
               <Link
                 key={product.slug}
                 href={`/products/${product.slug}`}
                 className="group overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative h-52 overflow-hidden">
-                  <Image
-                    src={product.image}
-                    alt={product.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
-                    className="object-cover transition duration-500 group-hover:scale-105"
-                  />
+                  {product.image ? (
+                    <Image
+                      src={product.image}
+                      alt={product.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                      className="object-cover transition duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center bg-[#F0F9FA] text-4xl">📦</div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/40 to-transparent" />
                   <span className="absolute left-3 top-3 rounded-md bg-white/90 px-2.5 py-1 text-[10px] font-bold tracking-wide text-[#0E7490] backdrop-blur-sm">
                     {product.category.toUpperCase()}

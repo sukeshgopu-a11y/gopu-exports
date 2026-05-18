@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { label: "Products", href: "/products" },
   { label: "Export Markets", href: "/markets" },
   { label: "Certifications", href: "/certifications" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -98,11 +99,6 @@ export default function Navbar() {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
-
-  /* Close mobile menu on route change */
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
 
   function isActive(href: string) {
     if (href === "/") return pathname === "/";
@@ -238,7 +234,7 @@ export default function Navbar() {
 
         {/* MOBILE MENU */}
         <div
-          className={`fixed inset-0 top-[88px] z-40 bg-white/98 backdrop-blur-sm transition-all duration-250 lg:hidden ${
+            className={`fixed inset-0 top-[88px] z-40 bg-white/98 backdrop-blur-sm transition-all duration-250 lg:hidden ${
             menuOpen ? "pointer-events-auto opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-2"
           }`}
         >

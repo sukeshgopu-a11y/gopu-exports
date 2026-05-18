@@ -7,11 +7,27 @@ type Stats = {
   total: number;
   newCount: number;
   products: number;
+  markets: number;
+  responseRate: number;
+};
+
+type InquirySummary = {
+  name: string;
+  product?: string;
+  country?: string;
+  status?: string;
+  createdAt: string;
 };
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState<Stats>({ total: 0, newCount: 0, products: 0 });
-  const [recent, setRecent] = useState<{ name: string; product?: string; country?: string; createdAt: string }[]>([]);
+  const [stats, setStats] = useState<Stats>({
+    total: 0,
+    newCount: 0,
+    products: 0,
+    markets: 0,
+    responseRate: 0,
+  });
+  const [recent, setRecent] = useState<InquirySummary[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,12 +35,20 @@ export default function DashboardPage() {
       fetch("/api/inquiries").then((r) => r.json()),
       fetch("/api/products").then((r) => r.json()),
     ]).then(([inquiries, products]) => {
-      const inqs = Array.isArray(inquiries) ? inquiries : [];
+      const inqs = Array.isArray(inquiries) ? inquiries as InquirySummary[] : [];
       const prods = Array.isArray(products) ? products : [];
+      const markets = new Set(
+        inqs
+          .map((i) => i.country?.trim())
+          .filter((country): country is string => Boolean(country))
+      );
+      const responded = inqs.filter((i) => ["Replied", "Closed"].includes(i.status ?? "")).length;
       setStats({
         total: inqs.length,
-        newCount: inqs.filter((i: { status: string }) => i.status === "New").length,
+        newCount: inqs.filter((i) => i.status === "New").length,
         products: prods.length,
+        markets: markets.size,
+        responseRate: inqs.length > 0 ? Math.round((responded / inqs.length) * 100) : 0,
       });
       setRecent(inqs.slice(0, 5));
     }).finally(() => setLoading(false));
@@ -33,8 +57,8 @@ export default function DashboardPage() {
   const statCards = [
     { label: "Total Inquiries", value: stats.total, sub: `${stats.newCount} new`, icon: MessageSquare, color: "bg-blue-100 text-blue-600" },
     { label: "Products", value: stats.products, sub: "In catalogue", icon: Package, color: "bg-orange-100 text-orange-600" },
-    { label: "Export Markets", value: "18+", sub: "Global presence", icon: Globe, color: "bg-green-100 text-green-600" },
-    { label: "Response Rate", value: "24h", sub: "Avg. reply time", icon: TrendingUp, color: "bg-purple-100 text-purple-600" },
+    { label: "Export Markets", value: stats.markets, sub: "From inquiries", icon: Globe, color: "bg-green-100 text-green-600" },
+    { label: "Response Rate", value: `${stats.responseRate}%`, sub: "Replied or closed", icon: TrendingUp, color: "bg-purple-100 text-purple-600" },
   ];
 
   return (
@@ -75,7 +99,7 @@ export default function DashboardPage() {
         ) : recent.length === 0 ? (
           <div className="text-center py-8 text-gray-400 text-sm">
             <p className="text-2xl mb-2">📭</p>
-            No inquiries yet. They'll appear here once buyers contact you.
+            No inquiries yet. They&apos;ll appear here once buyers contact you.
           </div>
         ) : (
           <div className="space-y-3">

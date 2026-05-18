@@ -62,6 +62,7 @@ const NAV_LINKS = [
   { href: "/products", label: "Products" },
   { href: "/markets", label: "Export Markets" },
   { href: "/certifications", label: "Quality & Certifications" },
+  { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];
 const PRODUCT_LINKS = [
@@ -125,6 +126,8 @@ function EnquiryForm() {
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [focused, setFocused] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   if (submitted) {
     return (
@@ -134,14 +137,44 @@ function EnquiryForm() {
           <Send className="h-5 w-5 text-amber-300" />
         </div>
         <p className="font-semibold text-amber-300">Message sent!</p>
-        <p className="mt-1 text-xs text-slate-400">We'll respond within 24 hours.</p>
+        <p className="mt-1 text-xs text-slate-400">We&apos;ll respond within 24 hours.</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
-      className="space-y-3" aria-label="Enquiry form">
+    <form
+      onSubmit={async (e) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
+        try {
+          const res = await fetch("/api/inquiries", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: form.name,
+              email: form.email,
+              product: "Footer quick enquiry",
+              notes: form.message,
+            }),
+          });
+
+          if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error ?? "Could not send enquiry.");
+          }
+
+          setSubmitted(true);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Could not send enquiry.");
+        } finally {
+          setLoading(false);
+        }
+      }}
+      className="space-y-3"
+      aria-label="Enquiry form"
+    >
       {[
         { id: "enq-name", type: "text", placeholder: "Your name", key: "name" },
         { id: "enq-email", type: "email", placeholder: "your@company.com", key: "email" },
@@ -174,12 +207,18 @@ function EnquiryForm() {
           }}
         />
       </div>
+      {error && (
+        <p className="rounded-lg border border-red-400/30 bg-red-400/10 px-3 py-2 text-xs text-red-200">
+          {error}
+        </p>
+      )}
       <button type="submit"
+        disabled={loading}
         className="group relative w-full overflow-hidden rounded-lg bg-gradient-to-r from-amber-400 to-amber-500
           px-5 py-2.5 text-sm font-semibold text-slate-900 transition-all duration-300
-          hover:from-amber-300 hover:to-amber-400 hover:shadow-lg hover:shadow-amber-400/25">
+          hover:from-amber-300 hover:to-amber-400 hover:shadow-lg hover:shadow-amber-400/25 disabled:cursor-not-allowed disabled:opacity-70">
         <span className="relative z-10 flex items-center justify-center gap-2">
-          Send Enquiry
+          {loading ? "Sending..." : "Send Enquiry"}
           <Send className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
         </span>
         <span className="absolute inset-0 -translate-x-full bg-white/10 transition-transform duration-500 group-hover:translate-x-0 skew-x-12" />

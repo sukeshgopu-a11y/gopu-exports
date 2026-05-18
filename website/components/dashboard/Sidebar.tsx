@@ -9,12 +9,20 @@ import {
   Settings,
   Image as ImageIcon,
   LogOut,
+  Tag,
+  Award,
+  BookOpen,
+  FileText,
 } from "lucide-react";
 
 const NAV = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Inquiries", href: "/dashboard/inquiries", icon: MessageSquare },
+  { name: "Quotes", href: "/dashboard/quotes", icon: FileText },
   { name: "Products", href: "/dashboard/products", icon: Package },
+  { name: "Categories", href: "/dashboard/categories", icon: Tag },
+  { name: "Certifications", href: "/dashboard/certifications", icon: Award },
+  { name: "Blogs", href: "/dashboard/blogs", icon: BookOpen },
   { name: "Gallery", href: "/dashboard/gallery", icon: ImageIcon },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
@@ -43,7 +51,9 @@ export default function Sidebar() {
       {/* Nav */}
       <nav className="flex flex-col gap-1 flex-1">
         {NAV.map(({ name, href, icon: Icon }) => {
-          const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+          const active =
+            pathname === href ||
+            (href !== "/dashboard" && pathname.startsWith(href));
           return (
             <Link
               key={name}
@@ -51,7 +61,7 @@ export default function Sidebar() {
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm font-medium ${
                 active
                   ? "bg-[#0E7490] text-white shadow"
-                  : "text-slate-400 hover:text-white hover:bg-white/8"
+                  : "text-slate-400 hover:text-white hover:bg-white/[0.08]"
               }`}
             >
               <Icon size={18} />

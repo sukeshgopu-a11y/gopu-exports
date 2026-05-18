@@ -2,35 +2,95 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getProductBySlug, getRelatedProducts, PRODUCTS } from "@/lib/products";
+import { createPublicClient } from "@/src/lib/supabase/public";
+import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
+
+export const revalidate = 60;
+
+type Spec = { label: string; value: string };
+type Product = {
+  _id: string;
+  slug: string;
+  title: string;
+  tagline?: string;
+  category: string;
+  image?: string;
+  description?: string;
+  origin?: string;
+  moq?: string;
+  packaging?: string;
+  lead?: string;
+  hs?: string;
+  shelfLife?: string;
+  applications?: string[];
+  specs?: Spec[];
+  benefits?: string[];
+  related?: string[];
+  exportCountries?: string[];
+  exportPorts?: string[];
+  containerCapacity?: string;
+  certifications?: string[];
+  featured?: boolean;
+  metaTitle?: string;
+  metaDescription?: string;
+};
 
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ slug: p.slug }));
+async function getProduct(slug: string): Promise<Product | null> {
+  const supabase = createPublicClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .maybeSingle<ProductRow>();
+  if (error || !data) return null;
+  return productToApi(data) as Product;
+}
+
+async function getRelated(slugs: string[]): Promise<Product[]> {
+  if (!slugs.length) return [];
+  const supabase = createPublicClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .in("slug", slugs)
+    .eq("is_active", true)
+    .returns<ProductRow[]>();
+  if (error) return [];
+  return (data ?? []).map(productToApi) as Product[];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProduct(slug);
   if (!product) return { title: "Product Not Found" };
   return {
-    title: product.title,
-    description: `${product.title} — ${product.tagline}. Export quality from ${product.origin}. MOQ: ${product.moq}. HS Code: ${product.hs}.`,
+    title: product.metaTitle || product.title,
+    description:
+      product.metaDescription ||
+      `${product.title}${product.tagline ? ` — ${product.tagline}` : ""}. Export quality${product.origin ? ` from ${product.origin}` : ""}${product.moq ? `. MOQ: ${product.moq}` : ""}${product.hs ? `. HS Code: ${product.hs}` : ""}.`,
   };
 }
 
 export default async function ProductDetailsPage({ params }: Props) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProduct(slug);
   if (!product) notFound();
 
-  const related = getRelatedProducts(product.related);
+  const related = await getRelated(product.related ?? []);
+
+  const specs = product.specs ?? [];
+  const benefits = product.benefits ?? [];
+  const applications = product.applications ?? [];
+  const exportCountries = product.exportCountries ?? [];
+  const exportPorts = product.exportPorts ?? [];
 
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
 
-      {/* ── BREADCRUMB ───────────────────────────────────────── */}
+      {/* ── BREADCRUMB ── */}
       <div className="border-b border-[#E2E8F0] bg-white">
         <div className="mx-auto max-w-[1450px] px-6 py-3 sm:px-8">
           <nav className="flex items-center gap-2 text-[13px] text-[#94A3B8]">
@@ -43,34 +103,42 @@ export default async function ProductDetailsPage({ params }: Props) {
         </div>
       </div>
 
-      {/* ── MAIN DETAIL ──────────────────────────────────────── */}
+      {/* ── MAIN DETAIL ── */}
       <section className="mx-auto max-w-[1450px] px-6 py-14 sm:px-8">
         <div className="grid gap-12 lg:grid-cols-2">
 
           {/* IMAGE */}
           <div className="relative overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm">
             <div className="relative h-[480px]">
-              <Image
-                src={product.image}
-                alt={product.title}
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-              />
+              {product.image ? (
+                <Image
+                  src={product.image}
+                  alt={product.title}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center bg-[#F0F9FA] text-[#0E7490] text-6xl">
+                  📦
+                </div>
+              )}
             </div>
-            <div className="p-5">
-              <div className="flex flex-wrap gap-2">
-                {product.applications.slice(0, 4).map((app) => (
-                  <span
-                    key={app}
-                    className="rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1 text-[12px] font-semibold text-[#374151]"
-                  >
-                    {app}
-                  </span>
-                ))}
+            {applications.length > 0 && (
+              <div className="p-5">
+                <div className="flex flex-wrap gap-2">
+                  {applications.slice(0, 4).map((app) => (
+                    <span
+                      key={app}
+                      className="rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1 text-[12px] font-semibold text-[#374151]"
+                    >
+                      {app}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* DETAILS */}
@@ -82,11 +150,14 @@ export default async function ProductDetailsPage({ params }: Props) {
             <h1 className="mt-3 text-[44px] font-black leading-[1.0] tracking-[-0.04em] text-[#0F172A] lg:text-[52px]">
               {product.title}
             </h1>
-            <p className="mt-2 text-[17px] italic text-[#64748B]">{product.tagline}</p>
-
-            <p className="mt-5 text-[15px] leading-[1.9] text-[#475569]">
-              {product.description}
-            </p>
+            {product.tagline && (
+              <p className="mt-2 text-[17px] italic text-[#64748B]">{product.tagline}</p>
+            )}
+            {product.description && (
+              <p className="mt-5 text-[15px] leading-[1.9] text-[#475569]">
+                {product.description}
+              </p>
+            )}
 
             {/* Quick specs */}
             <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -95,25 +166,35 @@ export default async function ProductDetailsPage({ params }: Props) {
                 { label: "Lead Time", value: product.lead },
                 { label: "HS Code", value: product.hs },
                 { label: "Shelf Life", value: product.shelfLife },
-              ].map(({ label, value }) => (
-                <div key={label} className="rounded-xl border border-[#D9E2EC] bg-white p-4 text-center">
-                  <p className="text-[10px] font-black tracking-[0.18em] text-[#94A3B8]">{label.toUpperCase()}</p>
-                  <p className="mt-1.5 text-[15px] font-bold text-[#0F172A]">{value}</p>
-                </div>
-              ))}
+              ]
+                .filter((s) => s.value)
+                .map(({ label, value }) => (
+                  <div key={label} className="rounded-xl border border-[#D9E2EC] bg-white p-4 text-center">
+                    <p className="text-[10px] font-black tracking-[0.18em] text-[#94A3B8]">
+                      {label.toUpperCase()}
+                    </p>
+                    <p className="mt-1.5 text-[15px] font-bold text-[#0F172A]">{value}</p>
+                  </div>
+                ))}
             </div>
 
             {/* Origin + Packaging */}
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-[#D9E2EC] bg-white p-4">
-                <p className="text-[10px] font-black tracking-[0.18em] text-[#94A3B8]">ORIGIN</p>
-                <p className="mt-1.5 text-[14px] font-semibold text-[#0F172A]">{product.origin}</p>
+            {(product.origin || product.packaging) && (
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                {product.origin && (
+                  <div className="rounded-xl border border-[#D9E2EC] bg-white p-4">
+                    <p className="text-[10px] font-black tracking-[0.18em] text-[#94A3B8]">ORIGIN</p>
+                    <p className="mt-1.5 text-[14px] font-semibold text-[#0F172A]">{product.origin}</p>
+                  </div>
+                )}
+                {product.packaging && (
+                  <div className="rounded-xl border border-[#D9E2EC] bg-white p-4">
+                    <p className="text-[10px] font-black tracking-[0.18em] text-[#94A3B8]">PACKAGING</p>
+                    <p className="mt-1.5 text-[14px] font-semibold text-[#0F172A]">{product.packaging}</p>
+                  </div>
+                )}
               </div>
-              <div className="rounded-xl border border-[#D9E2EC] bg-white p-4">
-                <p className="text-[10px] font-black tracking-[0.18em] text-[#94A3B8]">PACKAGING</p>
-                <p className="mt-1.5 text-[14px] font-semibold text-[#0F172A]">{product.packaging}</p>
-              </div>
-            </div>
+            )}
 
             {/* CTAs */}
             <div className="mt-7 flex flex-wrap gap-3">
@@ -139,61 +220,108 @@ export default async function ProductDetailsPage({ params }: Props) {
         </div>
       </section>
 
-      {/* ── SPECIFICATIONS ───────────────────────────────────── */}
-      <section className="bg-white py-14">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-          <div className="grid gap-10 lg:grid-cols-2">
+      {/* ── SPECIFICATIONS + BENEFITS ── */}
+      {(specs.length > 0 || benefits.length > 0) && (
+        <section className="bg-white py-14">
+          <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
+            <div className="grid gap-10 lg:grid-cols-2">
 
-            {/* Specs table */}
-            <div>
-              <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">PRODUCT SPECIFICATIONS</p>
-              <h2 className="mt-2 text-[28px] font-black tracking-[-0.03em] text-[#0F172A]">Technical Details</h2>
-              <div className="mt-6 overflow-hidden rounded-xl border border-[#E2E8F0]">
-                <table className="w-full text-[14px]">
-                  <tbody>
-                    {product.specs.map((spec, i) => (
-                      <tr key={spec.label} className={i % 2 === 0 ? "bg-[#F8FAFC]" : "bg-white"}>
-                        <td className="px-5 py-3.5 font-bold text-[#374151]">{spec.label}</td>
-                        <td className="px-5 py-3.5 text-[#64748B]">{spec.value}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Benefits */}
-            <div>
-              <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">WHY BUYERS CHOOSE THIS</p>
-              <h2 className="mt-2 text-[28px] font-black tracking-[-0.03em] text-[#0F172A]">Key Benefits</h2>
-              <ul className="mt-6 space-y-3">
-                {product.benefits.map((benefit) => (
-                  <li key={benefit} className="flex items-start gap-3 text-[14px] text-[#475569]">
-                    <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#E6F4F7] text-[11px] font-bold text-[#0E7490]">✓</span>
-                    {benefit}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-8 rounded-xl border border-[#D9E2EC] bg-[#F0F9FA] p-5">
-                <p className="text-[13px] font-bold text-[#0F172A]">Applications</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {product.applications.map((app) => (
-                    <span
-                      key={app}
-                      className="rounded-lg bg-white border border-[#D9E2EC] px-3 py-1.5 text-[12px] font-semibold text-[#374151]"
-                    >
-                      {app}
-                    </span>
-                  ))}
+              {specs.length > 0 && (
+                <div>
+                  <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">PRODUCT SPECIFICATIONS</p>
+                  <h2 className="mt-2 text-[28px] font-black tracking-[-0.03em] text-[#0F172A]">Technical Details</h2>
+                  <div className="mt-6 overflow-hidden rounded-xl border border-[#E2E8F0]">
+                    <table className="w-full text-[14px]">
+                      <tbody>
+                        {specs.map((spec, i) => (
+                          <tr key={spec.label} className={i % 2 === 0 ? "bg-[#F8FAFC]" : "bg-white"}>
+                            <td className="px-5 py-3.5 font-bold text-[#374151]">{spec.label}</td>
+                            <td className="px-5 py-3.5 text-[#64748B]">{spec.value}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {benefits.length > 0 && (
+                <div>
+                  <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">WHY BUYERS CHOOSE THIS</p>
+                  <h2 className="mt-2 text-[28px] font-black tracking-[-0.03em] text-[#0F172A]">Key Benefits</h2>
+                  <ul className="mt-6 space-y-3">
+                    {benefits.map((benefit) => (
+                      <li key={benefit} className="flex items-start gap-3 text-[14px] text-[#475569]">
+                        <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#E6F4F7] text-[11px] font-bold text-[#0E7490]">✓</span>
+                        {benefit}
+                      </li>
+                    ))}
+                  </ul>
+                  {applications.length > 0 && (
+                    <div className="mt-8 rounded-xl border border-[#D9E2EC] bg-[#F0F9FA] p-5">
+                      <p className="text-[13px] font-bold text-[#0F172A]">Applications</p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {applications.map((app) => (
+                          <span
+                            key={app}
+                            className="rounded-lg bg-white border border-[#D9E2EC] px-3 py-1.5 text-[12px] font-semibold text-[#374151]"
+                          >
+                            {app}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* ── RELATED PRODUCTS ─────────────────────────────────── */}
+      {/* ── EXPORT INFORMATION ── */}
+      {(exportCountries.length > 0 || exportPorts.length > 0 || product.containerCapacity) && (
+        <section className="bg-[#071624] py-14">
+          <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
+            <p className="text-[11px] font-black tracking-[0.24em] text-[#67C9D8]">EXPORT INFORMATION</p>
+            <h2 className="mt-2 text-[28px] font-black tracking-[-0.03em] text-white">Shipping & Export Details</h2>
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {exportCountries.length > 0 && (
+                <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+                  <p className="text-[11px] font-black tracking-[0.18em] text-[#67C9D8]">EXPORT DESTINATIONS</p>
+                  <ul className="mt-3 space-y-1">
+                    {exportCountries.map((c) => (
+                      <li key={c} className="text-[14px] text-slate-300 flex items-center gap-2">
+                        <span className="text-[#0E7490]">→</span> {c}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {exportPorts.length > 0 && (
+                <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+                  <p className="text-[11px] font-black tracking-[0.18em] text-[#67C9D8]">LOADING PORTS</p>
+                  <ul className="mt-3 space-y-1">
+                    {exportPorts.map((p) => (
+                      <li key={p} className="text-[14px] text-slate-300 flex items-center gap-2">
+                        <span className="text-[#0E7490]">⚓</span> {p}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {product.containerCapacity && (
+                <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+                  <p className="text-[11px] font-black tracking-[0.18em] text-[#67C9D8]">CONTAINER CAPACITY</p>
+                  <p className="mt-3 text-[17px] font-bold text-white">{product.containerCapacity}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── RELATED PRODUCTS ── */}
       {related.length > 0 && (
         <section className="py-16">
           <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
@@ -214,20 +342,26 @@ export default async function ProductDetailsPage({ params }: Props) {
                   className="group overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
                 >
                   <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={rp.image}
-                      alt={rp.title}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover transition duration-500 group-hover:scale-105"
-                    />
+                    {rp.image ? (
+                      <Image
+                        src={rp.image}
+                        alt={rp.title}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center bg-[#F0F9FA] text-4xl">📦</div>
+                    )}
                   </div>
                   <div className="p-5">
                     <p className="text-[11px] font-black tracking-[0.18em] text-[#0E7490]">
                       {rp.category.toUpperCase()}
                     </p>
                     <h3 className="mt-1.5 text-[17px] font-black text-[#0F172A]">{rp.title}</h3>
-                    <p className="mt-1 text-[13px] italic text-[#64748B]">{rp.tagline}</p>
+                    {rp.tagline && (
+                      <p className="mt-1 text-[13px] italic text-[#64748B]">{rp.tagline}</p>
+                    )}
                   </div>
                 </Link>
               ))}

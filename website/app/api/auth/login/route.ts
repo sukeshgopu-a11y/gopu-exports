@@ -1,33 +1,30 @@
 import { NextResponse } from "next/server";
-import { createSessionToken, COOKIE_NAME } from "@/lib/auth";
+import { createClient } from "@/src/lib/supabase/server";
 
 export async function POST(req: Request) {
   const { email, password } = await req.json();
+  const supabase = await createClient();
 
-  const validEmail = process.env.ADMIN_EMAIL;
-  const validPassword = process.env.ADMIN_PASSWORD;
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-  if (!validEmail || !validPassword) {
-    return NextResponse.json(
-      { error: "Server auth not configured" },
-      { status: 500 }
-    );
-  }
-
-  if (email !== validEmail || password !== validPassword) {
+  if (error || !data.user) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 
-  const token = await createSessionToken();
+  const { data: adminUser, error: adminError } = await supabase
+    .from("admin_users")
+    .select("id")
+    .eq("id", data.user.id)
+    .eq("role", "admin")
+    .maybeSingle();
 
-  const response = NextResponse.json({ success: true });
-  response.cookies.set(COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 60 * 60 * 24 * 7,
-    path: "/",
-  });
+  if (adminError || !adminUser) {
+    await supabase.auth.signOut();
+    return NextResponse.json({ error: "Admin access required" }, { status: 403 });
+  }
 
-  return response;
+  return NextResponse.json({ success: true });
 }

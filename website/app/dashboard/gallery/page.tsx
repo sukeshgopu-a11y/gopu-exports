@@ -2,11 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Trash2, Upload, ImageOff } from "lucide-react";
+import { Eye, EyeOff, Trash2, Upload, ImageOff } from "lucide-react";
 
 type GalleryImage = {
-  url: string;
-  name: string;
+  id: string;
+  title: string | null;
+  alt_text: string | null;
+  image_url: string;
+  storage_path: string | null;
+  is_active: boolean;
 };
 
 export default function GalleryPage() {
@@ -19,24 +23,20 @@ export default function GalleryPage() {
   const loadImages = async () => {
     setLoadError(false);
     try {
-      const { supabase } = await import("@/lib/Supabase");
-      const { data, error } = await supabase.storage.from("gallery").list("", {
-        sortBy: { column: "created_at", order: "desc" },
-      });
-      if (error) throw error;
-      const imgs = (data ?? [])
-        .filter((f) => f.name !== ".emptyFolderPlaceholder")
-        .map((f) => ({
-          name: f.name,
-          url: supabase.storage.from("gallery").getPublicUrl(f.name).data.publicUrl,
-        }));
-      setImages(imgs);
+      const res = await fetch("/api/gallery", { cache: "no-store" });
+      if (!res.ok) throw new Error("Failed to load gallery images");
+      setImages(await res.json());
     } catch {
       setLoadError(true);
     }
   };
 
-  useEffect(() => { loadImages(); }, []);
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      void loadImages();
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, []);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -53,7 +53,6 @@ export default function GalleryPage() {
           const d = await res.json();
           throw new Error(d.error ?? "Upload failed");
         }
-        return res.json() as Promise<{ url: string }>;
       });
       await Promise.all(uploads);
       await loadImages();
@@ -65,11 +64,21 @@ export default function GalleryPage() {
     }
   };
 
-  const deleteImage = async (name: string) => {
+  const toggleImage = async (image: GalleryImage) => {
+    const res = await fetch(`/api/gallery/${image.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ is_active: !image.is_active }),
+    });
+    if (!res.ok) return;
+    const updated = await res.json();
+    setImages((prev) => prev.map((item) => (item.id === image.id ? updated : item)));
+  };
+
+  const deleteImage = async (image: GalleryImage) => {
     if (!confirm("Delete this image?")) return;
-    const { supabase } = await import("@/lib/Supabase");
-    await supabase.storage.from("gallery").remove([name]);
-    setImages((prev) => prev.filter((i) => i.name !== name));
+    const res = await fetch(`/api/gallery/${image.id}`, { method: "DELETE" });
+    if (res.ok) setImages((prev) => prev.filter((i) => i.id !== image.id));
   };
 
   return (
@@ -78,7 +87,7 @@ export default function GalleryPage() {
         <div>
           <h1 className="text-4xl font-extrabold text-[#0F172A]">Gallery</h1>
           <p className="text-gray-500 mt-1 text-sm">
-            {images.length} image{images.length !== 1 ? "s" : ""} · Stored in Supabase
+            {images.length} image{images.length !== 1 ? "s" : ""} stored in Supabase
           </p>
         </div>
         <div>
@@ -96,7 +105,7 @@ export default function GalleryPage() {
             className="flex items-center gap-2 bg-[#0E7490] hover:bg-[#0A5A70] disabled:opacity-60 transition text-white px-5 py-3 rounded-xl font-medium text-sm"
           >
             <Upload size={16} />
-            {uploading ? "Uploading…" : "Upload Images"}
+            {uploading ? "Uploading..." : "Upload Images"}
           </button>
         </div>
       </div>
@@ -104,20 +113,13 @@ export default function GalleryPage() {
       {error && (
         <div className="mb-5 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
           {error}
-          {error.includes("SUPABASE_SERVICE_ROLE_KEY") && (
-            <p className="mt-1 text-xs">
-              Add <code className="bg-red-100 px-1 rounded">SUPABASE_SERVICE_ROLE_KEY</code> to
-              your <code className="bg-red-100 px-1 rounded">.env.local</code> file, then create
-              a public &ldquo;gallery&rdquo; bucket in your Supabase dashboard.
-            </p>
-          )}
+          <p className="mt-1 text-xs">Check your Supabase session and gallery storage policies.</p>
         </div>
       )}
 
       {loadError && (
         <div className="mb-5 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-800">
-          Could not load gallery images. Make sure a public &ldquo;gallery&rdquo; bucket exists in
-          your Supabase project and <code className="bg-amber-100 px-1 rounded">NEXT_PUBLIC_SUPABASE_URL</code> is set.
+          Could not load gallery images. Make sure you are logged in as an admin user.
         </div>
       )}
 
@@ -129,34 +131,44 @@ export default function GalleryPage() {
             onClick={() => fileRef.current?.click()}
             className="mt-4 text-[#0E7490] font-semibold text-sm hover:underline"
           >
-            Upload your first image →
+            Upload your first image
           </button>
         </div>
       ) : (
         <div className="grid gap-5 grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
           {images.map((img) => (
             <div
-              key={img.name}
+              key={img.id}
               className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 aspect-square"
             >
               <Image
-                src={img.url}
-                alt={img.name}
+                src={img.image_url}
+                alt={img.alt_text || img.title || "Gallery image"}
                 fill
                 sizes="(max-width:768px) 50vw, 25vw"
-                className="object-cover"
+                className={`object-cover ${img.is_active ? "" : "grayscale opacity-60"}`}
                 unoptimized
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition flex items-center justify-center">
                 <button
-                  onClick={() => deleteImage(img.name)}
-                  className="opacity-0 group-hover:opacity-100 transition bg-red-500 hover:bg-red-600 text-white p-2.5 rounded-full"
+                  onClick={() => toggleImage(img)}
+                  className="opacity-0 group-hover:opacity-100 transition bg-white hover:bg-gray-100 text-[#0F172A] p-2.5 rounded-full"
+                  title={img.is_active ? "Hide image" : "Show image"}
+                >
+                  {img.is_active ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+                <button
+                  onClick={() => deleteImage(img)}
+                  className="opacity-0 group-hover:opacity-100 transition bg-red-500 hover:bg-red-600 text-white p-2.5 rounded-full ml-2"
+                  title="Delete image"
                 >
                   <Trash2 size={16} />
                 </button>
               </div>
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-3 py-2 opacity-0 group-hover:opacity-100 transition">
-                <p className="text-white text-[10px] truncate">{img.name}</p>
+                <p className="text-white text-[10px] truncate">
+                  {img.title || img.storage_path || "Gallery image"} · {img.is_active ? "Visible" : "Hidden"}
+                </p>
               </div>
             </div>
           ))}

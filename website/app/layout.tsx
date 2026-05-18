@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | GOPU Exports",
   },
   description:
-    "GOPU Exports supplies premium agricultural commodities — spices, rice, fresh produce — to importers and distributors across 18+ global markets from India.",
+    "GOPU Exports supplies premium agricultural commodities, spices, rice, and fresh produce to importers and distributors from India.",
   keywords: [
     "Indian agricultural exports",
     "spices export India",
@@ -25,12 +25,12 @@ export const metadata: Metadata = {
     siteName: "GOPU Exports",
     title: "GOPU Exports — Premium Indian Agricultural Commodities",
     description:
-      "Supplying premium spices, rice, and agricultural commodities to importers across 18+ countries.",
+      "Supplying premium spices, rice, and agricultural commodities to global importers.",
   },
   twitter: {
     card: "summary_large_image",
     title: "GOPU Exports",
-    description: "Premium Indian agricultural exports to 18+ global markets.",
+    description: "Premium Indian agricultural exports for global importers.",
   },
   robots: { index: true, follow: true },
 };

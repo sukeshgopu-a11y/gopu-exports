@@ -23,7 +23,7 @@ export default function ProductsPage() {
           </h1>
           <p className="mt-4 max-w-xl text-[17px] leading-[1.8] text-[#64748B]">
             Premium Indian agricultural commodities — inspected, certified, and
-            export-ready. Serving importers and distributors in 18+ countries.
+            export-ready for importers and distributors in global markets.
           </p>
         </div>
       </section>
@@ -37,11 +37,11 @@ export default function ProductsPage() {
       <section className="bg-white border-t border-[#E2E8F0] py-16">
         <div className="mx-auto max-w-[1450px] px-6 sm:px-8 text-center">
           <h2 className="text-[30px] font-black tracking-[-0.04em] text-[#0F172A]">
-            Don't See What You're Looking For?
+            Don&apos;t See What You&apos;re Looking For?
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-[15px] leading-[1.8] text-[#64748B]">
             We source a wide range of Indian agricultural commodities on request.
-            Send us your product specifications and we'll get back to you within 24 hours.
+            Send us your product specifications and we&apos;ll get back to you within 24 hours.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-4">
             <a

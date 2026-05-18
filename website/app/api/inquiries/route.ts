@@ -1,16 +1,22 @@
-import { connectDB } from "@/lib/mongodb";
-import Inquiry from "@/models/Inquiry";
-import { NextResponse } from "next/server";
+import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
+import { createPublicClient } from "@/src/lib/supabase/public";
+import { inquiryToApi, type InquiryRow } from "@/src/lib/supabase/data";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
-  await connectDB();
-  const inquiries = await Inquiry.find().sort({ createdAt: -1 });
-  return NextResponse.json(inquiries);
+  const supabase = await requireAdminClient();
+  if (!supabase) return unauthorized();
+  const { data, error } = await supabase
+    .from("inquiries")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .returns<InquiryRow[]>();
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json((data ?? []).map(inquiryToApi));
 }
 
-export async function POST(req: Request) {
-  await connectDB();
-
+export async function POST(req: NextRequest) {
+  const supabase = createPublicClient();
   const body = await req.json();
 
   const required = ["name", "email"];
@@ -23,19 +29,19 @@ export async function POST(req: Request) {
     }
   }
 
-  const inquiry = await Inquiry.create({
+  const { error } = await supabase
+    .from("inquiries")
+    .insert({
     name: body.name,
     company: body.company,
     email: body.email,
     phone: body.phone,
     country: body.country,
-    port: body.port,
-    product: body.product,
-    quantity: body.quantity,
-    frequency: body.frequency,
-    incoterm: body.incoterm,
-    notes: body.notes,
-  });
+      message: body.message ?? body.notes ?? "",
+      product_id: body.product_id ?? null,
+      status: "new",
+    });
 
-  return NextResponse.json(inquiry, { status: 201 });
+  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  return NextResponse.json({ success: true }, { status: 201 });
 }

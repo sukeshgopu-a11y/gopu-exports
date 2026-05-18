@@ -14,13 +14,15 @@ type Inquiry = {
   quantity?: string;
   incoterm?: string;
   notes?: string;
-  status: "New" | "Pending" | "Replied" | "Closed";
+  status: "New" | "Pending" | "Read" | "Contacted" | "Replied" | "Closed";
   createdAt: string;
 };
 
 const STATUS_COLORS: Record<string, string> = {
   New: "bg-green-100 text-green-700",
   Pending: "bg-yellow-100 text-yellow-700",
+  Read: "bg-cyan-100 text-cyan-700",
+  Contacted: "bg-indigo-100 text-indigo-700",
   Replied: "bg-blue-100 text-blue-700",
   Closed: "bg-gray-100 text-gray-500",
 };
@@ -42,7 +44,12 @@ export default function InquiriesPage() {
     }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      void load();
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, []);
 
   const updateStatus = async (id: string, status: string) => {
     await fetch(`/api/inquiries/${id}`, {
@@ -169,7 +176,7 @@ export default function InquiriesPage() {
                           onChange={(e) => updateStatus(item._id, e.target.value)}
                           className={`px-3 py-1.5 rounded-full text-xs font-semibold border-0 outline-none cursor-pointer ${STATUS_COLORS[item.status]}`}
                         >
-                          {["New","Pending","Replied","Closed"].map((s) => (
+                          {["New","Pending","Read","Contacted","Replied","Closed"].map((s) => (
                             <option key={s} value={s}>{s}</option>
                           ))}
                         </select>
