@@ -201,6 +201,7 @@ export default async function HomePage() {
                       alt={product.title}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                      quality={58}
                       className="object-cover transition duration-500 group-hover:scale-105"
                     />
                   ) : (

@@ -1,7 +1,11 @@
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { DEFAULT_BLOGS } from "@/lib/blogs";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 type Blog = { _id: string; slug: string; [key: string]: unknown };
 
@@ -12,7 +16,8 @@ async function getBlogs(): Promise<Blog[]> {
     .select("value")
     .eq("key", "blogs")
     .maybeSingle();
-  return Array.isArray(data?.value) ? data.value as Blog[] : [];
+  const saved = Array.isArray(data?.value) ? data.value as Blog[] : [];
+  return saved.length > 0 ? saved : DEFAULT_BLOGS;
 }
 
 async function saveBlogs(supabase: SupabaseClient, blogs: Blog[]) {
@@ -42,6 +47,9 @@ export async function PATCH(
   await saveBlogs(supabase, updated);
   const blog = updated.find((item) => item._id === id);
   if (!blog) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${blog.slug}`);
+  revalidatePath("/sitemap.xml");
   return NextResponse.json(blog);
 }
 
@@ -53,5 +61,7 @@ export async function DELETE(
   if (!supabase) return unauthorized();
   const { id } = await params;
   await saveBlogs(supabase, (await getBlogs()).filter((blog) => blog._id !== id));
+  revalidatePath("/blog");
+  revalidatePath("/sitemap.xml");
   return NextResponse.json({ success: true });
 }

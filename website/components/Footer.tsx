@@ -1,8 +1,5 @@
-"use client";
-
 import Link from "next/link";
-import { Mail, Phone, Send, ShieldCheck, Globe2 } from "lucide-react";
-import { useState } from "react";
+import { Mail, Phone, ShieldCheck, Globe2 } from "lucide-react";
 import BrandLogo from "./BrandLogo";
 
 /* ------------------------------------------------------------------ */
@@ -108,114 +105,6 @@ function Particles() {
         />
       ))}
     </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Enquiry form                                                        */
-/* ------------------------------------------------------------------ */
-function EnquiryForm() {
-  const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [focused, setFocused] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  if (submitted) {
-    return (
-      <div className="rounded-xl border border-amber-400/30 bg-amber-400/5 px-5 py-8 text-center"
-        style={{ animation: "pop-in 0.4s cubic-bezier(0.34,1.56,0.64,1) both" }}>
-        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-400/20">
-          <Send className="h-5 w-5 text-amber-300" />
-        </div>
-        <p className="font-semibold text-amber-300">Message sent!</p>
-        <p className="mt-1 text-xs text-slate-400">We&apos;ll respond within 24 hours.</p>
-      </div>
-    );
-  }
-
-  return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
-        try {
-          const res = await fetch("/api/inquiries", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: form.name,
-              email: form.email,
-              product: "Footer quick enquiry",
-              notes: form.message,
-            }),
-          });
-
-          if (!res.ok) {
-            const data = await res.json();
-            throw new Error(data.error ?? "Could not send enquiry.");
-          }
-
-          setSubmitted(true);
-        } catch (err) {
-          setError(err instanceof Error ? err.message : "Could not send enquiry.");
-        } finally {
-          setLoading(false);
-        }
-      }}
-      className="space-y-3"
-      aria-label="Enquiry form"
-    >
-      {[
-        { id: "enq-name", type: "text", placeholder: "Your name", key: "name" },
-        { id: "enq-email", type: "email", placeholder: "your@company.com", key: "email" },
-      ].map(({ id, type, placeholder, key }) => (
-        <div key={id} className="relative">
-          <input id={id} type={type} required placeholder={placeholder}
-            value={form[key as "name" | "email"]}
-            onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-            onFocus={() => setFocused(key)} onBlur={() => setFocused("")}
-            className="w-full rounded-lg border bg-white/5 px-4 py-2.5 text-sm text-white
-              placeholder:text-slate-500 focus:outline-none transition-all duration-300"
-            style={{
-              borderColor: focused === key ? "rgba(251,191,36,0.5)" : "rgba(255,255,255,0.1)",
-              boxShadow: focused === key ? "0 0 0 3px rgba(251,191,36,0.08)" : "none",
-            }}
-          />
-        </div>
-      ))}
-      <div className="relative">
-        <textarea id="enq-message" required rows={3}
-          placeholder="What are you looking to source?"
-          value={form.message}
-          onChange={(e) => setForm({ ...form, message: e.target.value })}
-          onFocus={() => setFocused("message")} onBlur={() => setFocused("")}
-          className="w-full resize-none rounded-lg border bg-white/5 px-4 py-2.5 text-sm text-white
-            placeholder:text-slate-500 focus:outline-none transition-all duration-300"
-          style={{
-            borderColor: focused === "message" ? "rgba(251,191,36,0.5)" : "rgba(255,255,255,0.1)",
-            boxShadow: focused === "message" ? "0 0 0 3px rgba(251,191,36,0.08)" : "none",
-          }}
-        />
-      </div>
-      {error && (
-        <p className="rounded-lg border border-red-400/30 bg-red-400/10 px-3 py-2 text-xs text-red-200">
-          {error}
-        </p>
-      )}
-      <button type="submit"
-        disabled={loading}
-        className="group relative w-full overflow-hidden rounded-lg bg-gradient-to-r from-amber-400 to-amber-500
-          px-5 py-2.5 text-sm font-semibold text-slate-900 transition-all duration-300
-          hover:from-amber-300 hover:to-amber-400 hover:shadow-lg hover:shadow-amber-400/25 disabled:cursor-not-allowed disabled:opacity-70">
-        <span className="relative z-10 flex items-center justify-center gap-2">
-          {loading ? "Sending..." : "Send Enquiry"}
-          <Send className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-        </span>
-        <span className="absolute inset-0 -translate-x-full bg-white/10 transition-transform duration-500 group-hover:translate-x-0 skew-x-12" />
-      </button>
-    </form>
   );
 }
 
@@ -342,7 +231,7 @@ export default function Footer() {
 
       {/* ── Footer ── */}
       <footer itemScope itemType="https://schema.org/Organization"
-        className="relative overflow-hidden bg-[#060E18] text-slate-300">
+        className="relative min-h-[1430px] overflow-hidden bg-[#060E18] text-slate-300 md:min-h-0">
 
         {/* ── Aurora background ── */}
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">
@@ -419,9 +308,7 @@ export default function Footer() {
                   className="group relative flex h-9 w-9 items-center justify-center overflow-hidden
                     rounded-full border border-white/10 bg-white/5 text-slate-400 backdrop-blur-sm
                     transition-all duration-300 hover:scale-110 hover:border-transparent hover:text-white"
-                  style={{ "--hover-color": color } as React.CSSProperties}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = color + "22"; (e.currentTarget as HTMLElement).style.borderColor = color + "66"; (e.currentTarget as HTMLElement).style.color = color; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = ""; (e.currentTarget as HTMLElement).style.borderColor = ""; (e.currentTarget as HTMLElement).style.color = ""; }}>
+                  style={{ color }}>
                   <Icon className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
                 </a>
               ))}
@@ -482,9 +369,12 @@ export default function Footer() {
 
             <div className="mt-6">
               <SectionHeading>Quick Enquiry</SectionHeading>
-              <div className="mt-4">
-                <EnquiryForm />
-              </div>
+              <Link
+                href="/contact"
+                className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:from-amber-300 hover:to-amber-400"
+              >
+                Send Export Enquiry
+              </Link>
             </div>
           </div>
         </div>

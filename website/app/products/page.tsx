@@ -1,13 +1,40 @@
 import type { Metadata } from "next";
 import ProductsGrid from "@/components/ProductsGrid";
+import { createPublicClient } from "@/src/lib/supabase/public";
+import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
+import { CATEGORY_LANDING_PAGES } from "@/lib/categoryLandingPages";
+import { PRODUCTS } from "@/lib/products";
+import Link from "next/link";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Products",
   description:
     "Browse GOPU Exports' complete agricultural product catalogue — premium spices, basmati rice, fresh fruits, and vegetables for global importers.",
+  alternates: { canonical: "/products" },
 };
 
-export default function ProductsPage() {
+async function getProducts() {
+  try {
+    const supabase = createPublicClient();
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false })
+      .returns<ProductRow[]>();
+    if (error) return PRODUCTS.map((product) => ({ ...product, _id: product.slug }));
+    const products = (data ?? []).map(productToApi);
+    return products.length > 0 ? products : PRODUCTS.map((product) => ({ ...product, _id: product.slug }));
+  } catch {
+    return PRODUCTS.map((product) => ({ ...product, _id: product.slug }));
+  }
+}
+
+export default async function ProductsPage() {
+  const products = await getProducts();
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
 
@@ -30,7 +57,24 @@ export default function ProductsPage() {
 
       {/* ── GRID WITH FILTERS ────────────────────────────────── */}
       <section className="mx-auto max-w-[1450px] px-6 py-14 sm:px-8">
-        <ProductsGrid />
+        <ProductsGrid initialProducts={products} />
+      </section>
+
+      <section className="mx-auto max-w-[1450px] px-6 pb-14 sm:px-8">
+        <div className="rounded-2xl border border-[#D9E2EC] bg-white p-7">
+          <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#0E7490]">Category Buying Guides</p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            {CATEGORY_LANDING_PAGES.map((page) => (
+              <Link
+                key={page.slug}
+                href={`/export/${page.slug}`}
+                className="rounded-lg border border-[#D9E2EC] px-4 py-2.5 text-[13px] font-bold text-[#0F172A] transition hover:border-[#0E7490] hover:text-[#0E7490]"
+              >
+                {page.title}
+              </Link>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────── */}

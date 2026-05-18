@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
+import { getProductBySlug } from "@/lib/products";
 
 export const revalidate = 60;
 
@@ -45,7 +46,10 @@ async function getProduct(slug: string): Promise<Product | null> {
     .eq("slug", slug)
     .eq("is_active", true)
     .maybeSingle<ProductRow>();
-  if (error || !data) return null;
+  if (error || !data) {
+    const fallback = getProductBySlug(slug);
+    return fallback ? ({ ...fallback, _id: fallback.slug } as Product) : null;
+  }
   return productToApi(data) as Product;
 }
 
@@ -86,9 +90,39 @@ export default async function ProductDetailsPage({ params }: Props) {
   const applications = product.applications ?? [];
   const exportCountries = product.exportCountries ?? [];
   const exportPorts = product.exportPorts ?? [];
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: product.description,
+    image: product.image
+      ? product.image.startsWith("/")
+        ? `https://gopuexports.com${product.image}`
+        : product.image
+      : undefined,
+    category: product.category,
+    brand: { "@type": "Brand", name: "GOPU Exports" },
+    additionalProperty: [
+      product.origin ? { "@type": "PropertyValue", name: "Origin", value: product.origin } : null,
+      product.moq ? { "@type": "PropertyValue", name: "MOQ", value: product.moq } : null,
+      product.packaging ? { "@type": "PropertyValue", name: "Packaging", value: product.packaging } : null,
+      product.hs ? { "@type": "PropertyValue", name: "HS Code", value: product.hs } : null,
+    ].filter(Boolean),
+  };
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://gopuexports.com" },
+      { "@type": "ListItem", position: 2, name: "Products", item: "https://gopuexports.com/products" },
+      { "@type": "ListItem", position: 3, name: product.title, item: `https://gopuexports.com/products/${product.slug}` },
+    ],
+  };
 
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
+      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
+      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
       {/* ── BREADCRUMB ── */}
       <div className="border-b border-[#E2E8F0] bg-white">
@@ -203,6 +237,12 @@ export default async function ProductDetailsPage({ params }: Props) {
                 className="rounded-xl bg-[#0E7490] px-7 py-4 text-[13px] font-bold tracking-wide text-white shadow-md transition hover:bg-[#0A5A70] hover:shadow-lg"
               >
                 REQUEST A QUOTE →
+              </Link>
+              <Link
+                href={`/contact?product=${encodeURIComponent(product.title)}&catalogue=1`}
+                className="rounded-xl border border-[#D9E2EC] bg-white px-7 py-4 text-[13px] font-bold tracking-wide text-[#0F172A] transition hover:border-[#0E7490] hover:text-[#0E7490]"
+              >
+                DOWNLOAD CATALOGUE
               </Link>
               <a
                 href={`https://wa.me/918712816876?text=Hi%2C%20I%27m%20interested%20in%20${encodeURIComponent(product.title)}%20from%20GOPU%20Exports.`}

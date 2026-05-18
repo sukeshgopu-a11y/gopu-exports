@@ -5,6 +5,36 @@ import { useState } from "react";
 const INCOTERMS = ["FOB", "CIF", "CFR", "EXW", "DDP"];
 const OTHER = "Others";
 
+const EMPTY_FORM = {
+  name: "",
+  company: "",
+  email: "",
+  phone: "",
+  country: "",
+  countryOther: "",
+  port: "",
+  product: "",
+  productOther: "",
+  quantity: "",
+  frequency: "",
+  frequencyOther: "",
+  notes: "",
+};
+
+function getInitialForm() {
+  if (typeof window === "undefined") return EMPTY_FORM;
+  const params = new URLSearchParams(window.location.search);
+  const product = params.get("product");
+  const catalogue = params.get("catalogue");
+  if (!product) return EMPTY_FORM;
+  return {
+    ...EMPTY_FORM,
+    product: OTHER,
+    productOther: product,
+    notes: catalogue ? `Please share the product catalogue and quote details for ${product}.` : "",
+  };
+}
+
 function TrustCard({ title, label }: { title: string; label: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur px-4 py-4">
@@ -105,21 +135,7 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  const [form, setForm] = useState({
-    name: "",
-    company: "",
-    email: "",
-    phone: "",
-    country: "",
-    countryOther: "",
-    port: "",
-    product: "",
-    productOther: "",
-    quantity: "",
-    frequency: "",
-    frequencyOther: "",
-    notes: "",
-  });
+  const [form, setForm] = useState(getInitialForm);
 
   const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
@@ -284,7 +300,7 @@ export default function ContactPage() {
                   Thank you, {form.name}. Our team will respond within 12 hours.
                 </p>
                 <button
-                  onClick={() => { setSubmitted(false); setForm({ name:"",company:"",email:"",phone:"",country:"",countryOther:"",port:"",product:"",productOther:"",quantity:"",frequency:"",frequencyOther:"",notes:"" }); }}
+                  onClick={() => { setSubmitted(false); setForm(EMPTY_FORM); }}
                   className="mt-6 px-6 py-3 rounded-xl bg-[#0E7490] text-white text-sm font-bold hover:bg-[#0A5A70] transition"
                 >
                   Submit Another

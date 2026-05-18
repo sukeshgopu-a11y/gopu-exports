@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { createPublicClient } from "@/src/lib/supabase/public";
+import { DEFAULT_BLOGS } from "@/lib/blogs";
 
 export const revalidate = 60;
 
@@ -32,7 +33,8 @@ async function getPosts() {
     .maybeSingle();
 
   const posts = Array.isArray(data?.value) ? (data.value as BlogPost[]) : [];
-  return posts
+  const source = posts.length > 0 ? posts : DEFAULT_BLOGS;
+  return source
     .filter((post) => post.published)
     .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
 }

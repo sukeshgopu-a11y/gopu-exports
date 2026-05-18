@@ -1,6 +1,9 @@
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { certificationBodyToUpdate, certificationToApi, type CertificationRow } from "@/src/lib/supabase/data";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 export async function PATCH(
   req: NextRequest,
@@ -17,6 +20,9 @@ export async function PATCH(
     .select("*")
     .single<CertificationRow>();
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  revalidatePath("/");
+  revalidatePath("/certifications");
+  revalidatePath("/sitemap.xml");
   return NextResponse.json(certificationToApi(data));
 }
 
@@ -29,5 +35,8 @@ export async function DELETE(
   const { id } = await params;
   const { error } = await supabase.from("certifications").delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  revalidatePath("/");
+  revalidatePath("/certifications");
+  revalidatePath("/sitemap.xml");
   return NextResponse.json({ success: true });
 }

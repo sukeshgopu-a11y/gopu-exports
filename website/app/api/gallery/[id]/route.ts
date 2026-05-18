@@ -1,5 +1,8 @@
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 export async function PATCH(
   req: NextRequest,
@@ -27,6 +30,8 @@ export async function PATCH(
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  revalidatePath("/gallery");
+  revalidatePath("/sitemap.xml");
   return NextResponse.json(data);
 }
 
@@ -50,5 +55,7 @@ export async function DELETE(
 
   const { error } = await supabase.from("gallery_images").delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  revalidatePath("/gallery");
+  revalidatePath("/sitemap.xml");
   return NextResponse.json({ success: true });
 }

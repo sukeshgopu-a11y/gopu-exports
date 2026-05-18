@@ -1,6 +1,9 @@
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 export type GalleryImage = {
   id: string;
@@ -28,7 +31,9 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await query.returns<GalleryImage[]>();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data ?? []);
+  const res = NextResponse.json(data ?? []);
+  res.headers.set("Cache-Control", "no-store");
+  return res;
 }
 
 export async function POST(req: NextRequest) {
@@ -55,5 +60,7 @@ export async function POST(req: NextRequest) {
     .single<GalleryImage>();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  revalidatePath("/gallery");
+  revalidatePath("/sitemap.xml");
   return NextResponse.json(data, { status: 201 });
 }

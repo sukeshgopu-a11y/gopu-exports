@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import type { ProductRow } from "@/src/lib/supabase/data";
+import { DEFAULT_BLOGS } from "@/lib/blogs";
+import { CATEGORY_LANDING_PAGES } from "@/lib/categoryLandingPages";
 
 const BASE_URL = "https://gopuexports.com";
 
@@ -23,6 +25,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: path === "" ? 1 : 0.7,
   }));
 
+  const categoryRoutes: MetadataRoute.Sitemap = CATEGORY_LANDING_PAGES.map((page) => ({
+    url: `${BASE_URL}/export/${page.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.75,
+  }));
+
   const supabase = createPublicClient();
   const { data: products } = await supabase
     .from("products")
@@ -42,7 +51,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .select("value")
     .eq("key", "blogs")
     .maybeSingle();
-  const posts = Array.isArray(settings?.value) ? (settings.value as BlogPost[]) : [];
+  const savedPosts = Array.isArray(settings?.value) ? (settings.value as BlogPost[]) : [];
+  const posts = savedPosts.length > 0 ? savedPosts : DEFAULT_BLOGS;
   const blogRoutes: MetadataRoute.Sitemap = posts
     .filter((post) => post.published)
     .map((post) => ({
@@ -52,5 +62,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-  return [...staticRoutes, ...productRoutes, ...blogRoutes];
+  return [...staticRoutes, ...categoryRoutes, ...productRoutes, ...blogRoutes];
 }

@@ -19,14 +19,14 @@ type Product = {
   featured?: boolean;
 };
 
-export default function ProductsGrid() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function ProductsGrid({ initialProducts = [] }: { initialProducts?: Product[] }) {
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [loading, setLoading] = useState(initialProducts.length === 0);
   const [active, setActive] = useState("All");
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    fetch("/api/products?active=true")
+    fetch("/api/products?active=true", { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => setProducts(Array.isArray(data) ? data : []))
       .catch(() => setProducts([]))
@@ -157,6 +157,7 @@ export default function ProductsGrid() {
                     alt={product.title}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                    quality={58}
                     className="object-cover transition duration-500 group-hover:scale-105"
                   />
                 ) : (

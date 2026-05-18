@@ -1,7 +1,10 @@
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { productBodyToUpdate, productToApi, type ProductRow } from "@/src/lib/supabase/data";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(
   _req: NextRequest,
@@ -19,7 +22,9 @@ export async function GET(
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   if (!data) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  return NextResponse.json(productToApi(data));
+  const res = NextResponse.json(productToApi(data));
+  res.headers.set("Cache-Control", "no-store");
+  return res;
 }
 
 export async function PATCH(
@@ -38,6 +43,10 @@ export async function PATCH(
     .single<ProductRow>();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  revalidatePath("/");
+  revalidatePath("/products");
+  revalidatePath(`/products/${data.slug}`);
+  revalidatePath("/sitemap.xml");
   return NextResponse.json(productToApi(data));
 }
 
@@ -50,5 +59,8 @@ export async function DELETE(
   const { id } = await params;
   const { error } = await supabase.from("products").delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  revalidatePath("/");
+  revalidatePath("/products");
+  revalidatePath("/sitemap.xml");
   return NextResponse.json({ success: true });
 }

@@ -2,7 +2,11 @@ import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { slugify } from "@/src/lib/supabase/data";
+import { DEFAULT_BLOGS } from "@/lib/blogs";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 type Blog = { _id: string; slug: string; published?: boolean; createdAt: string; [key: string]: unknown };
 
@@ -13,7 +17,8 @@ async function getBlogs(): Promise<Blog[]> {
     .select("value")
     .eq("key", "blogs")
     .maybeSingle();
-  return Array.isArray(data?.value) ? data.value as Blog[] : [];
+  const saved = Array.isArray(data?.value) ? data.value as Blog[] : [];
+  return saved.length > 0 ? saved : DEFAULT_BLOGS;
 }
 
 async function saveBlogs(supabase: SupabaseClient, blogs: Blog[]) {
@@ -24,7 +29,9 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   let blogs = await getBlogs();
   if (searchParams.get("published") === "true") blogs = blogs.filter((blog) => blog.published);
-  return NextResponse.json(blogs.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)));
+  const res = NextResponse.json(blogs.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)));
+  res.headers.set("Cache-Control", "no-store");
+  return res;
 }
 
 export async function POST(req: NextRequest) {
@@ -41,5 +48,8 @@ export async function POST(req: NextRequest) {
   };
   const blogs = await getBlogs();
   await saveBlogs(supabase, [blog, ...blogs]);
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${blog.slug}`);
+  revalidatePath("/sitemap.xml");
   return NextResponse.json(blog, { status: 201 });
 }
