@@ -13,6 +13,7 @@ import {
   Award,
   BookOpen,
   FileText,
+  BarChart3,
 } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import { dashboardFetch, getErrorMessage } from "@/lib/dashboardApi";
@@ -22,6 +23,7 @@ const NAV = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Inquiries", href: "/dashboard/inquiries", icon: MessageSquare },
   { name: "Quotes", href: "/dashboard/quotes", icon: FileText },
+  { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
   { name: "Products", href: "/dashboard/products", icon: Package },
   { name: "Categories", href: "/dashboard/categories", icon: Tag },
   { name: "Certifications", href: "/dashboard/certifications", icon: Award },

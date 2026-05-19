@@ -88,12 +88,12 @@ export default async function ProductsPage() {
             Send us your product specifications and we&apos;ll get back to you within 24 hours.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-4">
-            <a
+            <Link
               href="/contact"
               className="rounded-lg bg-[#0E7490] px-8 py-4 text-[13px] font-bold tracking-wide text-white transition hover:bg-[#0A5A70]"
             >
               REQUEST A PRODUCT →
-            </a>
+            </Link>
             <a
               href="https://wa.me/918712816876"
               target="_blank"

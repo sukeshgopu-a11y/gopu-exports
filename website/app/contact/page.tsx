@@ -164,6 +164,15 @@ export default function ContactPage() {
         }),
       });
       if (res.ok) {
+        window.dispatchEvent(new CustomEvent("gopu:analytics", {
+          detail: {
+            eventType: "quote_submit",
+            metadata: {
+              product: form.product === OTHER ? form.productOther : form.product,
+              country: form.country === OTHER ? form.countryOther : form.country,
+            },
+          },
+        }));
         setSubmitted(true);
       } else {
         const d = await res.json();

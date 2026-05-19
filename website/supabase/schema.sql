@@ -103,6 +103,30 @@ create table if not exists public.site_settings (
   updated_at timestamptz not null default now()
 );
 
+-- Privacy-friendly visitor event log for opt-in analytics in the admin dashboard.
+create table if not exists public.visitor_events (
+  id uuid primary key default gen_random_uuid(),
+  event_type text not null check (event_type in (
+    'page_view',
+    'product_view',
+    'cta_click',
+    'whatsapp_click',
+    'email_click',
+    'phone_click',
+    'inquiry_submit',
+    'quote_submit'
+  )),
+  session_id text,
+  path text,
+  referrer text,
+  country text,
+  city text,
+  device text,
+  browser text,
+  metadata jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now()
+);
+
 drop trigger if exists set_products_updated_at on public.products;
 create trigger set_products_updated_at
 before update on public.products
@@ -138,6 +162,10 @@ create index if not exists quotes_status_created_at_idx on public.quotes (status
 create index if not exists certifications_active_order_idx on public.certifications (is_active, sort_order);
 create index if not exists gallery_images_active_order_idx on public.gallery_images (is_active, sort_order, created_at desc);
 create index if not exists site_settings_key_idx on public.site_settings (key);
+create index if not exists visitor_events_created_at_idx on public.visitor_events (created_at desc);
+create index if not exists visitor_events_type_created_at_idx on public.visitor_events (event_type, created_at desc);
+create index if not exists visitor_events_session_idx on public.visitor_events (session_id) where session_id is not null;
+create index if not exists visitor_events_path_idx on public.visitor_events (path) where path is not null;
 
 alter table public.products enable row level security;
 alter table public.inquiries enable row level security;
@@ -146,12 +174,15 @@ alter table public.certifications enable row level security;
 alter table public.gallery_images enable row level security;
 alter table public.admin_users enable row level security;
 alter table public.site_settings enable row level security;
+alter table public.visitor_events enable row level security;
 
 grant usage on schema public to anon, authenticated;
 grant select on public.products, public.certifications, public.gallery_images, public.site_settings to anon, authenticated;
 grant insert on public.inquiries, public.quotes to anon, authenticated;
 grant select, insert, update, delete on public.products, public.inquiries, public.quotes, public.certifications, public.gallery_images, public.site_settings to authenticated;
 grant select on public.admin_users to authenticated;
+grant insert on public.visitor_events to anon, authenticated;
+grant select, delete on public.visitor_events to authenticated;
 
 drop policy if exists "Public can read active products" on public.products;
 create policy "Public can read active products"
@@ -249,6 +280,35 @@ on public.site_settings for all
 to authenticated
 using (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'))
 with check (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'));
+
+drop policy if exists "Anyone can insert visitor events" on public.visitor_events;
+create policy "Anyone can insert visitor events"
+on public.visitor_events for insert
+to anon, authenticated
+with check (
+  event_type in (
+    'page_view',
+    'product_view',
+    'cta_click',
+    'whatsapp_click',
+    'email_click',
+    'phone_click',
+    'inquiry_submit',
+    'quote_submit'
+  )
+);
+
+drop policy if exists "Admins can read visitor events" on public.visitor_events;
+create policy "Admins can read visitor events"
+on public.visitor_events for select
+to authenticated
+using (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'));
+
+drop policy if exists "Admins can delete visitor events" on public.visitor_events;
+create policy "Admins can delete visitor events"
+on public.visitor_events for delete
+to authenticated
+using (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'));
 
 -- Public image buckets used by dashboard uploads.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)

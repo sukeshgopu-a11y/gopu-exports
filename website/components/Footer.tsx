@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Mail, Phone, ShieldCheck, Globe2 } from "lucide-react";
 import BrandLogo from "./BrandLogo";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 /* ------------------------------------------------------------------ */
 /*  Brand icons                                                         */
@@ -24,6 +25,7 @@ const NAV_LINKS = [
   { href: "/products", label: "Products" },
   { href: "/markets", label: "Export Markets" },
   { href: "/certifications", label: "Quality & Certifications" },
+  { href: "/resources", label: "Buyer Resources" },
   { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];
@@ -285,6 +287,10 @@ export default function Footer() {
                 </a>
               ))}
             </div>}
+
+            <div className="mt-5">
+              <LanguageSwitcher compact />
+            </div>
           </div>
 
           {/* ── Navigation ── */}

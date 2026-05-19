@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import BrandLogo from "./BrandLogo";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 /* ─── CONFIG ──────────────────────────────────────────────── */
 const CONTACT_EMAIL = "admin@gopuexports.com";
@@ -16,6 +17,7 @@ const NAV_LINKS = [
   { label: "Products", href: "/products" },
   { label: "Export Markets", href: "/markets" },
   { label: "Certifications", href: "/certifications" },
+  { label: "Resources", href: "/resources" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];
@@ -178,6 +180,9 @@ export default function Navbar() {
 
             {/* RIGHT CTA */}
             <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="hidden xl:block">
+                <LanguageSwitcher compact />
+              </div>
               <a
                 href={`https://wa.me/${WHATSAPP_NUMBER}`}
                 target="_blank"
@@ -240,6 +245,7 @@ export default function Navbar() {
               })}
             </ul>
             <div className="mt-5 flex flex-col gap-3">
+              <LanguageSwitcher />
               <Link
                 href="/contact"
                 onClick={() => setMenuOpen(false)}

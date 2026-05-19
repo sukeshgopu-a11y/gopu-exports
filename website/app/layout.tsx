@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import ConditionalLayout from "@/components/ConditionalLayout";
+import { LOCALES } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: {
@@ -95,7 +96,7 @@ const organizationJsonLd = {
       contactType: "sales",
       email: "admin@gopuexports.com",
       telephone: "+918712816876",
-      availableLanguage: ["en"],
+      availableLanguage: LOCALES.map((locale) => locale.label),
     },
   ],
   sameAs: [],

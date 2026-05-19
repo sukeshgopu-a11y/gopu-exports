@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { TrendingUp, Package, Globe, MessageSquare } from "lucide-react";
 import { DashboardSkeleton, InlineError } from "@/components/dashboard/LoadingStates";
 import { dashboardFetch, getErrorMessage } from "@/lib/dashboardApi";
@@ -92,9 +93,9 @@ export default function DashboardPage() {
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-bold text-[#0F172A]">Recent Inquiries</h2>
-          <a href="/dashboard/inquiries" className="text-[#0E7490] text-sm font-semibold hover:underline">
+          <Link href="/dashboard/inquiries" className="text-[#0E7490] text-sm font-semibold hover:underline">
             View all →
-          </a>
+          </Link>
         </div>
         {loading ? (
           <DashboardSkeleton rows={4} />
@@ -130,14 +131,14 @@ export default function DashboardPage() {
           { label: "Manage Gallery", href: "/dashboard/gallery", icon: "🖼️" },
           { label: "Settings", href: "/dashboard/settings", icon: "⚙️" },
         ].map(({ label, href, icon }) => (
-          <a
+          <Link
             key={label}
             href={href}
             className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col items-center gap-3 text-center hover:border-[#0E7490] hover:bg-[#F0F9FA] transition shadow-sm"
           >
             <span className="text-2xl">{icon}</span>
             <span className="text-sm font-semibold text-[#0F172A]">{label}</span>
-          </a>
+          </Link>
         ))}
       </div>
     </div>
