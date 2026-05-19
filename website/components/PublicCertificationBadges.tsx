@@ -1,18 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
+import { COMPANY } from "@/lib/company";
 
-type Certification = {
-  id?: string;
-  _id?: string;
-  name: string;
-  active?: boolean;
-  is_active?: boolean;
-};
-
-const FALLBACK_LABELS = ["Quality docs available", "Export compliance support", "Buyer document review"];
+const LABELS = [
+  ...COMPANY.verifiedIdentifiers.map((item) => `${item.label} verified`),
+  ...COMPANY.pendingCertifications.map((item) => `${item.label} on request`),
+];
 
 export default function PublicCertificationBadges({
   variant = "dark",
@@ -23,29 +18,7 @@ export default function PublicCertificationBadges({
   limit?: number;
   showLabel?: boolean;
 }) {
-  const [items, setItems] = useState<Certification[]>([]);
-
-  useEffect(() => {
-    let alive = true;
-    const controller = new AbortController();
-
-    fetch("/api/certifications?active=true", { cache: "no-store", signal: controller.signal })
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => {
-        if (!alive) return;
-        setItems(Array.isArray(data) ? data.filter((item) => item.active !== false && item.is_active !== false) : []);
-      })
-      .catch(() => {
-        if (alive) setItems([]);
-      });
-
-    return () => {
-      alive = false;
-      controller.abort();
-    };
-  }, []);
-
-  const labels = items.length > 0 ? items.slice(0, limit).map((item) => item.name) : FALLBACK_LABELS.slice(0, Math.min(limit, FALLBACK_LABELS.length));
+  const labels = LABELS.slice(0, Math.min(limit, LABELS.length));
 
   if (variant === "footer") {
     return (

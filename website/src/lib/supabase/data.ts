@@ -35,6 +35,10 @@ export type InquiryRow = {
   company: string | null;
   country: string | null;
   message: string | null;
+  product_name: string | null;
+  quantity: string | null;
+  incoterm: string | null;
+  admin_notes: string | null;
   product_id: string | null;
   status: string;
   created_at: string;
@@ -240,8 +244,14 @@ export function inquiryToApi(row: InquiryRow) {
     phone: row.phone ?? "",
     company: row.company ?? "",
     country: row.country ?? "",
+    product: row.product_name ?? "",
+    product_name: row.product_name ?? "",
+    quantity: row.quantity ?? "",
+    incoterm: row.incoterm ?? "",
     notes: row.message ?? "",
     message: row.message ?? "",
+    adminNotes: row.admin_notes ?? "",
+    admin_notes: row.admin_notes ?? "",
     product_id: row.product_id,
     status: toUiStatus(row.status),
     createdAt: row.created_at,

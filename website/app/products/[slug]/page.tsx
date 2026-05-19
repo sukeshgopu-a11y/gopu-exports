@@ -2,9 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { ArrowRight, CheckCircle2, ClipboardCheck, FileText, PackageCheck, Ship } from "lucide-react";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
 import { getProductBySlug } from "@/lib/products";
+import { formatCommercialMoq } from "@/lib/moq";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -39,6 +41,62 @@ type Product = {
 
 type Props = { params: Promise<{ slug: string }> };
 
+function DetailRow({ label, value }: { label: string; value?: string }) {
+  if (!value) return null;
+  return (
+    <div className="grid gap-1 border-b border-[#E2E8F0] py-3 last:border-b-0 sm:grid-cols-[180px_1fr]">
+      <dt className="text-[12px] font-black uppercase tracking-[0.14em] text-[#0E7490]">{label}</dt>
+      <dd className="text-[14px] font-semibold leading-6 text-[#0F172A]">{value}</dd>
+    </div>
+  );
+}
+
+function compactMoq(product: Product, commercialMoq: string) {
+  const category = product.category.toLowerCase();
+  if (category.includes("spice") || category.includes("rice")) return "Bulk orders accepted";
+  if (category.includes("fruit") || category.includes("vegetable")) return "LCL/FCL by route";
+  return product.moq || commercialMoq;
+}
+
+function BuyerStep({ icon: Icon, title, text }: { icon: typeof ClipboardCheck; title: string; text: string }) {
+  return (
+    <div className="rounded-2xl border border-[#D9E2EC] bg-white p-5 shadow-sm">
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E6F4F7] text-[#0E7490]">
+        <Icon size={19} />
+      </div>
+      <h3 className="mt-4 text-[15px] font-black tracking-[-0.02em] text-[#0F172A]">{title}</h3>
+      <p className="mt-2 text-[13px] leading-6 text-[#64748B]">{text}</p>
+    </div>
+  );
+}
+
+function SpecTable({ title, rows }: { title: string; rows: Spec[] }) {
+  if (!rows.length) return null;
+  return (
+    <div>
+      <h3 className="text-[18px] font-black tracking-[-0.02em] text-[#0F172A]">{title}</h3>
+      <div className="mt-4 overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white">
+        <table className="w-full text-left text-[14px]">
+          <thead className="bg-[#0F172A] text-white">
+            <tr>
+              <th className="px-5 py-3 font-black">Parameter</th>
+              <th className="px-5 py-3 font-black">Specification / Range</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, index) => (
+              <tr key={`${row.label}-${index}`} className={index % 2 === 0 ? "bg-[#F8FAFC]" : "bg-white"}>
+                <td className="px-5 py-3 font-bold text-[#374151]">{row.label}</td>
+                <td className="px-5 py-3 text-[#475569]">{row.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 async function getProduct(slug: string): Promise<Product | null> {
   const supabase = createPublicClient();
   const { data, error } = await supabase
@@ -71,11 +129,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProduct(slug);
   if (!product) return { title: "Product Not Found" };
+  const commercialMoq = formatCommercialMoq(product);
   return {
     title: product.metaTitle || product.title,
     description:
       product.metaDescription ||
-      `${product.title}${product.tagline ? ` — ${product.tagline}` : ""}. Export quality${product.origin ? ` from ${product.origin}` : ""}${product.moq ? `. MOQ: ${product.moq}` : ""}${product.hs ? `. HS Code: ${product.hs}` : ""}.`,
+      `${product.title}${product.tagline ? ` - ${product.tagline}` : ""}. Export quality${product.origin ? ` from ${product.origin}` : ""}${product.moq ? `. MOQ: ${commercialMoq}` : ""}${product.hs ? `. HS Code: ${product.hs}` : ""}.`,
+    alternates: { canonical: `/products/${product.slug}` },
+    openGraph: {
+      title: product.metaTitle || `${product.title} | GOPU Exports`,
+      description: product.metaDescription || product.description || `Export enquiry details for ${product.title}.`,
+      url: `/products/${product.slug}`,
+      type: "website",
+      images: product.image ? [{ url: product.image, alt: `${product.title} export product` }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.metaTitle || `${product.title} | GOPU Exports`,
+      description: product.metaDescription || product.description || `Export enquiry details for ${product.title}.`,
+      images: product.image ? [product.image] : undefined,
+    },
   };
 }
 
@@ -85,12 +158,15 @@ export default async function ProductDetailsPage({ params }: Props) {
   if (!product) notFound();
 
   const related = await getRelated(product.related ?? []);
-
   const specs = product.specs ?? [];
   const benefits = product.benefits ?? [];
   const applications = product.applications ?? [];
   const exportCountries = product.exportCountries ?? [];
   const exportPorts = product.exportPorts ?? [];
+  const commercialMoq = formatCommercialMoq(product);
+  const heroMoq = compactMoq(product, commercialMoq);
+  const midpoint = Math.ceil(specs.length / 2);
+
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -105,7 +181,7 @@ export default async function ProductDetailsPage({ params }: Props) {
     brand: { "@type": "Brand", name: "GOPU Exports" },
     additionalProperty: [
       product.origin ? { "@type": "PropertyValue", name: "Origin", value: product.origin } : null,
-      product.moq ? { "@type": "PropertyValue", name: "MOQ", value: product.moq } : null,
+      { "@type": "PropertyValue", name: "MOQ", value: commercialMoq },
       product.packaging ? { "@type": "PropertyValue", name: "Packaging", value: product.packaging } : null,
       product.hs ? { "@type": "PropertyValue", name: "HS Code", value: product.hs } : null,
     ].filter(Boolean),
@@ -125,7 +201,6 @@ export default async function ProductDetailsPage({ params }: Props) {
       <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
       <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
-      {/* ── BREADCRUMB ── */}
       <div className="border-b border-[#E2E8F0] bg-white">
         <div className="mx-auto max-w-[1450px] px-6 py-3 sm:px-8">
           <nav className="flex items-center gap-2 text-[13px] text-[#94A3B8]">
@@ -138,231 +213,171 @@ export default async function ProductDetailsPage({ params }: Props) {
         </div>
       </div>
 
-      {/* ── MAIN DETAIL ── */}
-      <section className="mx-auto max-w-[1450px] px-6 py-14 sm:px-8">
-        <div className="grid gap-12 lg:grid-cols-2">
+      <section className="mx-auto max-w-[1300px] px-6 py-12 sm:px-8">
+        <div className="overflow-hidden rounded-[32px] border border-[#D9E2EC] bg-white shadow-sm">
+          <div className="grid gap-0 lg:grid-cols-[1fr_0.82fr]">
+            <div className="p-6 sm:p-8 lg:p-10">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <span className="inline-block rounded-lg bg-[#E6F4F7] px-3 py-1 text-[11px] font-black tracking-[0.18em] text-[#0E7490]">
+                  {product.category.toUpperCase()}
+                </span>
+                {product.featured && <span className="w-fit rounded-lg bg-amber-100 px-3 py-1 text-[11px] font-black tracking-[0.14em] text-amber-700">FEATURED EXPORT ITEM</span>}
+              </div>
 
-          {/* IMAGE */}
-          <div className="relative overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm">
-            <div className="relative h-[480px]">
+              <div className="mt-8">
+                <h1 className="text-[40px] font-black leading-[0.98] tracking-[-0.055em] text-[#0F172A] sm:text-[56px] lg:text-[68px]">
+                  {product.title}
+                </h1>
+                {product.tagline && <p className="mt-3 text-[18px] italic text-[#64748B]">{product.tagline}</p>}
+                {product.description && <p className="mt-6 max-w-3xl text-[15px] leading-[1.9] text-[#475569]">{product.description}</p>}
+              </div>
+
+              <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                {[
+                  ["MOQ", heroMoq],
+                  ["Origin", product.origin?.split(",")[0]],
+                  ["HS Code", product.hs],
+                ].map(([label, value]) => value && (
+                  <div key={label} className="rounded-2xl border border-[#D9E2EC] bg-[#F8FAFC] p-4">
+                    <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#0E7490]">{label}</p>
+                    <p className="mt-2 text-[14px] font-black leading-6 text-[#0F172A]">{value}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link href={`/contact?product=${encodeURIComponent(product.title)}`} className="inline-flex items-center gap-2 rounded-xl bg-[#0E7490] px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-white transition hover:bg-[#0A5A70]">
+                  Product Enquiry <ArrowRight size={15} />
+                </Link>
+                <Link href={`/contact?product=${encodeURIComponent(product.title)}&catalogue=1`} className="inline-flex items-center gap-2 rounded-xl border border-[#D9E2EC] bg-white px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-[#0F172A] transition hover:border-[#0E7490] hover:text-[#0E7490]">
+                  Download Specification <FileText size={15} />
+                </Link>
+              </div>
+            </div>
+
+            <div className="relative min-h-[360px] overflow-hidden bg-[#E6F4F7] lg:min-h-full">
               {product.image ? (
-                <Image
-                  src={product.image}
-                  alt={product.title}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
-                />
+                <Image src={product.image} alt={`${product.title} product image`} fill priority sizes="(max-width: 1024px) 100vw, 520px" className="object-cover" />
               ) : (
-                <div className="flex h-full items-center justify-center bg-[#F0F9FA] text-[#0E7490] text-6xl">
-                  📦
+                <div className="flex h-full min-h-[360px] items-center justify-center text-sm font-semibold text-[#64748B]">
+                  Product image will appear after dashboard upload.
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#061827]/75 via-transparent to-transparent" />
+              <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/20 bg-white/90 p-4 shadow-xl backdrop-blur">
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#0E7490]">Buyer review focus</p>
+                <p className="mt-1 text-[14px] font-bold leading-6 text-[#0F172A]">Grade, packing, MOQ, destination, and documentation can be reviewed before quote finalisation.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-4 border-t border-[#E2E8F0] bg-[#F8FAFC] p-6 sm:grid-cols-2 lg:grid-cols-4 lg:p-8">
+            <BuyerStep icon={ClipboardCheck} title="Specification Review" text="Share grade, form, packing, quantity, and destination for a practical export review." />
+            <BuyerStep icon={PackageCheck} title="Packing Options" text="Discuss PP bags, jute bags, cartons, retail packs, or private-label formats where suitable." />
+            <BuyerStep icon={Ship} title="Shipment Planning" text="Plan LCL or FCL availability around product category, route, and buyer timeline." />
+            <BuyerStep icon={FileText} title="Documentation Support" text="Available certificate copies and product documents can be shared with verified buyers." />
+          </div>
+
+          <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[0.9fr_1.1fr] lg:p-10">
+            <div>
+              <h2 className="text-[24px] font-black tracking-[-0.03em] text-[#0F172A]">Product Details</h2>
+              <dl className="mt-4 rounded-2xl border border-[#D9E2EC] bg-[#F8FAFC] px-5">
+                <DetailRow label="Product Name" value={product.title} />
+                <DetailRow label="Category" value={product.category} />
+                <DetailRow label="Origin" value={product.origin} />
+                <DetailRow label="MOQ" value={commercialMoq} />
+                <DetailRow label="Packaging" value={product.packaging} />
+                <DetailRow label="Lead Time" value={product.lead} />
+                <DetailRow label="HS Code" value={product.hs} />
+                <DetailRow label="Shelf Life" value={product.shelfLife} />
+              </dl>
+            </div>
+
+            <div>
+              <h2 className="text-[24px] font-black tracking-[-0.03em] text-[#0F172A]">Bulk Export Information</h2>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                {[
+                  ["Container Loading", product.containerCapacity],
+                  ["Loading Ports", exportPorts.length ? exportPorts.join(", ") : undefined],
+                  ["Export Destinations", exportCountries.length ? exportCountries.join(", ") : undefined],
+                  ["Applications", applications.length ? applications.join(", ") : undefined],
+                ].map(([label, value]) => value && (
+                  <div key={label} className="rounded-2xl border border-[#D9E2EC] bg-white p-4">
+                    <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#0E7490]">{label}</p>
+                    <p className="mt-2 text-[14px] font-semibold leading-6 text-[#475569]">{value}</p>
+                  </div>
+                ))}
+              </div>
+              {benefits.length > 0 && (
+                <div className="mt-4 rounded-2xl border border-[#D9E2EC] bg-[#F0F9FA] p-5">
+                  <p className="text-[13px] font-black uppercase tracking-[0.16em] text-[#0E7490]">Buyer Notes</p>
+                  <ul className="mt-3 grid gap-2">
+                    {benefits.slice(0, 5).map((benefit) => (
+                      <li key={benefit} className="flex gap-2 text-[14px] leading-6 text-[#475569]">
+                        <span className="mt-1 text-[#0E7490]">✓</span>
+                        {benefit}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </div>
-            {applications.length > 0 && (
-              <div className="p-5">
-                <div className="flex flex-wrap gap-2">
-                  {applications.slice(0, 4).map((app) => (
-                    <span
-                      key={app}
-                      className="rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1 text-[12px] font-semibold text-[#374151]"
-                    >
-                      {app}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
-          {/* DETAILS */}
-          <div>
-            <span className="inline-block rounded-lg bg-[#E6F4F7] px-3 py-1 text-[11px] font-black tracking-[0.18em] text-[#0E7490]">
-              {product.category.toUpperCase()}
-            </span>
+          {specs.length > 0 && (
+            <div id="product-specifications" className="grid gap-8 px-6 pb-6 sm:px-8 sm:pb-8 lg:grid-cols-2 lg:px-10">
+              <SpecTable title="Physical / Quality Specifications" rows={specs.slice(0, midpoint)} />
+              <SpecTable
+                title="Commercial Specifications"
+                rows={specs.slice(midpoint).map((spec) => ({
+                  ...spec,
+                  value: spec.label.toLowerCase() === "moq" ? commercialMoq : spec.value,
+                }))}
+              />
+            </div>
+          )}
 
-            <h1 className="mt-3 text-[44px] font-black leading-[1.0] tracking-[-0.04em] text-[#0F172A] lg:text-[52px]">
-              {product.title}
-            </h1>
-            {product.tagline && (
-              <p className="mt-2 text-[17px] italic text-[#64748B]">{product.tagline}</p>
-            )}
-            {product.description && (
-              <p className="mt-5 text-[15px] leading-[1.9] text-[#475569]">
-                {product.description}
-              </p>
-            )}
-
-            {/* Quick specs */}
-            <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {[
-                { label: "MOQ", value: product.moq },
-                { label: "Lead Time", value: product.lead },
-                { label: "HS Code", value: product.hs },
-                { label: "Shelf Life", value: product.shelfLife },
-              ]
-                .filter((s) => s.value)
-                .map(({ label, value }) => (
-                  <div key={label} className="rounded-xl border border-[#D9E2EC] bg-white p-4 text-center">
-                    <p className="text-[10px] font-black tracking-[0.18em] text-[#94A3B8]">
-                      {label.toUpperCase()}
-                    </p>
-                    <p className="mt-1.5 text-[15px] font-bold text-[#0F172A]">{value}</p>
-                  </div>
-                ))}
+          <div className="grid gap-8 border-t border-[#E2E8F0] px-6 py-8 sm:px-8 lg:grid-cols-[1fr_0.85fr] lg:px-10">
+            <div>
+              <h2 className="text-[24px] font-black tracking-[-0.03em] text-[#0F172A]">Packaging & Shipping Details</h2>
+              <div className="mt-5 space-y-4 text-[15px] leading-7 text-[#475569]">
+                <p><strong className="text-[#0F172A]">Packing:</strong> {product.packaging || "Food-grade export packing options can be reviewed based on buyer requirement and destination rules."}</p>
+                <p><strong className="text-[#0F172A]">MOQ:</strong> {commercialMoq}</p>
+                {product.containerCapacity && <p><strong className="text-[#0F172A]">Container loading capacity:</strong> {product.containerCapacity}</p>}
+                {product.shelfLife && <p><strong className="text-[#0F172A]">Shelf life:</strong> {product.shelfLife} under suitable storage conditions.</p>}
+                <p><strong className="text-[#0F172A]">Documentation:</strong> Product specifications, packing details, and available verification documents can be shared during buyer discussions.</p>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link href={`/contact?product=${encodeURIComponent(product.title)}`} className="rounded-xl bg-[#0E7490] px-6 py-3 text-[13px] font-bold text-white transition hover:bg-[#0A5A70]">
+                  Request Quote
+                </Link>
+                <a href={`https://wa.me/918712816876?text=Hi%2C%20I%27m%20interested%20in%20${encodeURIComponent(product.title)}%20from%20GOPU%20Exports.`} target="_blank" rel="noreferrer" className="rounded-xl border border-[#22C55E]/50 bg-[#F0FDF4] px-6 py-3 text-[13px] font-bold text-[#16A34A] transition hover:bg-[#DCFCE7]">
+                  WhatsApp Enquiry
+                </a>
+              </div>
             </div>
 
-            {/* Origin + Packaging */}
-            {(product.origin || product.packaging) && (
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                {product.origin && (
-                  <div className="rounded-xl border border-[#D9E2EC] bg-white p-4">
-                    <p className="text-[10px] font-black tracking-[0.18em] text-[#94A3B8]">ORIGIN</p>
-                    <p className="mt-1.5 text-[14px] font-semibold text-[#0F172A]">{product.origin}</p>
+            <div className="rounded-2xl border border-[#D9E2EC] bg-[#F8FAFC] p-5">
+              <p className="text-[13px] font-black uppercase tracking-[0.16em] text-[#0E7490]">Procurement checklist</p>
+              <div className="mt-4 grid gap-3">
+                {[
+                  "Product grade or variety",
+                  "Required packing size",
+                  "Trial order or bulk quantity",
+                  "Destination port or country",
+                  "Document requirements",
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 text-[13px] font-semibold text-[#475569]">
+                    <CheckCircle2 size={16} className="shrink-0 text-[#0E7490]" />
+                    {item}
                   </div>
-                )}
-                {product.packaging && (
-                  <div className="rounded-xl border border-[#D9E2EC] bg-white p-4">
-                    <p className="text-[10px] font-black tracking-[0.18em] text-[#94A3B8]">PACKAGING</p>
-                    <p className="mt-1.5 text-[14px] font-semibold text-[#0F172A]">{product.packaging}</p>
-                  </div>
-                )}
+                ))}
               </div>
-            )}
-
-            {/* CTAs */}
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link
-                href={`/contact?product=${encodeURIComponent(product.title)}`}
-                className="rounded-xl bg-[#0E7490] px-7 py-4 text-[13px] font-bold tracking-wide text-white shadow-md transition hover:bg-[#0A5A70] hover:shadow-lg"
-              >
-                REQUEST A QUOTE →
-              </Link>
-              <Link
-                href={`/contact?product=${encodeURIComponent(product.title)}&catalogue=1`}
-                className="rounded-xl border border-[#D9E2EC] bg-white px-7 py-4 text-[13px] font-bold tracking-wide text-[#0F172A] transition hover:border-[#0E7490] hover:text-[#0E7490]"
-              >
-                DOWNLOAD CATALOGUE
-              </Link>
-              <a
-                href={`https://wa.me/918712816876?text=Hi%2C%20I%27m%20interested%20in%20${encodeURIComponent(product.title)}%20from%20GOPU%20Exports.`}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 rounded-xl border border-[#22C55E]/50 bg-[#F0FDF4] px-7 py-4 text-[13px] font-bold text-[#16A34A] transition hover:bg-[#DCFCE7]"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                </svg>
-                WHATSAPP ENQUIRY
-              </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── SPECIFICATIONS + BENEFITS ── */}
-      {(specs.length > 0 || benefits.length > 0) && (
-        <section className="bg-white py-14">
-          <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-            <div className="grid gap-10 lg:grid-cols-2">
-
-              {specs.length > 0 && (
-                <div>
-                  <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">PRODUCT SPECIFICATIONS</p>
-                  <h2 className="mt-2 text-[28px] font-black tracking-[-0.03em] text-[#0F172A]">Technical Details</h2>
-                  <div className="mt-6 overflow-hidden rounded-xl border border-[#E2E8F0]">
-                    <table className="w-full text-[14px]">
-                      <tbody>
-                        {specs.map((spec, i) => (
-                          <tr key={spec.label} className={i % 2 === 0 ? "bg-[#F8FAFC]" : "bg-white"}>
-                            <td className="px-5 py-3.5 font-bold text-[#374151]">{spec.label}</td>
-                            <td className="px-5 py-3.5 text-[#64748B]">{spec.value}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-
-              {benefits.length > 0 && (
-                <div>
-                  <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">WHY BUYERS CHOOSE THIS</p>
-                  <h2 className="mt-2 text-[28px] font-black tracking-[-0.03em] text-[#0F172A]">Key Benefits</h2>
-                  <ul className="mt-6 space-y-3">
-                    {benefits.map((benefit) => (
-                      <li key={benefit} className="flex items-start gap-3 text-[14px] text-[#475569]">
-                        <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#E6F4F7] text-[11px] font-bold text-[#0E7490]">✓</span>
-                        {benefit}
-                      </li>
-                    ))}
-                  </ul>
-                  {applications.length > 0 && (
-                    <div className="mt-8 rounded-xl border border-[#D9E2EC] bg-[#F0F9FA] p-5">
-                      <p className="text-[13px] font-bold text-[#0F172A]">Applications</p>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {applications.map((app) => (
-                          <span
-                            key={app}
-                            className="rounded-lg bg-white border border-[#D9E2EC] px-3 py-1.5 text-[12px] font-semibold text-[#374151]"
-                          >
-                            {app}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ── EXPORT INFORMATION ── */}
-      {(exportCountries.length > 0 || exportPorts.length > 0 || product.containerCapacity) && (
-        <section className="bg-[#071624] py-14">
-          <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-            <p className="text-[11px] font-black tracking-[0.24em] text-[#67C9D8]">EXPORT INFORMATION</p>
-            <h2 className="mt-2 text-[28px] font-black tracking-[-0.03em] text-white">Shipping & Export Details</h2>
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {exportCountries.length > 0 && (
-                <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-                  <p className="text-[11px] font-black tracking-[0.18em] text-[#67C9D8]">EXPORT DESTINATIONS</p>
-                  <ul className="mt-3 space-y-1">
-                    {exportCountries.map((c) => (
-                      <li key={c} className="text-[14px] text-slate-300 flex items-center gap-2">
-                        <span className="text-[#0E7490]">→</span> {c}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {exportPorts.length > 0 && (
-                <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-                  <p className="text-[11px] font-black tracking-[0.18em] text-[#67C9D8]">LOADING PORTS</p>
-                  <ul className="mt-3 space-y-1">
-                    {exportPorts.map((p) => (
-                      <li key={p} className="text-[14px] text-slate-300 flex items-center gap-2">
-                        <span className="text-[#0E7490]">⚓</span> {p}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {product.containerCapacity && (
-                <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-                  <p className="text-[11px] font-black tracking-[0.18em] text-[#67C9D8]">CONTAINER CAPACITY</p>
-                  <p className="mt-3 text-[17px] font-bold text-white">{product.containerCapacity}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ── RELATED PRODUCTS ── */}
       {related.length > 0 && (
         <section className="py-16">
           <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
@@ -372,37 +387,23 @@ export default async function ProductDetailsPage({ params }: Props) {
                 <h2 className="mt-2 text-[28px] font-black tracking-[-0.03em] text-[#0F172A]">Related Products</h2>
               </div>
               <Link href="/products" className="text-[13px] font-bold text-[#0E7490] hover:text-[#0A5A70]">
-                VIEW ALL →
+                View All
               </Link>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((rp) => (
-                <Link
-                  key={rp.slug}
-                  href={`/products/${rp.slug}`}
-                  className="group overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-                >
+                <Link key={rp.slug} href={`/products/${rp.slug}`} className="group overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
                   <div className="relative h-48 overflow-hidden">
                     {rp.image ? (
-                      <Image
-                        src={rp.image}
-                        alt={rp.title}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover transition duration-500 group-hover:scale-105"
-                      />
+                      <Image src={rp.image} alt={rp.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" />
                     ) : (
-                      <div className="flex h-full items-center justify-center bg-[#F0F9FA] text-4xl">📦</div>
+                      <div className="flex h-full items-center justify-center bg-[#F0F9FA] text-sm font-semibold text-[#64748B]">Image pending</div>
                     )}
                   </div>
                   <div className="p-5">
-                    <p className="text-[11px] font-black tracking-[0.18em] text-[#0E7490]">
-                      {rp.category.toUpperCase()}
-                    </p>
+                    <p className="text-[11px] font-black tracking-[0.18em] text-[#0E7490]">{rp.category.toUpperCase()}</p>
                     <h3 className="mt-1.5 text-[17px] font-black text-[#0F172A]">{rp.title}</h3>
-                    {rp.tagline && (
-                      <p className="mt-1 text-[13px] italic text-[#64748B]">{rp.tagline}</p>
-                    )}
+                    {rp.tagline && <p className="mt-1 text-[13px] italic text-[#64748B]">{rp.tagline}</p>}
                   </div>
                 </Link>
               ))}
@@ -410,7 +411,6 @@ export default async function ProductDetailsPage({ params }: Props) {
           </div>
         </section>
       )}
-
     </main>
   );
 }

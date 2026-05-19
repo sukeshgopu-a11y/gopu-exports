@@ -36,22 +36,49 @@ async function getProducts() {
 
 export default async function ProductsPage() {
   const products = await getProducts();
+  const categories = Array.from(new Set(products.map((product) => product.category).filter(Boolean)));
+  const featuredCount = products.filter((product) => product.featured).length;
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
 
       {/* ── HEADER ───────────────────────────────────────────── */}
-      <section className="border-b border-[#E2E8F0] bg-white">
-        <div className="mx-auto max-w-[1450px] px-6 py-14 sm:px-8">
-          <div className="flex items-center gap-4">
-            <div className="h-[2px] w-10 bg-[#0E7490]" />
-            <p className="text-[11px] font-black tracking-[0.26em] text-[#0E7490]">EXPORT CATALOGUE</p>
+      <section className="relative overflow-hidden border-b border-[#D9E2EC] bg-[#061827]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(103,201,216,0.22),transparent_34%),linear-gradient(135deg,rgba(14,116,144,0.28),transparent_45%)]" />
+        <div className="absolute right-0 top-0 h-full w-1/2 bg-[linear-gradient(135deg,transparent,rgba(255,255,255,0.08))]" />
+        <div className="relative mx-auto grid max-w-[1450px] gap-10 px-6 py-16 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:py-20">
+          <div>
+            <div className="flex items-center gap-4">
+              <div className="h-[2px] w-10 bg-[#67C9D8]" />
+              <p className="text-[11px] font-black tracking-[0.26em] text-[#67C9D8]">EXPORT CATALOGUE</p>
+            </div>
+            <h1 className="mt-5 max-w-3xl text-[48px] font-black leading-none tracking-[-0.055em] text-white sm:text-[64px] lg:text-[76px]">
+              Indian Agri Products for Bulk Buyers
+            </h1>
+            <p className="mt-6 max-w-2xl text-[16px] leading-[1.9] text-slate-300 sm:text-[18px]">
+              Browse rice, spices, fresh produce, millets, pulses, and processed agricultural products organised for importers reviewing grade, packing, MOQ, destination, and documentation needs.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/contact" className="rounded-xl bg-[#0E7490] px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-white shadow-lg shadow-cyan-950/30 transition hover:bg-[#0A5A70]">
+                Request Bulk Quote
+              </Link>
+              <a href="https://wa.me/918712816876" target="_blank" rel="noreferrer" className="rounded-xl border border-white/20 bg-white/10 px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-white backdrop-blur transition hover:bg-white/15">
+                WhatsApp Sourcing Desk
+              </a>
+            </div>
           </div>
-          <h1 className="mt-4 text-[52px] font-black leading-none tracking-[-0.05em] text-[#0F172A] lg:text-[64px]">
-            Our Products
-          </h1>
-          <p className="mt-4 max-w-xl text-[17px] leading-[1.8] text-[#64748B]">
-            Indian agricultural commodities organised by category for importers and procurement teams reviewing grade, packing, quantity, destination, and document requirements.
-          </p>
+          <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+            {[
+              ["Active products", `${products.length}`, "Live catalogue records from the product system"],
+              ["Export categories", `${categories.length}`, "Grouped for faster buyer review"],
+              ["Featured items", `${featuredCount}`, "Priority products shown on the homepage"],
+            ].map(([label, value, note]) => (
+              <div key={label} className="rounded-2xl border border-white/15 bg-white/10 p-5 text-white shadow-2xl shadow-cyan-950/20 backdrop-blur">
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#9EE7EF]">{label}</p>
+                <p className="mt-2 text-4xl font-black tracking-[-0.04em]">{value}</p>
+                <p className="mt-1 text-sm leading-6 text-slate-300">{note}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

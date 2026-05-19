@@ -37,6 +37,10 @@ create table if not exists public.inquiries (
   company text,
   country text,
   message text,
+  product_name text,
+  quantity text,
+  incoterm text,
+  admin_notes text,
   product_id uuid references public.products(id) on delete set null,
   status text not null default 'new' check (status in ('new', 'pending', 'read', 'contacted', 'replied', 'closed')),
   created_at timestamptz not null default now()
@@ -158,6 +162,7 @@ create index if not exists inquiries_status_idx on public.inquiries (status);
 create index if not exists inquiries_created_at_idx on public.inquiries (created_at desc);
 create index if not exists inquiries_status_created_at_idx on public.inquiries (status, created_at desc);
 create index if not exists inquiries_country_idx on public.inquiries (country) where country is not null;
+create index if not exists inquiries_product_name_idx on public.inquiries (product_name) where product_name is not null;
 create index if not exists quotes_status_idx on public.quotes (status);
 create index if not exists quotes_created_at_idx on public.quotes (created_at desc);
 create index if not exists quotes_status_created_at_idx on public.quotes (status, created_at desc);

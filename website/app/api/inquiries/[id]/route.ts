@@ -13,6 +13,7 @@ export async function PATCH(
   const update = {
     ...("status" in body ? { status: toDbStatus(body.status) } : {}),
     ...("message" in body || "notes" in body ? { message: body.message ?? body.notes } : {}),
+    ...("adminNotes" in body || "admin_notes" in body ? { admin_notes: body.admin_notes ?? body.adminNotes ?? "" } : {}),
   };
   const { data, error } = await supabase
     .from("inquiries")

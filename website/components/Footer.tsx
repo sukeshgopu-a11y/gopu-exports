@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Mail, Phone, ShieldCheck } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, Phone, ShieldCheck } from "lucide-react";
 import BrandLogo from "./BrandLogo";
 import PublicCertificationBadges from "./PublicCertificationBadges";
 import { COMPANY } from "@/lib/company";
@@ -16,10 +16,18 @@ const NAVIGATION = [
 
 const TRUST_LINKS = [
   ["Company Verification", "/company-verification"],
+  ["Certifications", "/certifications"],
+  ["Request Verification Documents", "/contact?verification=true"],
+];
+
+const RESOURCE_LINKS = [
+  ["Buyer Resources", "/resources"],
+  ["Blog", "/blog"],
   ["Documentation Support", "/resources/documentation-support"],
   ["Buyer FAQ", "/resources/buyer-faq"],
   ["Export Process", "/resources/export-process"],
   ["Quality Control", "/resources/quality-control"],
+  ["Packaging Standards", "/resources/packaging-standards"],
 ];
 
 const POLICY_LINKS = [
@@ -28,6 +36,12 @@ const POLICY_LINKS = [
   ["Cookie Policy", "/cookie-policy"],
   ["Shipping Policy", "/shipping-policy"],
 ];
+
+const SOCIAL_LINKS = [
+  { label: "LinkedIn", href: COMPANY.social.linkedin, icon: Linkedin },
+  { label: "Facebook", href: COMPANY.social.facebook, icon: Facebook },
+  { label: "Instagram", href: COMPANY.social.instagram, icon: Instagram },
+].filter((item) => Boolean(item.href));
 
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
@@ -61,6 +75,8 @@ export default function Footer() {
             <span>IEC: <strong className="text-slate-200">{COMPANY.iec}</strong></span>
             <span>CIN: <strong className="text-slate-200">{COMPANY.cin}</strong></span>
             <span>GST: <strong className="text-slate-200">{COMPANY.gst}</strong></span>
+            <span>Australia business presence: <strong className="text-slate-200">{COMPANY.australia.entityName}, {COMPANY.australia.location}</strong></span>
+            <span>ABN: <strong className="text-slate-200">{COMPANY.australia.abn}</strong></span>
           </div>
           <div className="mt-5">
             <PublicCertificationBadges variant="footer" limit={5} />
@@ -74,8 +90,12 @@ export default function Footer() {
           </ul>
         </nav>
 
-        <nav aria-label="Trust and buyer resources">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Buyer Trust</h3>
+        <nav aria-label="Footer resources and verification">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Resources</h3>
+          <ul className="mt-5 grid gap-3">
+            {RESOURCE_LINKS.map(([label, href]) => <li key={href}><FooterLink href={href}>{label}</FooterLink></li>)}
+          </ul>
+          <h3 className="mt-7 text-[11px] font-black uppercase tracking-[0.22em] text-white">Verification</h3>
           <ul className="mt-5 grid gap-3">
             {TRUST_LINKS.map(([label, href]) => <li key={href}><FooterLink href={href}>{label}</FooterLink></li>)}
           </ul>
@@ -84,6 +104,11 @@ export default function Footer() {
         <div>
           <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Contact Us</h3>
           <div className="mt-5 grid gap-3 text-[13px]">
+            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300">
+              <p className="text-xs uppercase tracking-[0.16em] text-amber-300">Responsible contact</p>
+              <p className="mt-1 font-bold text-slate-100">{COMPANY.contactPerson}</p>
+              <p className="text-xs text-slate-400">{COMPANY.contactTitle}</p>
+            </div>
             <a href={`mailto:${COMPANY.email}`} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300 transition hover:border-amber-400/40">
               <Mail size={17} className="text-amber-300" />
               {COMPANY.email}
@@ -100,6 +125,27 @@ export default function Footer() {
           <Link href="/contact" className="mt-5 inline-flex w-full justify-center rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 px-5 py-3 text-sm font-bold text-slate-900 transition hover:from-amber-300 hover:to-amber-400">
             Send Export Enquiry
           </Link>
+          <div className="mt-5">
+            <p className="text-[12px] leading-5 text-slate-400">
+              Follow GOPU Exports for product updates, sourcing notes, and export documentation insights.
+            </p>
+            {SOCIAL_LINKS.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={label}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-300 transition hover:border-amber-400/40 hover:text-amber-300"
+                  >
+                    <Icon size={16} />
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -109,6 +155,7 @@ export default function Footer() {
           <div className="flex flex-wrap gap-4">
             {POLICY_LINKS.map(([label, href]) => <FooterLink key={href} href={href}>{label}</FooterLink>)}
           </div>
+          <p className="text-slate-600">Website v1.0 • Production build</p>
         </div>
       </div>
     </footer>

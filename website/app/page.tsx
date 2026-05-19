@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
+import { formatCommercialMoq } from "@/lib/moq";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -83,10 +84,11 @@ export default async function HomePage() {
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-[#071624]/80 via-[#08182F]/60 to-[#0E7490]/30" />
+          <div className="hero-ambient absolute inset-0 opacity-70" aria-hidden="true" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-[1450px] px-5 pb-14 pt-16 sm:px-8 sm:pb-20 sm:pt-24 lg:pt-32 lg:pb-28">
-          <div className="max-w-[680px]">
+          <div className="hero-copy max-w-[680px]">
             <div className="flex items-center gap-4">
               <div className="h-[2px] w-14 bg-[#0E7490]" />
               <p className="text-[11px] font-black tracking-[0.26em] text-white/80">
@@ -109,18 +111,40 @@ export default async function HomePage() {
             <div className="mt-6 flex flex-col gap-3 min-[420px]:flex-row sm:mt-8 sm:flex-wrap sm:gap-4">
               <Link
                 href="/products"
-                className="rounded-lg bg-[#0E7490] px-6 py-3.5 text-center text-[12px] font-bold tracking-wide text-white shadow-lg transition hover:bg-[#0A5A70] hover:shadow-xl sm:px-8 sm:py-4 sm:text-[13px]"
+                className="hero-cta rounded-lg bg-[#0E7490] px-6 py-3.5 text-center text-[12px] font-bold tracking-wide text-white shadow-lg transition hover:bg-[#0A5A70] hover:shadow-xl sm:px-8 sm:py-4 sm:text-[13px]"
               >
                 EXPLORE PRODUCTS →
               </Link>
               <Link
                 href="/contact"
-                className="rounded-lg border border-white/25 bg-white/10 px-6 py-3.5 text-center text-[12px] font-bold tracking-wide text-white backdrop-blur-sm transition hover:bg-white/20 sm:px-8 sm:py-4 sm:text-[13px]"
+                className="hero-cta rounded-lg border border-white/25 bg-white/10 px-6 py-3.5 text-center text-[12px] font-bold tracking-wide text-white backdrop-blur-sm transition hover:bg-white/20 sm:px-8 sm:py-4 sm:text-[13px]"
               >
                 GET A QUOTE →
               </Link>
             </div>
 
+          </div>
+          <div className="pointer-events-none absolute bottom-32 right-8 hidden w-[410px] lg:block">
+            <div className="hero-motion-beam absolute -inset-8 rounded-[2rem]" aria-hidden="true" />
+            <div className="hero-process-line absolute left-5 top-6 h-[calc(100%-48px)] w-px bg-cyan-200/35" aria-hidden="true" />
+            <div className="grid gap-4">
+            {["Specification Review", "Packing Options", "Documentation", "Shipment Planning"].map((item, index) => (
+              <div
+                key={item}
+                className={`hero-float-card relative ml-8 rounded-2xl border border-cyan-100/25 bg-[#071624]/70 px-5 py-4 text-white shadow-2xl backdrop-blur-md ${index % 2 === 1 ? "hero-float-card-offset" : ""}`}
+                style={{ animationDelay: `${index * 0.18}s` }}
+              >
+                <span className="hero-process-dot absolute -left-[33px] top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border border-[#9EE7EF] bg-[#0E7490] shadow-lg shadow-cyan-300/30" />
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#9EE7EF]">{item}</p>
+                <p className="mt-1 text-xs text-white/70">Buyer-ready export support</p>
+              </div>
+            ))}
+            </div>
+          </div>
+          <div className="hero-scroll-cue absolute bottom-5 left-1/2 hidden -translate-x-1/2 text-white/70 sm:flex">
+            <span className="h-9 w-5 rounded-full border border-white/35 p-1">
+              <span className="block h-2 w-2 rounded-full bg-white/80" />
+            </span>
           </div>
         </div>
       </section>
@@ -151,10 +175,11 @@ export default async function HomePage() {
               <p className="mt-1 text-[13px]">Add products and mark them as featured in the admin panel.</p>
             </div>
           )}
-          <div className="-mx-6 flex gap-5 overflow-x-auto px-6 pb-3 sm:mx-0 sm:px-0">
-            {featured.slice(0, 8).map((product: FeaturedProduct) => (
+          <div className="-mx-6 overflow-hidden px-6 pb-3 sm:mx-0 sm:px-0">
+            <div className="featured-products-track flex w-max gap-5">
+              {[...featured.slice(0, 8), ...featured.slice(0, 8)].map((product: FeaturedProduct, index) => (
               <Link
-                key={product.slug}
+                key={`${product.slug}-${index}`}
                 href={`/products/${product.slug}`}
                 className="group w-[270px] flex-none overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:w-[300px]"
               >
@@ -185,7 +210,7 @@ export default async function HomePage() {
                   </p>
                   <div className="mt-4 flex items-center justify-between border-t border-[#F1F5F9] pt-3">
                     <span className="text-[12px] font-semibold text-[#94A3B8]">
-                      MOQ: {product.moq}
+                      MOQ: {formatCommercialMoq(product)}
                     </span>
                     <span className="text-[12px] font-bold text-[#0E7490]">
                       VIEW DETAILS →
@@ -194,6 +219,7 @@ export default async function HomePage() {
                 </div>
               </Link>
             ))}
+            </div>
           </div>
 
           <div className="mt-8 text-center sm:hidden">
@@ -266,17 +292,22 @@ export default async function HomePage() {
             <div className="grid lg:grid-cols-2">
 
               {/* LEFT — map */}
-              <div className="relative min-h-[340px] overflow-hidden bg-[#F0F9FA]">
-                <div className="absolute inset-0 flex items-center justify-center p-10">
+              <div className="relative min-h-[340px] overflow-hidden bg-[#071624]">
+                <div className="absolute inset-0">
                   <Image
-                    src="/images/world-map.webp"
-                    alt="GOPU Exports Global Reach"
+                    src="/images/hero-export.webp"
+                    alt="GOPU Exports container logistics and export coordination"
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-contain p-8 opacity-60"
+                    className="object-cover"
                   />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white lg:block hidden" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#071624]/20 via-[#071624]/5 to-white lg:block hidden" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#071624]/45 via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6 rounded-2xl border border-white/15 bg-white/10 px-5 py-4 text-white backdrop-blur-sm">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9EE7EF]">Export Coordination</p>
+                  <p className="mt-1 max-w-[260px] text-sm font-semibold leading-6">Packing, documentation, verification, and shipment planning handled step by step.</p>
+                </div>
               </div>
 
               {/* RIGHT — content */}

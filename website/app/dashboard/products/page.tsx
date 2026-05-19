@@ -328,12 +328,29 @@ export default function ProductsPage() {
     setForm((f) => ({ ...f, specs: f.specs.filter((_, i) => i !== idx) }));
 
   const uploadImage = async (file: File) => {
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("bucket", "products");
-    const data = await dashboardFetch<{ url: string }>("/api/upload", { method: "POST", body: fd, timeoutMs: 30000 });
-    setForm((f) => ({ ...f, image: data.url }));
-    toast.success("Image uploaded.");
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("bucket", "products");
+      const data = await dashboardFetch<{ url: string }>("/api/upload", { method: "POST", body: fd, timeoutMs: 30000 });
+      setForm((f) => ({ ...f, image: data.url }));
+
+      if (editing) {
+        const updated = await dashboardFetch<ProductDB>(`/api/products/${editing._id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: data.url }),
+        });
+        setProducts((prev) => prev.map((p) => (p._id === editing._id ? updated : p)));
+        setEditing(updated);
+        toast.success("Image uploaded and product updated.");
+        return;
+      }
+
+      toast.success("Image uploaded. Save the product to publish it.");
+    } catch (err) {
+      toast.error(getErrorMessage(err, "Image upload failed."));
+    }
   };
 
   const autoSlug = (title: string) =>

@@ -16,7 +16,7 @@ export async function GET() {
     supabase.from("inquiries").select("id", { count: "exact", head: true }).in("status", ["replied", "closed"]),
     supabase
       .from("inquiries")
-      .select("id,name,email,phone,company,country,message,product_id,status,created_at")
+      .select("id,name,email,phone,company,country,message,product_name,quantity,incoterm,admin_notes,product_id,status,created_at")
       .order("created_at", { ascending: false })
       .limit(5)
       .returns<InquiryRow[]>(),

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, Download, Trash2, RefreshCw } from "lucide-react";
+import { Copy, Download, Mail, RefreshCw, Save, Search, Trash2 } from "lucide-react";
 import { DashboardSkeleton, InlineError } from "@/components/dashboard/LoadingStates";
 import { useToast } from "@/components/dashboard/ToastProvider";
 import { dashboardFetch, getErrorMessage } from "@/lib/dashboardApi";
@@ -17,6 +17,7 @@ type Inquiry = {
   quantity?: string;
   incoterm?: string;
   notes?: string;
+  adminNotes?: string;
   status: "New" | "Pending" | "Read" | "Contacted" | "Replied" | "Closed";
   createdAt: string;
 };
@@ -35,6 +36,8 @@ export default function InquiriesPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Inquiry | null>(null);
+  const [draftNote, setDraftNote] = useState("");
+  const [savingNote, setSavingNote] = useState(false);
   const [error, setError] = useState("");
   const toast = useToast();
 
@@ -70,6 +73,41 @@ export default function InquiriesPage() {
       toast.success("Inquiry status updated.");
     } catch (err) {
       toast.error(getErrorMessage(err, "Status update failed."));
+    }
+  };
+
+  const openInquiry = (inquiry: Inquiry) => {
+    const next = selected?._id === inquiry._id ? null : inquiry;
+    setSelected(next);
+    setDraftNote(next?.adminNotes ?? "");
+  };
+
+  const copyEmail = async (email: string) => {
+    try {
+      await navigator.clipboard.writeText(email);
+      toast.success("Email copied.");
+    } catch {
+      toast.error("Could not copy email.");
+    }
+  };
+
+  const saveAdminNote = async () => {
+    if (!selected) return;
+    setSavingNote(true);
+    try {
+      const updated = await dashboardFetch<Inquiry>(`/api/inquiries/${selected._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ adminNotes: draftNote }),
+      });
+      setInquiries((prev) => prev.map((i) => (i._id === selected._id ? updated : i)));
+      setSelected(updated);
+      setDraftNote(updated.adminNotes ?? "");
+      toast.success("Admin note saved.");
+    } catch (err) {
+      toast.error(getErrorMessage(err, "Note save failed."));
+    } finally {
+      setSavingNote(false);
     }
   };
 
@@ -174,7 +212,7 @@ export default function InquiriesPage() {
                   {filtered.map((item) => (
                     <tr
                       key={item._id}
-                      onClick={() => setSelected(selected?._id === item._id ? null : item)}
+                      onClick={() => openInquiry(item)}
                       className={`border-b border-gray-100 hover:bg-gray-50 transition cursor-pointer ${selected?._id === item._id ? "bg-[#E6F4F7]" : ""}`}
                     >
                       <td className="px-6 py-4">
@@ -225,6 +263,24 @@ export default function InquiriesPage() {
               </div>
               <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-gray-600 text-lg">✕</button>
             </div>
+            <div className="mb-5 grid grid-cols-2 gap-2">
+              <a
+                href={`mailto:${selected.email}?subject=${encodeURIComponent(`GOPU Exports enquiry follow-up${selected.product ? ` - ${selected.product}` : ""}`)}&body=${encodeURIComponent(`Dear ${selected.name},\n\nThank you for your enquiry to GOPU Exports.\n\n`)}`}
+                onClick={() => void updateStatus(selected._id, "Replied")}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0E7490] px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0A5A70]"
+              >
+                <Mail size={15} />
+                Reply
+              </a>
+              <button
+                type="button"
+                onClick={() => copyEmail(selected.email)}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-3 py-2.5 text-sm font-semibold text-gray-600 transition hover:bg-gray-50"
+              >
+                <Copy size={15} />
+                Copy Email
+              </button>
+            </div>
             <div className="space-y-3 text-sm">
               {[
                 ["Email", selected.email],
@@ -243,18 +299,29 @@ export default function InquiriesPage() {
               )}
               {selected.notes && (
                 <div>
-                  <p className="text-gray-400 mb-1">Notes</p>
+                  <p className="text-gray-400 mb-1">Buyer message</p>
                   <p className="text-[#0F172A] bg-gray-50 rounded-xl p-3 text-xs leading-6">{selected.notes}</p>
                 </div>
               )}
-            </div>
-            <div className="mt-5 pt-5 border-t border-gray-100">
-              <a
-                href={`mailto:${selected.email}`}
-                className="block w-full text-center bg-[#0E7490] hover:bg-[#0A5A70] text-white font-semibold py-2.5 rounded-xl text-sm transition"
-              >
-                Reply via Email
-              </a>
+              <div>
+                <p className="text-gray-400 mb-1">Internal admin notes</p>
+                <textarea
+                  value={draftNote}
+                  onChange={(event) => setDraftNote(event.target.value)}
+                  rows={5}
+                  placeholder="Add follow-up notes, call outcome, pricing reminders, or next action..."
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs leading-6 text-[#0F172A] outline-none transition focus:border-[#0E7490] focus:ring-2 focus:ring-[#0E7490]/20"
+                />
+                <button
+                  type="button"
+                  onClick={saveAdminNote}
+                  disabled={savingNote}
+                  className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#0E7490] px-4 py-2.5 text-sm font-semibold text-[#0E7490] transition hover:bg-[#0E7490]/5 disabled:opacity-60"
+                >
+                  <Save size={15} />
+                  {savingNote ? "Saving..." : "Save Notes"}
+                </button>
+              </div>
             </div>
           </div>
         )}

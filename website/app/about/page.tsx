@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { COMPANY } from "@/lib/company";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -100,8 +101,11 @@ export default function AboutPage() {
               <p className="mt-5 text-sm leading-7 text-slate-300">
                 Our sourcing philosophy is simple: understand the buyer requirement first, confirm what can be supplied responsibly, and communicate documentation and shipment assumptions clearly before the order moves forward.
               </p>
-              <p className="mt-5 text-sm font-semibold text-white">Founder / Director</p>
-              <p className="text-sm text-slate-400">GOPU Exports</p>
+              <p className="mt-5 text-sm font-semibold text-white">{COMPANY.founderPerson}</p>
+              <p className="text-sm text-slate-400">{COMPANY.founderTitle}</p>
+              <p className="mt-4 text-xs leading-6 text-slate-400">
+                For buyer verification and export enquiries, contact {COMPANY.contactPerson}.
+              </p>
             </div>
             <div id="vision" className="rounded-3xl border border-[#D9E2EC] bg-[#F8FAFC] p-8">
               <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0E7490]">OUR VISION</p>

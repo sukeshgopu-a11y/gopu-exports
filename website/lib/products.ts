@@ -24,7 +24,7 @@ export type Product = {
 
 export const CATEGORIES = [
   "All",
-  "Spices & Herbs",
+  "Spices",
   "Rice & Grains",
   "Fresh Fruits",
   "Fresh Vegetables",
@@ -35,7 +35,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "green-cardamom",
     title: "Green Cardamom",
-    category: "Spices & Herbs",
+    category: "Spices",
     image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=800&auto=format&fit=crop",
     tagline: "Queen of Spices — Premium Export Grade",
     description:
@@ -62,7 +62,7 @@ export const PRODUCTS: Product[] = [
     ],
     benefits: [
       "Rich aromatic essential oils",
-      "APEDA certified sourcing",
+      "Buyer documentation review available",
       "Uniform pod size & color grading",
       "Phytosanitary certificate included",
       "Air or sea freight options",
@@ -73,7 +73,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "black-pepper",
     title: "Black Pepper",
-    category: "Spices & Herbs",
+    category: "Spices",
     image: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=800&auto=format&fit=crop",
     tagline: "King of Spices — World-Class Export Quality",
     description:
@@ -98,7 +98,7 @@ export const PRODUCTS: Product[] = [
       "High piperine content",
       "Tested for pesticide residues",
       "Fumigation certificate available",
-      "FSSAI compliant",
+      "Food safety documentation available on request",
     ],
     related: ["green-cardamom", "cloves", "coriander-seeds"],
     featured: true,
@@ -106,7 +106,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "turmeric-powder",
     title: "Turmeric Powder",
-    category: "Spices & Herbs",
+    category: "Spices",
     image: "/products/turmeric.webp",
     tagline: "High Curcumin — Food & Industrial Grade",
     description:
@@ -131,7 +131,7 @@ export const PRODUCTS: Product[] = [
     benefits: [
       "Highest curcumin content available",
       "No artificial coloring",
-      "APEDA & Spice Board certified",
+      "Trade certification references available on request",
       "Lab tested for aflatoxins",
     ],
     related: ["red-chilli", "coriander-seeds", "cumin-seeds"],
@@ -140,7 +140,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "red-chilli",
     title: "Red Chilli (Whole)",
-    category: "Spices & Herbs",
+    category: "Spices",
     image: "/products/red-chilli.webp",
     tagline: "Guntur S4 Grade — Premium Heat & Color",
     description:
@@ -174,7 +174,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "cumin-seeds",
     title: "Cumin Seeds",
-    category: "Spices & Herbs",
+    category: "Spices",
     image: "https://images.unsplash.com/photo-1623227891085-32898e93de1c?w=800&auto=format&fit=crop",
     tagline: "Gujarat's Finest — Strong Aroma Export Grade",
     description:
@@ -198,7 +198,7 @@ export const PRODUCTS: Product[] = [
     benefits: [
       "Machine cleaned and sorted",
       "No artificial color",
-      "APEDA export certified",
+      "Export documentation support available",
       "Tested for heavy metals",
     ],
     related: ["coriander-seeds", "fennel-seeds", "turmeric-powder"],
@@ -207,7 +207,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "coriander-seeds",
     title: "Coriander Seeds",
-    category: "Spices & Herbs",
+    category: "Spices",
     image: "https://images.unsplash.com/photo-1548013146-72479768bada?w=800&auto=format&fit=crop",
     tagline: "Eagle Grade — Premium Global Export",
     description:
@@ -230,7 +230,7 @@ export const PRODUCTS: Product[] = [
     benefits: [
       "Fresh citrusy aroma",
       "Uniform grade separation",
-      "Lab tested and certified",
+      "Lab testing can be discussed for buyer requirements",
     ],
     related: ["cumin-seeds", "fennel-seeds", "turmeric-powder"],
     featured: false,
@@ -238,7 +238,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "cloves",
     title: "Cloves",
-    category: "Spices & Herbs",
+    category: "Spices",
     image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&auto=format&fit=crop",
     tagline: "High Eugenol — Premium Export Grade",
     description:
@@ -269,7 +269,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "cinnamon",
     title: "Cinnamon (Dalchini)",
-    category: "Spices & Herbs",
+    category: "Spices",
     image: "https://images.unsplash.com/photo-1587049332298-1c42e83937a7?w=800&auto=format&fit=crop",
     tagline: "Ceylon & Cassia — Premium Export Sticks",
     description:
@@ -300,7 +300,7 @@ export const PRODUCTS: Product[] = [
   {
     slug: "fennel-seeds",
     title: "Fennel Seeds",
-    category: "Spices & Herbs",
+    category: "Spices",
     image: "https://images.unsplash.com/photo-1628684669898-49f2dce90e0f?w=800&auto=format&fit=crop",
     tagline: "Gujarat Premium — Bold Aroma Export",
     description:
@@ -356,8 +356,8 @@ export const PRODUCTS: Product[] = [
       { label: "Processing", value: "Double polished / Silky" },
     ],
     benefits: [
-      "GI certified origin",
-      "APEDA export registered",
+      "Origin documentation can be discussed",
+      "Export documentation support available",
       "Parboiled options available",
       "Private labeling & OEM packaging",
       "Custom bag printing available",
