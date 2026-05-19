@@ -452,7 +452,7 @@ export default function ContactPage() {
               title="India Headquarters"
               badge="Registered Office"
               badgeColor="bg-[#E6F4F7] text-[#0A5A70]"
-              lines={[COMPANY.registeredAddress, COMPANY.email, COMPANY.phone, `IEC: ${COMPANY.iec}`, `GST: ${COMPANY.gst}`]}
+              lines={[COMPANY.registeredAddress, COMPANY.email, COMPANY.phone]}
             />
             <OfficeCard
               map="https://maps.google.com/?q=Warangal,Telangana,India"
@@ -460,7 +460,7 @@ export default function ContactPage() {
               title="Verification Desk"
               badge="Buyer Support"
               badgeColor="bg-[#EFF6FF] text-[#1D4ED8]"
-              lines={["Request IEC, CIN, GST and registration documents", "APEDA / FSSAI / Spice Board: Available on request", "Use official email for verification requests"]}
+              lines={["Request available verification documents", "Share destination document checklist", "Use official email for verification requests"]}
             />
           </div>
         </div>

@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Export Markets",
   description:
-    "GOPU Exports supplies premium Indian agricultural commodities to importers in global markets including USA, UK, Australia, UAE, and Europe.",
+    "GOPU Exports supports international buyer enquiries for Indian agricultural commodities with practical product, documentation, and shipment planning.",
 };
 
 const markets = [
@@ -63,11 +63,11 @@ const requirements = [
   },
   {
     title: "Certificate of Origin",
-    desc: "Issued by APEDA / FIEO confirming Indian origin of goods.",
+    desc: "Origin documentation can be discussed based on product type, shipment terms, and buyer destination.",
   },
   {
-    title: "FSSAI Compliance",
-    desc: "All food products comply with India's food safety standards.",
+    title: "Food Safety Documentation",
+    desc: "Food safety documentation requirements are reviewed based on product category and destination rules.",
   },
   {
     title: "Fumigation Certificate",
@@ -100,9 +100,9 @@ export default function MarketsPage() {
             <span className="text-[#0E7490]">.</span>
           </h1>
           <p className="mt-5 text-[15px] leading-7 text-slate-300 max-w-[580px]">
-            GOPU Exports supplies premium Indian agricultural commodities to
-            importers, distributors, and wholesale buyers across multiple countries
-            with full export documentation and logistics support.
+            GOPU Exports supports importers, distributors, and wholesale buyers
+            reviewing Indian agricultural commodities with practical product,
+            documentation, and logistics planning.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
@@ -126,10 +126,10 @@ export default function MarketsPage() {
         <div className="mx-auto max-w-[1400px] px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-[#D9E2EC]">
             {[
-              ["🌍", "Multi-Region Reach", "Asia, Middle East, Europe & Americas"],
-              ["📋", "Full Documentation", "Phytosanitary, COA, COO & more"],
-              ["🔬", "Lab Tested", "Pesticide, aflatoxin & heavy metals"],
-              ["💬", "Responsive Support", "Dedicated buyer account management"],
+              ["🌍", "Region Planning", "Destination-specific enquiry review"],
+              ["📋", "Document Checklist", "Shipment documents mapped early"],
+              ["🔬", "Quality Discussion", "Product parameters reviewed clearly"],
+              ["💬", "Responsive Support", "Practical buyer communication"],
             ].map(([icon, label, sub]) => (
               <div key={label} className="px-8 py-7">
                 <div className="text-3xl mb-2">{icon}</div>
@@ -146,10 +146,10 @@ export default function MarketsPage() {
         <div className="mx-auto max-w-[1400px] px-8">
           <div className="mb-10">
             <p className="text-xs font-black tracking-[0.2em] text-[#0E7490] uppercase">
-              Active Export Destinations
+              Buyer Enquiry Planning
             </p>
             <h2 className="mt-3 text-[32px] font-black tracking-[-0.04em] text-[#0F172A]">
-              Markets by Region
+              Regional Planning References
             </h2>
           </div>
 
@@ -232,8 +232,8 @@ export default function MarketsPage() {
                 Ready to Import from India?
               </h2>
               <p className="mt-2 text-slate-300 text-[14px] leading-7 max-w-xl">
-                Send us your product requirement and destination country — we
-                handle all export documentation, packaging, and logistics.
+                Send product requirements and destination country so the team can
+                review documentation, packaging, and logistics assumptions.
               </p>
             </div>
             <Link

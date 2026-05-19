@@ -103,7 +103,7 @@ export default function Navbar() {
           <BrandLogo priority className="h-11 w-auto" />
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-1 lg:ml-auto lg:flex">
           {MAIN_LINKS.map(([label, href]) => (
             <Link
               key={href}

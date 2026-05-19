@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import PublicCertificationBadges from "@/components/PublicCertificationBadges";
-import { COMPANY } from "@/lib/company";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -90,10 +88,6 @@ export default function AboutPage() {
             with specification-led sourcing, documentation planning, and logistics coordination.
           </p>
 
-          {/* Trust tags — no fake numbers */}
-          <div className="mt-10">
-            <PublicCertificationBadges variant="dark" limit={6} />
-          </div>
         </div>
       </section>
 
@@ -110,25 +104,13 @@ export default function AboutPage() {
               <p className="text-sm text-slate-400">GOPU Exports</p>
             </div>
             <div id="vision" className="rounded-3xl border border-[#D9E2EC] bg-[#F8FAFC] p-8">
-              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0E7490]">COMPANY VERIFICATION</p>
-              <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-[#0F172A]">A verified, process-driven Indian export partner.</h2>
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0E7490]">OUR VISION</p>
+              <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-[#0F172A]">A process-driven Indian export partner.</h2>
               <p className="mt-5 text-sm leading-7 text-[#64748B]">
-                GOPU Exports builds buyer confidence through verifiable company details, practical documentation support, quality-focused sourcing, and disciplined communication from enquiry to dispatch.
+                GOPU Exports builds buyer confidence through practical documentation support, quality-focused sourcing, and disciplined communication from enquiry to dispatch.
               </p>
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                {[
-                  ["IEC", COMPANY.iec],
-                  ["CIN", COMPANY.cin],
-                  ["GST", COMPANY.gst],
-                ].map(([label, value]) => (
-                  <div key={label} className="rounded-2xl border border-[#D9E2EC] bg-white p-4">
-                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#0E7490]">{label}</p>
-                    <p className="mt-2 break-words text-sm font-black text-[#0F172A]">{value}</p>
-                  </div>
-                ))}
-              </div>
               <Link href="/company-verification" className="mt-6 inline-flex rounded-xl bg-[#0E7490] px-5 py-3 text-sm font-bold text-white">
-                Request Verification Documents
+                View Company Verification
               </Link>
             </div>
           </div>
