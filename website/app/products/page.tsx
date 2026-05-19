@@ -12,7 +12,7 @@ export const revalidate = 0;
 export const metadata: Metadata = {
   title: "Products",
   description:
-    "Browse GOPU Exports' complete agricultural product catalogue — premium spices, basmati rice, fresh fruits, and vegetables for global importers.",
+    "Browse GOPU Exports agricultural product catalogue for rice, spices, fresh produce, millets, pulses, and export sourcing enquiries.",
   alternates: { canonical: "/products" },
 };
 
@@ -50,8 +50,7 @@ export default async function ProductsPage() {
             Our Products
           </h1>
           <p className="mt-4 max-w-xl text-[17px] leading-[1.8] text-[#64748B]">
-            Premium Indian agricultural commodities — inspected, certified, and
-            export-ready for importers and distributors in global markets.
+            Indian agricultural commodities organised by category for importers and procurement teams reviewing grade, packing, quantity, destination, and document requirements.
           </p>
         </div>
       </section>
@@ -86,7 +85,7 @@ export default async function ProductsPage() {
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-[15px] leading-[1.8] text-[#64748B]">
             We source a wide range of Indian agricultural commodities on request.
-            Send us your product specifications and we&apos;ll get back to you within 24 hours.
+            Send product specifications, packing needs, quantity, destination, and document requirements for review.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-4">
             <Link

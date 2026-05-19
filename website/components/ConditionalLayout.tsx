@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import AnalyticsTracker from "./AnalyticsTracker";
-import LocaleDetector from "./LocaleDetector";
 
 export default function ConditionalLayout({
   children,
@@ -20,7 +19,6 @@ export default function ConditionalLayout({
       <div id="main-content">{children}</div>
       {!isDashboard && (
         <>
-          <LocaleDetector />
           <AnalyticsTracker />
         </>
       )}

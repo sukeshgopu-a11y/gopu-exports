@@ -1,0 +1,20 @@
+export const COMPANY = {
+  name: "GOPU Exports",
+  legalName: "GOPU Exports Private Limited",
+  email: "admin@gopuexports.com",
+  phone: "+91 87128 16876",
+  phoneHref: "tel:+918712816876",
+  whatsapp: "https://wa.me/918712816876",
+  iec: "AAMCG8793P",
+  cin: "U46909TS2026PTC212867",
+  gst: "36AAMCG8793P1ZE",
+  registeredAddress: "Warangal, Telangana, India",
+  registrations: [
+    { label: "IEC", value: "AAMCG8793P" },
+    { label: "CIN", value: "U46909TS2026PTC212867" },
+    { label: "GST", value: "36AAMCG8793P1ZE" },
+    { label: "APEDA", value: "Available on request" },
+    { label: "FSSAI", value: "Available on request" },
+    { label: "Spice Board", value: "Available on request" },
+  ],
+};

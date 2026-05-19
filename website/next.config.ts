@@ -1,6 +1,21 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    const localePattern = "/:locale(ar|zh|es|fr|de|pt|ru|ja|ko|hi|te|tr|it|vi|th|id)";
+    return [
+      {
+        source: localePattern,
+        destination: "/",
+        permanent: false,
+      },
+      {
+        source: `${localePattern}/:path*`,
+        destination: "/:path*",
+        permanent: false,
+      },
+    ];
+  },
   async headers() {
     const contentSecurityPolicy = [
       "default-src 'self'",

@@ -4,7 +4,6 @@ import type { ProductRow } from "@/src/lib/supabase/data";
 import { DEFAULT_BLOGS } from "@/lib/blogs";
 import { CATEGORY_LANDING_PAGES } from "@/lib/categoryLandingPages";
 import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
-import { DEFAULT_LOCALE, LOCALES } from "@/lib/i18n";
 
 const BASE_URL = "https://gopuexports.com";
 
@@ -17,6 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/products",
     "/markets",
     "/certifications",
+    "/company-verification",
     "/gallery",
     "/resources",
     "/blog",
@@ -31,15 +31,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: path === "" ? "weekly" : "monthly",
     priority: path === "" ? 1 : 0.7,
   }));
-
-  const localizedRoutes: MetadataRoute.Sitemap = LOCALES.filter((locale) => locale.code !== DEFAULT_LOCALE).flatMap((locale) =>
-    ["", "/products", "/blog", "/contact", "/resources", "/enquiry", "/privacy-policy", "/terms-and-conditions", "/cookie-policy", "/shipping-policy"].map((path) => ({
-      url: `${BASE_URL}/${locale.code}${path}`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: path === "" ? 0.55 : 0.45,
-    }))
-  );
 
   const resourceRoutes: MetadataRoute.Sitemap = EXPORT_OPERATION_PAGES.map((page) => ({
     url: `${BASE_URL}/resources/${page.slug}`,
@@ -85,5 +76,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-  return [...staticRoutes, ...localizedRoutes, ...categoryRoutes, ...resourceRoutes, ...productRoutes, ...blogRoutes];
+  return [...staticRoutes, ...categoryRoutes, ...resourceRoutes, ...productRoutes, ...blogRoutes];
 }

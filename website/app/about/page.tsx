@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PublicCertificationBadges from "@/components/PublicCertificationBadges";
+import { COMPANY } from "@/lib/company";
 
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Learn about GOPU Exports — India's trusted agricultural export company supplying premium spices, rice, and fresh produce to global importers with certified quality and reliable logistics.",
+    "Learn about GOPU Exports, company verification details, founder message, sourcing philosophy, export process, quality control, and documentation support.",
 };
 
 const VALUES = [
@@ -84,14 +85,52 @@ export default function AboutPage() {
             <span className="text-[#67C9D8]">To The World.</span>
           </h1>
           <p className="mt-6 max-w-xl text-[17px] leading-[1.8] text-slate-300">
-            GOPU Exports is a Warangal-based agricultural export company supplying
-            premium spices, rice, and fresh produce to importers worldwide —
-            backed by certified quality, full documentation, and dependable logistics.
+            GOPU Exports is a Warangal-based agricultural export company supporting
+            buyer enquiries for spices, rice, fresh produce, and agricultural commodities,
+            with specification-led sourcing, documentation planning, and logistics coordination.
           </p>
 
           {/* Trust tags — no fake numbers */}
           <div className="mt-10">
             <PublicCertificationBadges variant="dark" limit={6} />
+          </div>
+        </div>
+      </section>
+
+      <section id="founder-message" className="bg-white py-20">
+        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
+          <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+            <div className="rounded-3xl bg-[#071624] p-8 text-white">
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#67C9D8]">FOUNDER MESSAGE</p>
+              <h2 className="mt-4 text-3xl font-black tracking-[-0.04em]">Built for careful buyers, not quick claims.</h2>
+              <p className="mt-5 text-sm leading-7 text-slate-300">
+                Our sourcing philosophy is simple: understand the buyer requirement first, confirm what can be supplied responsibly, and communicate documentation and shipment assumptions clearly before the order moves forward.
+              </p>
+              <p className="mt-5 text-sm font-semibold text-white">Founder / Director</p>
+              <p className="text-sm text-slate-400">GOPU Exports</p>
+            </div>
+            <div id="vision" className="rounded-3xl border border-[#D9E2EC] bg-[#F8FAFC] p-8">
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0E7490]">COMPANY VERIFICATION</p>
+              <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-[#0F172A]">A verified, process-driven Indian export partner.</h2>
+              <p className="mt-5 text-sm leading-7 text-[#64748B]">
+                GOPU Exports builds buyer confidence through verifiable company details, practical documentation support, quality-focused sourcing, and disciplined communication from enquiry to dispatch.
+              </p>
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                {[
+                  ["IEC", COMPANY.iec],
+                  ["CIN", COMPANY.cin],
+                  ["GST", COMPANY.gst],
+                ].map(([label, value]) => (
+                  <div key={label} className="rounded-2xl border border-[#D9E2EC] bg-white p-4">
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#0E7490]">{label}</p>
+                    <p className="mt-2 break-words text-sm font-black text-[#0F172A]">{value}</p>
+                  </div>
+                ))}
+              </div>
+              <Link href="/company-verification" className="mt-6 inline-flex rounded-xl bg-[#0E7490] px-5 py-3 text-sm font-bold text-white">
+                Request Verification Documents
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -106,17 +145,15 @@ export default function AboutPage() {
                 Built on Trust, Quality<br />and Trade Expertise
               </h2>
               <p className="mt-5 text-[15px] leading-[1.9] text-[#64748B]">
-                GOPU Exports was established with a single mission: to bring the richness of
-                Indian agriculture to the global marketplace with complete transparency and
-                uncompromising quality. What began as a focused spice trading operation
-                has grown into a multi-category export firm serving importers, distributors,
-                and supermarket chains across multiple continents.
+                GOPU Exports was established to help international buyers source Indian
+                agricultural products with practical communication, clear specifications,
+                and realistic export documentation support. The company focuses on
+                structured enquiry handling rather than generic commodity promises.
               </p>
               <p className="mt-4 text-[15px] leading-[1.9] text-[#64748B]">
-                We have built direct relationships with farmers across Andhra Pradesh,
-                Kerala, Karnataka, Maharashtra, and Tamil Nadu — ensuring traceability from
-                field to port. Every product we export carries the pride of Indian agricultural
-                heritage and the rigour of modern food safety standards.
+                Each buyer discussion starts with product type, grade, packing, quantity,
+                destination, and document requirements. This helps the team review sourcing
+                feasibility, prepare relevant options, and coordinate the next commercial step.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
@@ -163,9 +200,8 @@ export default function AboutPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#E6F4F7] text-2xl">🎯</div>
               <h2 className="mt-5 text-[22px] font-black tracking-[-0.03em] text-[#0F172A]">Our Mission</h2>
               <p className="mt-3 text-[15px] leading-[1.8] text-[#64748B]">
-                To deliver world-class Indian agricultural products to global buyers with
-                integrity, reliability, and certified quality — enabling long-term trade
-                partnerships that benefit both importers and source farmers.
+                To support buyers with clear Indian agricultural product sourcing, practical
+                documentation guidance, and realistic shipment coordination.
               </p>
             </div>
 
@@ -174,7 +210,7 @@ export default function AboutPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#0E7490]/20 text-2xl">🌏</div>
               <h2 className="mt-5 text-[22px] font-black tracking-[-0.03em] text-white">Our Vision</h2>
               <p className="mt-3 text-[15px] leading-[1.8] text-slate-400">
-                To build a trusted agricultural export brand through consistent sourcing,
+                To build a verifiable agricultural export platform through consistent sourcing,
                 food safety awareness, and transparent supply-chain communication.
               </p>
             </div>
@@ -302,8 +338,8 @@ export default function AboutPage() {
               Partner with GOPU Exports
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-[16px] leading-[1.8] text-white/80">
-              Ready to source premium Indian agricultural commodities? Send us your
-              requirements and receive a detailed quote within 24 hours.
+              Ready to source Indian agricultural commodities? Send product, packing,
+              destination, and document requirements for review.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link

@@ -3,7 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import ConditionalLayout from "@/components/ConditionalLayout";
-import { LOCALES } from "@/lib/i18n";
+import { COMPANY } from "@/lib/company";
 
 export const metadata: Metadata = {
   title: {
@@ -82,6 +82,12 @@ const organizationJsonLd = {
   logo: "https://gopuexports.com/logos/gopu-mark.svg",
   email: "admin@gopuexports.com",
   telephone: "+918712816876",
+  taxID: COMPANY.gst,
+  identifier: [
+    { "@type": "PropertyValue", name: "IEC", value: COMPANY.iec },
+    { "@type": "PropertyValue", name: "CIN", value: COMPANY.cin },
+    { "@type": "PropertyValue", name: "GST", value: COMPANY.gst },
+  ],
   description:
     "Indian agricultural exports, rice, spices, fruits, vegetables, grains, and food products for global B2B buyers.",
   address: {
@@ -96,7 +102,7 @@ const organizationJsonLd = {
       contactType: "sales",
       email: "admin@gopuexports.com",
       telephone: "+918712816876",
-      availableLanguage: LOCALES.map((locale) => locale.label),
+      availableLanguage: ["English"],
     },
   ],
   sameAs: [],

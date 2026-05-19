@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { COMPANY } from "@/lib/company";
 
 const INCOTERMS = ["FOB", "CIF", "CFR", "EXW", "DDP"];
 const OTHER = "Others";
@@ -255,7 +256,7 @@ export default function ContactPage() {
                   Export Coverage
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {["Australia","UAE","Saudi","Singapore","UK","Europe"].map((c) => (
+                  {["Company verification","Product specification","Packaging review","Document checklist","Quote preparation","Shipment planning"].map((c) => (
                     <div key={c} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white text-[11px] font-medium">
                       {c}
                     </div>
@@ -306,7 +307,7 @@ export default function ContactPage() {
                   Enquiry Received!
                 </h3>
                 <p className="mt-3 text-[#64748B] text-sm leading-7">
-                  Thank you, {form.name}. Our team will respond within 12 hours.
+                  Thank you, {form.name}. Our team will review your requirement and respond with practical next steps.
                 </p>
                 <button
                   onClick={() => { setSubmitted(false); setForm(EMPTY_FORM); }}
@@ -447,27 +448,19 @@ export default function ContactPage() {
           <div className="space-y-4">
             <OfficeCard
               map="https://maps.google.com/?q=Hasanparthy,Warangal,Telangana,India"
-              flag="🇮🇳"
+              flag="IN"
               title="India Headquarters"
               badge="Registered Office"
               badgeColor="bg-[#E6F4F7] text-[#0A5A70]"
-              lines={["Hasanparthy","Warangal, Telangana","506244, India","admin@gopuexports.com","+91 87128 16876"]}
+              lines={[COMPANY.registeredAddress, COMPANY.email, COMPANY.phone, `IEC: ${COMPANY.iec}`, `GST: ${COMPANY.gst}`]}
             />
             <OfficeCard
-              map="https://maps.google.com/?q=Surry+Hills,Sydney,Australia"
-              flag="🇦🇺"
-              title="Australia Operations"
-              badge="Sydney Office"
+              map="https://maps.google.com/?q=Warangal,Telangana,India"
+              flag="ID"
+              title="Verification Desk"
+              badge="Buyer Support"
               badgeColor="bg-[#EFF6FF] text-[#1D4ED8]"
-              lines={["Surry Hills","Sydney, NSW","2000, Australia","+61 411 711 106"]}
-            />
-            <OfficeCard
-              map="https://www.google.com/maps/place/Guntur+Market+Yard,+Guntur,+Andhra+Pradesh"
-              flag="🇮🇳"
-              title="Guntur Yard"
-              badge="Field Office"
-              badgeColor="bg-[#FFF1F2] text-[#BE123C]"
-              lines={["Guntur Market Yard","Guntur, Andhra Pradesh","Field Operations Office","India Procurement & Sourcing","+91 87128 16876"]}
+              lines={["Request IEC, CIN, GST and registration documents", "APEDA / FSSAI / Spice Board: Available on request", "Use official email for verification requests"]}
             />
           </div>
         </div>
