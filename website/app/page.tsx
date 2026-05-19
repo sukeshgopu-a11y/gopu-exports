@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
+import PublicCertificationBadges from "@/components/PublicCertificationBadges";
 
 export const revalidate = 60;
 
@@ -147,15 +148,10 @@ export default async function HomePage() {
             </div>
 
             {/* Trust pillars — no fake numbers */}
-            <div className="mt-7 flex flex-wrap gap-2.5 sm:mt-10 sm:gap-3">
-              {["APEDA Certified", "FSSAI Licensed", "ISO 22000", "HACCP", "IEC Registered"].map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-[12px] font-bold text-white backdrop-blur-sm"
-                >
-                  ✓ {tag}
-                </span>
-              ))}
+            <div className="mt-7 sm:mt-10">
+              <PublicCertificationBadges variant="dark" limit={5} />
+            </div>
+            <div className="hidden">
             </div>
           </div>
         </div>
@@ -356,18 +352,10 @@ export default async function HomePage() {
       <section className="border-y border-[#E2E8F0] bg-white py-10">
         <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
           <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-12">
-            <span className="text-[11px] font-black tracking-[0.22em] text-[#94A3B8]">
+            <span className="hidden text-[11px] font-black tracking-[0.22em] text-[#94A3B8]">
               CERTIFIED &amp; COMPLIANT:
             </span>
-            {["FSSAI", "APEDA", "ISO 22000", "HACCP", "IEC Registered", "Phytosanitary Certified"].map((cert) => (
-              <div
-                key={cert}
-                className="flex items-center gap-2 text-[13px] font-bold text-[#374151]"
-              >
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#E6F4F7] text-[10px] text-[#0E7490]">✓</span>
-                {cert}
-              </div>
-            ))}
+            <PublicCertificationBadges variant="light" limit={6} showLabel={false} />
             <Link
               href="/certifications"
               className="text-[12px] font-bold text-[#0E7490] transition hover:text-[#0A5A70]"

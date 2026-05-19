@@ -28,12 +28,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: path === "" ? 1 : 0.7,
   }));
 
-  const localizedRoutes: MetadataRoute.Sitemap = LOCALES.filter((locale) => locale.code !== DEFAULT_LOCALE).map((locale) => ({
-    url: `${BASE_URL}/${locale.code}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.55,
-  }));
+  const localizedRoutes: MetadataRoute.Sitemap = LOCALES.filter((locale) => locale.code !== DEFAULT_LOCALE).flatMap((locale) =>
+    ["", "/products", "/blog", "/contact"].map((path) => ({
+      url: `${BASE_URL}/${locale.code}${path}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: path === "" ? 0.55 : 0.45,
+    }))
+  );
 
   const resourceRoutes: MetadataRoute.Sitemap = EXPORT_OPERATION_PAGES.map((page) => ({
     url: `${BASE_URL}/resources/${page.slug}`,

@@ -43,7 +43,9 @@ export async function proxy(request: NextRequest) {
     : { data: null };
 
   if (!user || !adminUser) {
-    return NextResponse.redirect(new URL("/dashboard/login", request.url));
+    const url = new URL("/dashboard/login", request.url);
+    url.searchParams.set("reason", user ? "admin" : "session");
+    return NextResponse.redirect(url);
   }
 
   return response;

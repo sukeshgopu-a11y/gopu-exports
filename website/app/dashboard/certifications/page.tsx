@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { Plus, Pencil, Trash2, X, Check, Upload, Download, Database } from "lucide-react";
+import { InlineError } from "@/components/dashboard/LoadingStates";
+import { useToast } from "@/components/dashboard/ToastProvider";
+import { dashboardFetch, getErrorMessage, redirectIfAuthError } from "@/lib/dashboardApi";
 
 type Cert = {
   _id: string;
@@ -83,18 +86,20 @@ export default function CertificationsPage() {
   const [form, setForm] = useState<Omit<Cert, "_id">>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [autoImportTried, setAutoImportTried] = useState(false);
+  const [error, setError] = useState("");
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const toast = useToast();
 
   const load = useCallback(async () => {
     setLoading(true);
+    setError("");
     try {
-      const res = await fetch("/api/certifications");
-      const data = await res.json();
+      const data = await dashboardFetch<Cert[]>("/api/certifications?limit=250");
       if (Array.isArray(data)) {
         if (data.length === 0 && !autoImportTried) {
           setAutoImportTried(true);
           await createWebsiteDefaults([]);
-          const retry = await fetch("/api/certifications");
-          const retryData = await retry.json();
+          const retryData = await dashboardFetch<Cert[]>("/api/certifications?limit=250");
           setCerts(Array.isArray(retryData) ? retryData : []);
         } else {
           setCerts(data);
@@ -102,6 +107,8 @@ export default function CertificationsPage() {
       } else {
         setCerts([]);
       }
+    } catch (err) {
+      if (!redirectIfAuthError(err)) setError(getErrorMessage(err, "Certifications could not be loaded."));
     } finally {
       setLoading(false);
     }
@@ -136,52 +143,68 @@ export default function CertificationsPage() {
     const fd = new FormData();
     fd.append("file", file);
     fd.append("bucket", "certifications");
-    const res = await fetch("/api/upload", { method: "POST", body: fd });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error ?? "Upload failed");
+    const data = await dashboardFetch<{ url: string }>("/api/upload", { method: "POST", body: fd, timeoutMs: 20000 });
     setForm((f) => ({ ...f, logo: data.url }));
   };
 
   const save = async () => {
+    if (saving) return;
     setSaving(true);
     try {
       if (editing) {
-        const res = await fetch(`/api/certifications/${editing._id}`, {
+        const updated = await dashboardFetch<Cert>(`/api/certifications/${editing._id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
-        const updated = await res.json();
         setCerts((prev) => prev.map((c) => (c._id === editing._id ? updated : c)));
+        toast.success("Certification updated.");
       } else {
-        const res = await fetch("/api/certifications", {
+        const created = await dashboardFetch<Cert>("/api/certifications", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
-        const created = await res.json();
         setCerts((prev) => [...prev, created]);
+        toast.success("Certification added.");
       }
       setShowForm(false);
+    } catch (err) {
+      if (!redirectIfAuthError(err)) toast.error(getErrorMessage(err, "Save failed."));
     } finally {
       setSaving(false);
     }
   };
 
   const toggle = async (c: Cert) => {
-    const res = await fetch(`/api/certifications/${c._id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ active: !c.active }),
-    });
-    const updated = await res.json();
-    setCerts((prev) => prev.map((x) => (x._id === c._id ? updated : x)));
+    setBusyId(c._id);
+    try {
+      const updated = await dashboardFetch<Cert>(`/api/certifications/${c._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ active: !c.active }),
+      });
+      setCerts((prev) => prev.map((x) => (x._id === c._id ? updated : x)));
+      toast.success(updated.active ? "Certification shown publicly." : "Certification hidden publicly.");
+    } catch (err) {
+      if (!redirectIfAuthError(err)) toast.error(getErrorMessage(err, "Visibility update failed."));
+    } finally {
+      setBusyId(null);
+    }
   };
 
   const remove = async (id: string) => {
     if (!confirm("Delete this certification?")) return;
-    await fetch(`/api/certifications/${id}`, { method: "DELETE" });
-    setCerts((prev) => prev.filter((c) => c._id !== id));
+    setBusyId(id);
+    try {
+      await dashboardFetch<{ success: boolean }>(`/api/certifications/${id}`, { method: "DELETE" });
+      setCerts((prev) => prev.filter((c) => c._id !== id));
+      toast.success("Certification deleted.");
+    } catch (err) {
+      if (!redirectIfAuthError(err)) toast.error(getErrorMessage(err, "Delete failed."));
+    } finally {
+      setBusyId(null);
+    }
   };
 
   const importWebsiteData = async () => {
@@ -189,7 +212,9 @@ export default function CertificationsPage() {
     try {
       const created = await createWebsiteDefaults(certs);
       await load();
-      if (created === 0) alert("Website certifications are already imported.");
+      toast.success(created === 0 ? "Website certifications are already imported." : `${created} certifications imported.`);
+    } catch (err) {
+      if (!redirectIfAuthError(err)) toast.error(getErrorMessage(err, "Import failed."));
     } finally {
       setSaving(false);
     }
@@ -262,6 +287,8 @@ export default function CertificationsPage() {
         </div>
       )}
 
+      {error && <div className="mb-5"><InlineError message={error} onRetry={load} /></div>}
+
       <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center h-48 text-gray-400 text-sm">Loading…</div>
@@ -303,6 +330,7 @@ export default function CertificationsPage() {
                     <td className="px-6 py-4">
                       <button
                         onClick={() => toggle(c)}
+                        disabled={busyId === c._id}
                         className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition ${
                           c.active
                             ? "bg-green-100 text-green-700 hover:bg-green-200"
@@ -317,7 +345,7 @@ export default function CertificationsPage() {
                         <button onClick={() => openEdit(c)} className="text-[#0E7490] hover:text-[#0A5A70] transition">
                           <Pencil size={16} />
                         </button>
-                        <button onClick={() => remove(c._id)} className="text-red-400 hover:text-red-600 transition">
+                        <button disabled={busyId === c._id} onClick={() => remove(c._id)} className="text-red-400 hover:text-red-600 transition disabled:opacity-40">
                           <Trash2 size={16} />
                         </button>
                       </div>

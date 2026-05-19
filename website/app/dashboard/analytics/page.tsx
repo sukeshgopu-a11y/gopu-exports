@@ -12,6 +12,8 @@ type AnalyticsResponse = {
     uniqueVisitors: number;
     pageViews: number;
     leads: number;
+    avgSessionSeconds: number;
+    maxScrollDepth: number;
   };
   topPages: { label: string; count: number }[];
   countries: { label: string; count: number }[];
@@ -103,6 +105,8 @@ export default function DashboardAnalyticsPage() {
         <Stat label="Unique Visitors" value={data?.stats.uniqueVisitors ?? 0} icon={Users} />
         <Stat label="Page Views" value={data?.stats.pageViews ?? 0} icon={Globe2} />
         <Stat label="Lead Actions" value={data?.stats.leads ?? 0} icon={MousePointerClick} />
+        <Stat label="Avg. Session" value={data?.stats.avgSessionSeconds ?? 0} icon={Activity} />
+        <Stat label="Max Scroll %" value={data?.stats.maxScrollDepth ?? 0} icon={MousePointerClick} />
       </div>
 
       <div className="mt-6 grid gap-5 lg:grid-cols-2">

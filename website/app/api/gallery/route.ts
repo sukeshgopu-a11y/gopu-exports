@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
     .order("created_at", { ascending: false });
 
   if (searchParams.get("active") === "true") query = query.eq("is_active", true);
+  if (searchParams.get("limit")) query = query.limit(Math.min(Number(searchParams.get("limit")), 250));
 
   const { data, error } = await query.returns<GalleryImage[]>();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

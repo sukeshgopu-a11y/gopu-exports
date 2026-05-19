@@ -9,7 +9,7 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: "Certifications",
   description:
-    "GOPU Exports holds APEDA, FSSAI, ISO 22000, HACCP, and Spice Board certifications — ensuring full export compliance and food safety for global buyers.",
+    "GOPU Exports shows active certification and compliance information from the admin-controlled dashboard for global buyers.",
 };
 
 type DbCert = {
@@ -22,46 +22,25 @@ type DbCert = {
 
 const FALLBACK_CERTS = [
   {
-    name: "APEDA",
-    full: "Agricultural & Processed Food Products Export Development Authority",
-    desc: "Mandated registration for export of agricultural and processed food products from India. Enables access to APEDA-regulated markets in the EU, USA, and Middle East.",
-    icon: "🌾",
+    name: "Export Documentation",
+    full: "Buyer-ready trade document support",
+    desc: "Documentation discussions are handled according to product type, buyer destination, and shipment requirements.",
+    icon: "DOC",
     color: "from-green-500 to-emerald-600",
   },
   {
-    name: "FSSAI",
-    full: "Food Safety and Standards Authority of India",
-    desc: "Central license under the Food Safety and Standards Act ensuring all products meet India's food safety regulations before export.",
-    icon: "🔬",
+    name: "Quality Review",
+    full: "Specification and packing checks",
+    desc: "Product, packing, and quality discussions are aligned with buyer specifications before shipment planning.",
+    icon: "QC",
     color: "from-blue-500 to-cyan-600",
   },
   {
-    name: "ISO 22000",
-    full: "Food Safety Management System",
-    desc: "International standard for food safety management systems — covers the complete supply chain from sourcing and processing through packaging and shipment.",
-    icon: "🏅",
+    name: "Compliance Coordination",
+    full: "Destination-aware export handling",
+    desc: "Buyer requirements, available certifications, and destination-country import needs are reviewed during enquiry handling.",
+    icon: "OK",
     color: "from-amber-500 to-orange-600",
-  },
-  {
-    name: "HACCP",
-    full: "Hazard Analysis & Critical Control Points",
-    desc: "Systematic preventive approach to food safety — identifies physical, chemical, and biological hazards in the production process.",
-    icon: "✅",
-    color: "from-teal-500 to-cyan-600",
-  },
-  {
-    name: "IEC",
-    full: "Import Export Code — DGFT Registered",
-    desc: "Issued by the Director General of Foreign Trade, Government of India. Mandatory for all export/import operations.",
-    icon: "📑",
-    color: "from-violet-500 to-purple-600",
-  },
-  {
-    name: "Spice Board",
-    full: "Spice Board of India Registration",
-    desc: "Registered with the Spice Board of India — ensuring compliance with international spice quality standards.",
-    icon: "🌶️",
-    color: "from-red-500 to-rose-600",
   },
 ];
 
@@ -100,6 +79,7 @@ const ICON_COLORS = [
 
 export default async function CertificationsPage() {
   let dbCerts: DbCert[] = [];
+  let dbLoaded = false;
   try {
     const supabase = createPublicClient();
     const { data, error } = await supabase
@@ -109,12 +89,15 @@ export default async function CertificationsPage() {
       .order("sort_order", { ascending: true })
       .order("name", { ascending: true })
       .returns<CertificationRow[]>();
-    if (!error) dbCerts = (data ?? []).map(certificationToApi) as DbCert[];
+    if (!error) {
+      dbLoaded = true;
+      dbCerts = (data ?? []).map(certificationToApi) as DbCert[];
+    }
   } catch {
-    // Fall back gracefully if DB unavailable
+    dbLoaded = true;
   }
 
-  const usingDb = dbCerts.length > 0;
+  const usingDb = dbLoaded;
   const certNames = usingDb
     ? dbCerts.map((c) => c.name)
     : FALLBACK_CERTS.map((c) => c.name);
@@ -148,8 +131,7 @@ export default async function CertificationsPage() {
             <span className="text-[#67C9D8]">Global Trade.</span>
           </h1>
           <p className="mt-6 max-w-xl text-[17px] leading-[1.8] text-slate-300">
-            GOPU Exports holds all mandatory certifications for exporting Indian agricultural
-            commodities — ensuring every shipment complies with destination-country import regulations.
+            GOPU Exports shows active certification and compliance information from the dashboard, so buyers see the current public document status before enquiry.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-3">
@@ -178,6 +160,12 @@ export default async function CertificationsPage() {
               and regulatory compliance across our entire export chain.
             </p>
           </div>
+
+          {usingDb && dbCerts.length === 0 && (
+            <div className="rounded-2xl border border-dashed border-[#D9E2EC] bg-white p-10 text-center text-[#64748B]">
+              No public certifications are currently visible. The dashboard controls this section.
+            </div>
+          )}
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {usingDb

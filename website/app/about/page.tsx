@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import PublicCertificationBadges from "@/components/PublicCertificationBadges";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -89,15 +90,8 @@ export default function AboutPage() {
           </p>
 
           {/* Trust tags — no fake numbers */}
-          <div className="mt-10 flex flex-wrap gap-3">
-            {["APEDA Registered", "FSSAI Licensed", "ISO 22000", "HACCP Compliant", "IEC Registered", "Spice Board Certified"].map((tag) => (
-              <span
-                key={tag}
-                className="rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-[12px] font-bold text-white backdrop-blur-sm"
-              >
-                ✓ {tag}
-              </span>
-            ))}
+          <div className="mt-10">
+            <PublicCertificationBadges variant="dark" limit={6} />
           </div>
         </div>
       </section>
@@ -152,8 +146,8 @@ export default function AboutPage() {
               </div>
               {/* floating badge */}
               <div className="absolute -bottom-6 -left-6 rounded-2xl border border-[#D9E2EC] bg-white p-5 shadow-xl">
-                <p className="text-[28px] font-black leading-none tracking-[-0.03em] text-[#0E7490]">APEDA</p>
-                <p className="mt-1 text-[13px] font-semibold text-[#374151]">Registered Exporter</p>
+                <p className="text-[22px] font-black leading-none tracking-[-0.03em] text-[#0E7490]">EXPORT</p>
+                <p className="mt-1 text-[13px] font-semibold text-[#374151]">Documentation Ready</p>
               </div>
             </div>
           </div>
@@ -252,18 +246,18 @@ export default function AboutPage() {
 
             <div className="grid grid-cols-2 gap-4">
               {[
-                { label: "Quality Inspection", icon: "🔬", desc: "Multi-point checks at source, warehouse, and pre-shipment stages." },
-                { label: "Documentation", icon: "📋", desc: "Phytosanitary, COO, COA, HACCP, fumigation — all managed in-house." },
-                { label: "Logistics", icon: "🚢", desc: "Shipment planning and coordination with logistics partners." },
-                { label: "Buyer Support", icon: "💬", desc: "Dedicated account manager, WhatsApp updates, and responsive communication." },
+                { label: "Quality Inspection", icon: "QC", desc: "Multi-point checks at source, warehouse, and pre-shipment stages." },
+                { label: "Documentation", icon: "DS", desc: "Phytosanitary, COO, COA, inspection, and fumigation document support." },
+                { label: "Logistics", icon: "LG", desc: "Shipment planning and coordination with logistics partners." },
+                { label: "Buyer Support", icon: "BS", desc: "Dedicated updates and responsive export communication." },
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-6"
+                  className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5"
                 >
-                  <span className="text-3xl">{item.icon}</span>
+                  <div className="text-2xl">{item.icon}</div>
                   <h3 className="mt-3 text-[15px] font-bold text-white">{item.label}</h3>
-                  <p className="mt-2 text-[13px] leading-[1.7] text-slate-400">{item.desc}</p>
+                  <p className="mt-2 text-[12px] leading-[1.7] text-slate-400">{item.desc}</p>
                 </div>
               ))}
             </div>

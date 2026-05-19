@@ -72,14 +72,19 @@ export default function AnalyticsTracker() {
 
   useEffect(() => {
     if (consent !== "accepted") return;
+    if (pathname?.startsWith("/products/")) {
+      trackEvent("product_view", { slug: pathname.split("/").filter(Boolean)[1] ?? "" });
+    }
     trackEvent("page_view", {
       title: document.title,
       search: window.location.search,
     });
-  }, [consent, routeKey]);
+  }, [consent, pathname, routeKey]);
 
   useEffect(() => {
     if (consent !== "accepted") return;
+    const startedAt = Date.now();
+    const sentDepths = new Set<number>();
 
     const onCustomEvent = (event: Event) => {
       const detail = (event as CustomEvent<{ eventType?: string; metadata?: Record<string, unknown> }>).detail;
@@ -104,10 +109,32 @@ export default function AnalyticsTracker() {
       }
     };
 
+    const onScroll = () => {
+      const scrollable = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+      const depth = Math.min(100, Math.round((window.scrollY / scrollable) * 100));
+      for (const marker of [25, 50, 75, 90]) {
+        if (depth >= marker && !sentDepths.has(marker)) {
+          sentDepths.add(marker);
+          trackEvent("scroll_depth", { depth: marker });
+        }
+      }
+    };
+
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") {
+        trackEvent("session_duration", { seconds: Math.round((Date.now() - startedAt) / 1000) });
+      }
+    };
+
     window.addEventListener("gopu:analytics", onCustomEvent);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("visibilitychange", onVisibility);
     document.addEventListener("click", onClick);
     return () => {
+      onVisibility();
       window.removeEventListener("gopu:analytics", onCustomEvent);
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("visibilitychange", onVisibility);
       document.removeEventListener("click", onClick);
     };
   }, [consent]);

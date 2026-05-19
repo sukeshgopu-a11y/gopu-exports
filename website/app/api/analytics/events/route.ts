@@ -13,6 +13,8 @@ const ALLOWED_EVENTS = new Set([
   "phone_click",
   "inquiry_submit",
   "quote_submit",
+  "scroll_depth",
+  "session_duration",
 ]);
 
 function cleanText(value: unknown, max = 240) {
@@ -78,6 +80,14 @@ export async function GET(req: NextRequest) {
 
   const events = data ?? [];
   const uniqueVisitors = new Set(events.map((event) => event.session_id).filter(Boolean)).size;
+  const sessionDurations = events
+    .filter((event) => event.event_type === "session_duration")
+    .map((event) => Number((event.metadata as { seconds?: unknown } | null)?.seconds ?? 0))
+    .filter((seconds) => Number.isFinite(seconds) && seconds > 0);
+  const scrollDepths = events
+    .filter((event) => event.event_type === "scroll_depth")
+    .map((event) => Number((event.metadata as { depth?: unknown } | null)?.depth ?? 0))
+    .filter((depth) => Number.isFinite(depth) && depth > 0);
   const countBy = (key: "path" | "country" | "device" | "browser" | "event_type") => {
     const counts = new Map<string, number>();
     for (const event of events) {
@@ -96,6 +106,8 @@ export async function GET(req: NextRequest) {
       uniqueVisitors,
       pageViews: events.filter((event) => event.event_type === "page_view").length,
       leads: events.filter((event) => ["inquiry_submit", "quote_submit", "whatsapp_click", "email_click"].includes(event.event_type)).length,
+      avgSessionSeconds: sessionDurations.length > 0 ? Math.round(sessionDurations.reduce((sum, value) => sum + value, 0) / sessionDurations.length) : 0,
+      maxScrollDepth: scrollDepths.length > 0 ? Math.max(...scrollDepths) : 0,
     },
     topPages: countBy("path"),
     countries: countBy("country"),

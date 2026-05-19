@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/src/lib/supabase/server";
 
 export async function POST(req: Request) {
-  const { email, password } = await req.json();
+  const body = await req.json().catch(() => null);
+  const { email, password } = body ?? {};
   const supabase = await createClient();
 
   if (!email || !password) {
@@ -16,7 +17,7 @@ export async function POST(req: Request) {
 
   if (error || !data.user) {
     console.warn("Admin login failed", { email: String(email).trim().toLowerCase(), reason: error?.message });
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
   }
 
   const { data: adminUser, error: adminError } = await supabase
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
   if (adminError || !adminUser) {
     await supabase.auth.signOut();
     console.warn("Non-admin dashboard login blocked", { userId: data.user.id });
-    return NextResponse.json({ error: "Admin access required" }, { status: 403 });
+    return NextResponse.json({ error: "Admin access is required for this dashboard." }, { status: 403 });
   }
 
   const response = NextResponse.json({ success: true });

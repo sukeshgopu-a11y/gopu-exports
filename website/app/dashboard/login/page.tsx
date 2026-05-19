@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import BrandLogo from "@/components/BrandLogo";
 import { dashboardFetch, getErrorMessage } from "@/lib/dashboardApi";
 
 export default function DashboardLoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -14,6 +16,7 @@ export default function DashboardLoginPage() {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (loading) return;
     setError("");
     setLoading(true);
 
@@ -22,6 +25,7 @@ export default function DashboardLoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        timeoutMs: 10000,
       });
       router.push("/dashboard");
       router.refresh();
@@ -32,13 +36,23 @@ export default function DashboardLoginPage() {
     }
   };
 
+  const reason = searchParams.get("reason");
+  const notice =
+    reason === "session"
+      ? "Your dashboard session expired. Please sign in again."
+      : reason === "admin"
+        ? "This account is not allowed to access the admin dashboard."
+        : "";
+
   return (
     <div className="min-h-screen bg-[#F1F5F9] flex items-center justify-center px-4 py-8">
       <div className="bg-white w-full max-w-md rounded-3xl shadow-xl p-6 sm:p-10">
 
         <div className="mb-8 text-center">
           <div className="flex justify-center">
-            <BrandLogo priority className="h-16 w-auto" />
+            <Link href="/" aria-label="GOPU Exports homepage">
+              <BrandLogo priority className="h-16 w-auto" />
+            </Link>
           </div>
           <div className="mt-3 text-[10px] font-semibold tracking-[0.35em] text-[#0E7490]">
             ADMIN
@@ -77,8 +91,14 @@ export default function DashboardLoginPage() {
             />
           </div>
 
+          {notice && !error && (
+            <div className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-800">
+              {notice}
+            </div>
+          )}
+
           {error && (
-            <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+            <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700" role="alert">
               {error}
             </div>
           )}
@@ -92,6 +112,11 @@ export default function DashboardLoginPage() {
           </button>
         </form>
       </div>
+      {(error || notice) && (
+        <div className="fixed bottom-5 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-2xl">
+          {error || notice}
+        </div>
+      )}
     </div>
   );
 }

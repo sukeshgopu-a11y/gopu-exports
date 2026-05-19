@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Mail, Phone, ShieldCheck, Globe2 } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 import BrandLogo from "./BrandLogo";
 import LanguageSwitcher from "./LanguageSwitcher";
+import PublicCertificationBadges from "./PublicCertificationBadges";
 
 /* ------------------------------------------------------------------ */
 /*  Brand icons                                                         */
@@ -36,12 +37,6 @@ const PRODUCT_LINKS = [
   { href: "/products/cumin-seeds", label: "Cumin Seeds" },
   { href: "/products/coriander-seeds", label: "Coriander Seeds" },
   { href: "/products", label: "View All Products →" },
-];
-const CERTIFICATIONS = [
-  { label: "APEDA", icon: ShieldCheck },
-  { label: "FSSAI", icon: ShieldCheck },
-  { label: "ISO 9001", icon: ShieldCheck },
-  { label: "IEC Registered", icon: Globe2 },
 ];
 const SOCIALS = [
   { href: "https://wa.me/918712816876", label: "WhatsApp", Icon: WhatsAppIcon, color: "#25D366", external: true },
@@ -252,27 +247,18 @@ export default function Footer() {
           {/* ── Brand column ── */}
           <div className="footer-col-0 sm:col-span-2 lg:col-span-1">
             {/* Logo with glow */}
-            <div className="relative inline-flex">
+            <Link href="/" aria-label="GOPU Exports Home" className="relative inline-flex">
               <div className="glow-amber absolute -inset-3 rounded-xl bg-amber-400/5 blur-xl" />
               <BrandLogo variant="light" className="relative h-14 w-auto" />
               <span itemProp="name" className="sr-only">GOPU Exports</span>
-            </div>
+            </Link>
 
             <p itemProp="description" className="mt-5 text-[13px] leading-6 text-slate-400">
               Premium Indian agricultural commodities sourced from verified farms across Andhra Pradesh, Telangana, Kerala, and Karnataka — exported with full compliance documentation.
             </p>
 
-            {/* Certification badges */}
-            <div className="mt-6 flex flex-wrap gap-2">
-              {["APEDA", "FSSAI", "ISO 22000", "HACCP", "IEC"].map((cert) => (
-                <span key={cert}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/10
-                    bg-white/5 px-2.5 py-1 text-[10px] font-bold tracking-wide text-slate-300
-                    transition hover:border-amber-400/30 hover:text-amber-300">
-                  <ShieldCheck className="h-2.5 w-2.5 text-amber-400" />
-                  {cert}
-                </span>
-              ))}
+            <div className="mt-6">
+              <PublicCertificationBadges variant="footer" limit={5} />
             </div>
 
             {/* Social icons */}
@@ -368,15 +354,7 @@ export default function Footer() {
 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               <div className="flex flex-wrap gap-1.5">
-                {CERTIFICATIONS.map(({ label, icon: Icon }) => (
-                  <span key={label}
-                    className="inline-flex items-center gap-1 rounded-full border border-white/10
-                      bg-white/5 px-2.5 py-0.5 text-[10px] font-medium text-slate-400
-                      transition hover:border-amber-400/30 hover:text-amber-300">
-                    <Icon className="h-2.5 w-2.5 text-amber-400" />
-                    {label}
-                  </span>
-                ))}
+                <PublicCertificationBadges variant="footer" limit={4} />
               </div>
               {[["Privacy", "/privacy-policy"], ["Terms", "/terms-and-conditions"], ["Shipping", "/shipping-policy"]].map(([label, href]) => (
                 <Link key={href} href={href}

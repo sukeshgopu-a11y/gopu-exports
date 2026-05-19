@@ -6,14 +6,18 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
   const supabase = (await requireAdminClient()) ?? createPublicClient();
-  const { data, error } = await supabase
+  let query = supabase
     .from("certifications")
     .select("*")
     .order("sort_order", { ascending: true })
-    .order("name", { ascending: true })
-    .returns<CertificationRow[]>();
+    .order("name", { ascending: true });
+
+  if (searchParams.get("active") === "true") query = query.eq("is_active", true);
+
+  const { data, error } = await query.returns<CertificationRow[]>();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   const res = NextResponse.json((data ?? []).map(certificationToApi));
   res.headers.set("Cache-Control", "no-store");

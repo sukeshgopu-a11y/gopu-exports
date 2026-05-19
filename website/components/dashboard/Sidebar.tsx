@@ -53,7 +53,9 @@ export default function Sidebar() {
 
       {/* Logo */}
       <div className="mb-10 px-2">
-        <BrandLogo variant="light" className="h-12 w-auto" />
+        <Link href="/dashboard" aria-label="Dashboard home">
+          <BrandLogo variant="light" className="h-12 w-auto" />
+        </Link>
         <div className="mt-2 text-[9px] font-semibold tracking-[0.35em] text-[#67C9D8]">
           ADMIN
         </div>

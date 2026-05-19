@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Eye, EyeOff, Trash2, Upload, ImageOff } from "lucide-react";
+import { useToast } from "@/components/dashboard/ToastProvider";
+import { dashboardFetch, getErrorMessage, redirectIfAuthError } from "@/lib/dashboardApi";
 
 type GalleryImage = {
   id: string;
@@ -18,25 +20,27 @@ export default function GalleryPage() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [loadError, setLoadError] = useState(false);
+  const [busyId, setBusyId] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const toast = useToast();
 
-  const loadImages = async () => {
+  const loadImages = useCallback(async () => {
     setLoadError(false);
     try {
-      const res = await fetch("/api/gallery", { cache: "no-store" });
-      if (!res.ok) throw new Error("Failed to load gallery images");
-      setImages(await res.json());
-    } catch {
+      setImages(await dashboardFetch<GalleryImage[]>("/api/gallery?limit=250"));
+    } catch (err) {
+      if (redirectIfAuthError(err)) return;
       setLoadError(true);
+      toast.error(getErrorMessage(err, "Failed to load gallery images."));
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     const id = window.setTimeout(() => {
       void loadImages();
     }, 0);
     return () => window.clearTimeout(id);
-  }, []);
+  }, [loadImages]);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -48,16 +52,17 @@ export default function GalleryPage() {
         const fd = new FormData();
         fd.append("file", file);
         fd.append("bucket", "gallery");
-        const res = await fetch("/api/upload", { method: "POST", body: fd });
-        if (!res.ok) {
-          const d = await res.json();
-          throw new Error(d.error ?? "Upload failed");
-        }
+        await dashboardFetch<{ url: string }>("/api/upload", { method: "POST", body: fd, timeoutMs: 25000 });
       });
       await Promise.all(uploads);
       await loadImages();
+      toast.success("Gallery images uploaded.");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed");
+      if (!redirectIfAuthError(err)) {
+        const message = getErrorMessage(err, "Upload failed");
+        setError(message);
+        toast.error(message);
+      }
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -65,20 +70,34 @@ export default function GalleryPage() {
   };
 
   const toggleImage = async (image: GalleryImage) => {
-    const res = await fetch(`/api/gallery/${image.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ is_active: !image.is_active }),
-    });
-    if (!res.ok) return;
-    const updated = await res.json();
-    setImages((prev) => prev.map((item) => (item.id === image.id ? updated : item)));
+    setBusyId(image.id);
+    try {
+      const updated = await dashboardFetch<GalleryImage>(`/api/gallery/${image.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ is_active: !image.is_active }),
+      });
+      setImages((prev) => prev.map((item) => (item.id === image.id ? updated : item)));
+      toast.success(updated.is_active ? "Gallery image shown publicly." : "Gallery image hidden publicly.");
+    } catch (err) {
+      if (!redirectIfAuthError(err)) toast.error(getErrorMessage(err, "Gallery update failed."));
+    } finally {
+      setBusyId(null);
+    }
   };
 
   const deleteImage = async (image: GalleryImage) => {
     if (!confirm("Delete this image?")) return;
-    const res = await fetch(`/api/gallery/${image.id}`, { method: "DELETE" });
-    if (res.ok) setImages((prev) => prev.filter((i) => i.id !== image.id));
+    setBusyId(image.id);
+    try {
+      await dashboardFetch<{ success: boolean }>(`/api/gallery/${image.id}`, { method: "DELETE" });
+      setImages((prev) => prev.filter((i) => i.id !== image.id));
+      toast.success("Gallery image deleted.");
+    } catch (err) {
+      if (!redirectIfAuthError(err)) toast.error(getErrorMessage(err, "Delete failed."));
+    } finally {
+      setBusyId(null);
+    }
   };
 
   return (
@@ -152,6 +171,7 @@ export default function GalleryPage() {
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition flex items-center justify-center">
                 <button
                   onClick={() => toggleImage(img)}
+                  disabled={busyId === img.id}
                   className="opacity-0 group-hover:opacity-100 transition bg-white hover:bg-gray-100 text-[#0F172A] p-2.5 rounded-full"
                   title={img.is_active ? "Hide image" : "Show image"}
                 >
@@ -159,6 +179,7 @@ export default function GalleryPage() {
                 </button>
                 <button
                   onClick={() => deleteImage(img)}
+                  disabled={busyId === img.id}
                   className="opacity-0 group-hover:opacity-100 transition bg-red-500 hover:bg-red-600 text-white p-2.5 rounded-full ml-2"
                   title="Delete image"
                 >

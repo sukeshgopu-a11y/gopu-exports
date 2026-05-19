@@ -114,7 +114,9 @@ create table if not exists public.visitor_events (
     'email_click',
     'phone_click',
     'inquiry_submit',
-    'quote_submit'
+    'quote_submit',
+    'scroll_depth',
+    'session_duration'
   )),
   session_id text,
   path text,
@@ -294,7 +296,9 @@ with check (
     'email_click',
     'phone_click',
     'inquiry_submit',
-    'quote_submit'
+    'quote_submit',
+    'scroll_depth',
+    'session_duration'
   )
 );
 
