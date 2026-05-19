@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Mail, Phone } from "lucide-react";
 import BrandLogo from "./BrandLogo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import PublicCertificationBadges from "./PublicCertificationBadges";
+import { localeFromPath, uiForLocale } from "@/lib/localizedContent";
 
 /* ------------------------------------------------------------------ */
 /*  Brand icons                                                         */
@@ -105,6 +109,20 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
 /* ------------------------------------------------------------------ */
 export default function Footer() {
   const year = new Date().getFullYear();
+  const pathname = usePathname();
+  const { locale, text } = uiForLocale(localeFromPath(pathname));
+  const prefix = locale.code === "en" ? "" : `/${locale.code}`;
+  const navLinks = NAV_LINKS.map((link, index) => ({
+    ...link,
+    label: text.nav[index] ?? link.label,
+    href: link.href === "/" ? (prefix || "/") : `${prefix}${link.href}`,
+  }));
+  const policyLinks = [
+    [text.footer.privacy, `${prefix}/privacy-policy`],
+    [text.footer.terms, `${prefix}/terms-and-conditions`],
+    [text.footer.cookies, `${prefix}/cookie-policy`],
+    [text.footer.shipping, `${prefix}/shipping-policy`],
+  ];
 
   return (
     <>
@@ -254,7 +272,7 @@ export default function Footer() {
             </Link>
 
             <p itemProp="description" className="mt-5 text-[13px] leading-6 text-slate-400">
-              Premium Indian agricultural commodities sourced from verified farms across Andhra Pradesh, Telangana, Kerala, and Karnataka — exported with full compliance documentation.
+              {text.footer.description}
             </p>
 
             <div className="mt-6">
@@ -281,9 +299,9 @@ export default function Footer() {
 
           {/* ── Navigation ── */}
           <nav aria-label="Footer navigation" className="footer-col-1">
-            <SectionHeading>Navigation</SectionHeading>
+            <SectionHeading>{text.footer.navigation}</SectionHeading>
             <ul className="mt-5 space-y-3">
-              {NAV_LINKS.map((link) => (
+              {navLinks.map((link) => (
                 <li key={link.href}>
                   <FooterLink href={link.href}>{link.label}</FooterLink>
                 </li>
@@ -293,7 +311,7 @@ export default function Footer() {
 
           {/* ── Products ── */}
           <nav aria-label="Product links" className="footer-col-2">
-            <SectionHeading>Products</SectionHeading>
+            <SectionHeading>{text.footer.products}</SectionHeading>
             <ul className="mt-5 space-y-3">
               {PRODUCT_LINKS.map((link) => (
                 <li key={link.href}>
@@ -305,7 +323,7 @@ export default function Footer() {
 
           {/* ── Contact + Enquiry ── */}
           <div className="footer-col-3">
-            <SectionHeading>Contact Us</SectionHeading>
+            <SectionHeading>{text.footer.contactUs}</SectionHeading>
 
             <ul className="mt-5 space-y-2.5 text-[13px]" itemProp="contactPoint"
               itemScope itemType="https://schema.org/ContactPoint">
@@ -332,12 +350,12 @@ export default function Footer() {
             </ul>
 
             <div className="mt-6">
-              <SectionHeading>Quick Enquiry</SectionHeading>
+              <SectionHeading>{text.footer.quickEnquiry}</SectionHeading>
               <Link
                 href="/contact"
                 className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:from-amber-300 hover:to-amber-400"
               >
-                Send Export Enquiry
+                {text.footer.sendExportEnquiry}
               </Link>
             </div>
           </div>
@@ -356,7 +374,7 @@ export default function Footer() {
               <div className="flex flex-wrap gap-1.5">
                 <PublicCertificationBadges variant="footer" limit={4} />
               </div>
-              {[["Privacy", "/privacy-policy"], ["Terms", "/terms-and-conditions"], ["Cookies", "/cookie-policy"], ["Shipping", "/shipping-policy"]].map(([label, href]) => (
+              {policyLinks.map(([label, href]) => (
                 <Link key={href} href={href}
                   className="relative text-slate-500 transition-colors hover:text-amber-300 after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-amber-300 after:transition-all hover:after:w-full">
                   {label}

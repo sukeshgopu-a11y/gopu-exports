@@ -184,12 +184,12 @@ export default async function HomePage() {
               <p className="mt-1 text-[13px]">Add products and mark them as featured in the admin panel.</p>
             </div>
           )}
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-            {featured.map((product: FeaturedProduct) => (
+          <div className="-mx-6 flex gap-5 overflow-x-auto px-6 pb-3 sm:mx-0 sm:px-0">
+            {featured.slice(0, 8).map((product: FeaturedProduct) => (
               <Link
                 key={product.slug}
                 href={`/products/${product.slug}`}
-                className="group overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                className="group w-[270px] flex-none overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:w-[300px]"
               >
                 <div className="relative h-52 overflow-hidden">
                   {product.image ? (

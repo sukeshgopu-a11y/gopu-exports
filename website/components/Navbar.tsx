@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import BrandLogo from "./BrandLogo";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { localeFromPath, uiForLocale } from "@/lib/localizedContent";
 
 /* ─── CONFIG ──────────────────────────────────────────────── */
 const CONTACT_EMAIL = "admin@gopuexports.com";
@@ -62,6 +63,13 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const { locale, text } = uiForLocale(localeFromPath(pathname));
+  const prefix = locale.code === "en" ? "" : `/${locale.code}`;
+  const navLinks = NAV_LINKS.map((link, index) => ({
+    ...link,
+    label: text.nav[index] ?? link.label,
+    href: link.href === "/" ? (prefix || "/") : `${prefix}${link.href}`,
+  }));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -157,7 +165,7 @@ export default function Navbar() {
 
             {/* DESKTOP NAV */}
             <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 ml-auto pr-5">
-              {NAV_LINKS.map((link) => {
+              {navLinks.map((link) => {
                 const active = isActive(link.href);
                 return (
                   <Link
@@ -196,7 +204,7 @@ export default function Navbar() {
                 href="/contact"
                 className="hidden lg:flex items-center gap-2 rounded-lg bg-[#0E7490] px-5 py-2.5 text-[12px] font-bold tracking-wide text-white transition hover:bg-[#0A5A70] shadow-sm hover:shadow-md"
               >
-                GET A QUOTE
+                {text.common.requestQuote}
               </Link>
               {/* MOBILE MENU TOGGLE */}
               <button
@@ -226,7 +234,7 @@ export default function Navbar() {
         >
           <nav className="border-b border-[#E2E8F0] px-5 pt-4 pb-6">
             <ul className="flex flex-col divide-y divide-[#F1F5F9]">
-              {NAV_LINKS.map((link) => {
+              {navLinks.map((link) => {
                 const active = isActive(link.href);
                 return (
                   <li key={link.href}>
@@ -251,7 +259,7 @@ export default function Navbar() {
                 onClick={() => setMenuOpen(false)}
                 className="w-full rounded-xl bg-[#0E7490] px-6 py-3.5 text-center text-sm font-bold tracking-wide text-white transition hover:bg-[#0A5A70]"
               >
-                GET A QUOTE →
+                {text.common.requestQuote} →
               </Link>
               <a
                 href={`https://wa.me/${WHATSAPP_NUMBER}`}
@@ -259,7 +267,7 @@ export default function Navbar() {
                 rel="noreferrer"
                 className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#22C55E]/40 py-3.5 text-sm font-bold text-[#16A34A] transition hover:bg-[#F0FDF4]"
               >
-                <IconWhatsApp /> Chat on WhatsApp
+                <IconWhatsApp /> WhatsApp
               </a>
             </div>
           </nav>
