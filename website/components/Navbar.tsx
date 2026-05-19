@@ -65,6 +65,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const { locale, text } = uiForLocale(localeFromPath(pathname));
   const prefix = locale.code === "en" ? "" : `/${locale.code}`;
+  const localizedHome = prefix || "/";
+  const localizedContact = `${prefix}/contact`;
   const navLinks = NAV_LINKS.map((link, index) => ({
     ...link,
     label: text.nav[index] ?? link.label,
@@ -137,7 +139,7 @@ export default function Navbar() {
 
             {/* RIGHT — social icons only */}
             {SOCIALS.length > 0 && <div className="hidden md:flex items-center gap-3">
-              <span className="text-[10px] text-white/30 font-medium mr-1">Contact:</span>
+              <span className="text-[10px] text-white/30 font-medium mr-1">{text.footer.contactUs}:</span>
               {SOCIALS.map(({ label, href, Icon, external }) => (
                 <a
                   key={label}
@@ -159,7 +161,7 @@ export default function Navbar() {
           <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 sm:px-6 lg:px-8">
 
             {/* LOGO */}
-            <Link href="/" aria-label="GOPU Exports Home" className="flex-shrink-0">
+            <Link href={localizedHome} aria-label="GOPU Exports Home" className="flex-shrink-0">
               <LogoMark />
             </Link>
 
@@ -201,7 +203,7 @@ export default function Navbar() {
                 <IconWhatsApp />
               </a>
               <Link
-                href="/contact"
+                href={localizedContact}
                 className="hidden lg:flex items-center gap-2 rounded-lg bg-[#0E7490] px-5 py-2.5 text-[12px] font-bold tracking-wide text-white transition hover:bg-[#0A5A70] shadow-sm hover:shadow-md"
               >
                 {text.common.requestQuote}
@@ -255,7 +257,7 @@ export default function Navbar() {
             <div className="mt-5 flex flex-col gap-3">
               <LanguageSwitcher />
               <Link
-                href="/contact"
+                href={localizedContact}
                 onClick={() => setMenuOpen(false)}
                 className="w-full rounded-xl bg-[#0E7490] px-6 py-3.5 text-center text-sm font-bold tracking-wide text-white transition hover:bg-[#0A5A70]"
               >

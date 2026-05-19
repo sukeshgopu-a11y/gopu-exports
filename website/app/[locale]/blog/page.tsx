@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLocale, isLocale, localeCodes } from "@/lib/i18n";
-import { uiForLocale } from "@/lib/localizedContent";
+import { localizedArticleExcerpt, localizedBlogTitle, uiForLocale } from "@/lib/localizedContent";
 import { DEFAULT_BLOGS } from "@/lib/blogs";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -39,12 +39,12 @@ export default async function LocalizedBlogPage({ params }: Props) {
       </section>
       <section className="px-6 py-14 sm:px-8">
         <div className="mx-auto grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {DEFAULT_BLOGS.slice(0, 9).map((post) => (
-            <Link key={post.slug} href={`/blog/${post.slug}`} className="rounded-2xl border border-[#D9E2EC] bg-white p-6 shadow-sm transition hover:border-[#0E7490]">
+          {DEFAULT_BLOGS.map((post) => (
+            <Link key={post.slug} href={`/${code}/blog/${post.slug}`} className="rounded-2xl border border-[#D9E2EC] bg-white p-6 shadow-sm transition hover:border-[#0E7490]">
               <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#0E7490]">GOPU Exports</p>
-              <h2 className="mt-3 text-lg font-black leading-6 tracking-[-0.03em] text-[#0F172A]">{post.title}</h2>
+              <h2 className="mt-3 text-lg font-black leading-6 tracking-[-0.03em] text-[#0F172A]">{localizedBlogTitle(post.slug, code, post.title)}</h2>
               <p className="mt-3 text-sm leading-7 text-[#64748B]">
-                {text.blog.body}
+                {localizedArticleExcerpt(code)}
               </p>
             </Link>
           ))}

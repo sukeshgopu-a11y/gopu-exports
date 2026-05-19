@@ -91,6 +91,120 @@ const base = {
   },
 };
 
+const translatedResourceCards = {
+  ar: [
+    ["عملية التصدير", "فهم خطوات الاستفسار ومراجعة المواصفات والتسعير والتعبئة والوثائق وتنسيق الشحن."],
+    ["معايير التعبئة", "خيارات تعبئة عملية للتوابل والأرز والبقول والدخن والفواكه والخضروات والعلامات الخاصة."],
+    ["مراقبة الجودة", "تخطيط الفحص والدرجات ومواصفات المشتري لدعم جاهزية المنتجات للتصدير."],
+    ["اللوجستيات والشحن", "تخطيط شروط التجارة والشحن والحاويات والجداول الزمنية والتواصل."],
+    ["دعم الوثائق", "مناقشة الفواتير وشهادات المنشأ والصحة النباتية والفحص والوثائق الخاصة بالمنتج."],
+    ["أسئلة المشترين", "إجابات عملية قبل إرسال استفسار بالجملة أو طلب عرض سعر لمنتج محدد."],
+    ["خدمات العلامة الخاصة", "تخطيط التصميم والعبوات وقوائم المكونات والكرتون ومتطلبات المشتري."],
+    ["طلبات الجملة", "تنظيم الاستفسارات حسب الدرجة والكمية والتعبئة والوجهة والوثائق وموعد الشحن."],
+    ["شبكة التوريد", "فهم تنسيق الموردين عبر فئات المنتجات الزراعية الهندية."],
+    ["دعم الاستفسار والشراء", "إرسال متطلبات شراء واضحة للحصول على خطوات عملية تالية."],
+  ],
+  zh: [
+    ["出口流程", "了解询盘、规格确认、报价、包装、文件和装运协调的基本步骤。"],
+    ["包装标准", "查看香料、大米、豆类、小米、水果、蔬菜和贴牌产品的实用包装选择。"],
+    ["质量控制", "了解产品检查、分级、买方规格和检验计划如何支持出口准备。"],
+    ["物流与运输", "规划贸易术语、货运协调、装柜、路线时间和沟通节点。"],
+    ["文件支持", "准备商业文件、原产地、植物检疫、检验和产品相关文件讨论。"],
+    ["买方问答", "在发送大宗询盘或产品报价请求前获得实用答案。"],
+    ["贴牌服务", "规划品牌设计、零售包装、配料表、外箱和买方包装要求。"],
+    ["大宗订单", "按等级、数量、包装、目的地、文件和装运时间组织询盘。"],
+    ["供应网络", "了解印度农业产品类别中的供应商协调方式。"],
+    ["采购支持", "发送清晰采购需求，以便获得可执行的下一步建议。"],
+  ],
+  es: [
+    ["Proceso de exportación", "Comprenda consulta, revisión de especificaciones, cotización, empaque, documentación y coordinación de envío."],
+    ["Estándares de empaque", "Opciones prácticas para especias, arroz, legumbres, mijos, frutas, verduras y marca privada."],
+    ["Control de calidad", "Planificación de controles, grados, especificaciones del comprador e inspecciones para exportación."],
+    ["Logística y envío", "Planifique Incoterms, flete, carga de contenedor, tiempos de ruta y comunicación."],
+    ["Soporte documental", "Prepare discusiones sobre factura, origen, fitosanitario, inspección y documentos específicos."],
+    ["FAQ del comprador", "Respuestas prácticas antes de enviar una consulta mayorista o una cotización por producto."],
+    ["Servicios de marca privada", "Planifique arte, packs minoristas, ingredientes, cajas exteriores y requisitos del comprador."],
+    ["Pedidos al por mayor", "Estructure consultas con grado, cantidad, empaque, destino, documentos y ventana de envío."],
+    ["Red de suministro", "Entienda la coordinación de proveedores en categorías agrícolas de India."],
+    ["Apoyo de consulta y compras", "Envíe requisitos claros para recibir próximos pasos prácticos."],
+  ],
+  fr: [
+    ["Processus export", "Comprendre demande, spécifications, devis, emballage, documentation et coordination d’expédition."],
+    ["Standards d’emballage", "Options pratiques pour épices, riz, légumineuses, millets, fruits, légumes et marque privée."],
+    ["Contrôle qualité", "Planifier contrôles, grades, spécifications acheteur et inspections pour l’export."],
+    ["Logistique et expédition", "Planifier Incoterms, fret, chargement conteneur, délais de route et communication."],
+    ["Support documentaire", "Préparer factures, origine, phytosanitaire, inspection et documents spécifiques au produit."],
+    ["FAQ acheteurs", "Réponses pratiques avant une demande en gros ou une cotation produit."],
+    ["Services marque privée", "Planifier design, packs retail, ingrédients, cartons et exigences acheteur."],
+    ["Commandes en gros", "Structurer les demandes par grade, quantité, emballage, destination, documents et fenêtre d’expédition."],
+    ["Réseau d’approvisionnement", "Comprendre la coordination fournisseurs dans les catégories agricoles indiennes."],
+    ["Support achat et demande", "Envoyer des besoins clairs pour recevoir des étapes concrètes."],
+  ],
+};
+
+const translatedBlogTitles: Record<string, Record<string, string>> = {
+  de: {
+    "how-to-import-indian-spices-in-bulk": "Indische Gewürze in großen Mengen importieren",
+    "rice-export-from-india-varieties-packaging-buyer-checklist": "Reisexport aus Indien: Sorten, Verpackung und Käufercheckliste",
+    "apeda-products-export-guide-international-buyers": "APEDA-Produkte: Exportleitfaden für internationale Käufer",
+    "spice-board-products-from-india-importers-guide": "Spice-Board-Produkte aus Indien: Hinweise für Importeure",
+    "choose-reliable-agricultural-exporter-from-india": "Einen zuverlässigen Agrar-Exporteur aus Indien auswählen",
+    "export-packaging-standards-spices-rice-fruits-vegetables": "Exportverpackung für Gewürze, Reis, Obst und Gemüse",
+    "indian-millets-export-types-uses-global-demand": "Indische Hirse für den Export: Typen, Nutzung und Nachfrage",
+    "fresh-fruits-vegetables-export-india-quality-shipping": "Frisches Obst und Gemüse aus Indien exportieren",
+    "documents-required-importing-food-products-from-india": "Dokumente für den Import von Lebensmitteln aus Indien",
+    "private-label-spice-manufacturing-export-opportunities-india": "Private-Label-Gewürze aus Indien: Exportmöglichkeiten",
+  },
+  zh: {
+    "how-to-import-indian-spices-in-bulk": "如何批量进口印度香料",
+    "rice-export-from-india-varieties-packaging-buyer-checklist": "印度大米出口：品种、包装与买方清单",
+    "apeda-products-export-guide-international-buyers": "APEDA产品出口买方指南",
+    "spice-board-products-from-india-importers-guide": "印度香料委员会产品：进口商须知",
+    "choose-reliable-agricultural-exporter-from-india": "如何选择可靠的印度农业出口商",
+    "export-packaging-standards-spices-rice-fruits-vegetables": "香料、大米、水果和蔬菜出口包装标准",
+    "indian-millets-export-types-uses-global-demand": "印度小米出口：类型、用途和需求",
+    "fresh-fruits-vegetables-export-india-quality-shipping": "印度新鲜水果和蔬菜出口基础",
+    "documents-required-importing-food-products-from-india": "从印度进口食品所需文件",
+    "private-label-spice-manufacturing-export-opportunities-india": "印度贴牌香料制造与出口机会",
+  },
+  es: {
+    "how-to-import-indian-spices-in-bulk": "Cómo importar especias indias al por mayor",
+    "rice-export-from-india-varieties-packaging-buyer-checklist": "Exportación de arroz de India: variedades, empaque y checklist",
+    "apeda-products-export-guide-international-buyers": "Guía de productos APEDA para compradores internacionales",
+    "spice-board-products-from-india-importers-guide": "Productos del Spice Board de India para importadores",
+    "choose-reliable-agricultural-exporter-from-india": "Cómo elegir un exportador agrícola confiable de India",
+    "export-packaging-standards-spices-rice-fruits-vegetables": "Estándares de empaque para especias, arroz, frutas y verduras",
+    "indian-millets-export-types-uses-global-demand": "Mijos indios para exportación: tipos, usos y demanda",
+    "fresh-fruits-vegetables-export-india-quality-shipping": "Exportación de frutas y verduras frescas de India",
+    "documents-required-importing-food-products-from-india": "Documentos para importar alimentos desde India",
+    "private-label-spice-manufacturing-export-opportunities-india": "Marca privada de especias y oportunidades de exportación desde India",
+  },
+  fr: {
+    "how-to-import-indian-spices-in-bulk": "Importer des épices indiennes en vrac",
+    "rice-export-from-india-varieties-packaging-buyer-checklist": "Export de riz depuis l’Inde : variétés, emballage et checklist",
+    "apeda-products-export-guide-international-buyers": "Guide des produits APEDA pour acheteurs internationaux",
+    "spice-board-products-from-india-importers-guide": "Produits Spice Board d’Inde : points clés pour importateurs",
+    "choose-reliable-agricultural-exporter-from-india": "Choisir un exportateur agricole fiable en Inde",
+    "export-packaging-standards-spices-rice-fruits-vegetables": "Standards d’emballage export pour épices, riz, fruits et légumes",
+    "indian-millets-export-types-uses-global-demand": "Millets indiens à l’export : types, usages et demande",
+    "fresh-fruits-vegetables-export-india-quality-shipping": "Export de fruits et légumes frais depuis l’Inde",
+    "documents-required-importing-food-products-from-india": "Documents nécessaires pour importer des aliments d’Inde",
+    "private-label-spice-manufacturing-export-opportunities-india": "Épices marque privée et opportunités export depuis l’Inde",
+  },
+  ar: {
+    "how-to-import-indian-spices-in-bulk": "كيفية استيراد التوابل الهندية بالجملة",
+    "rice-export-from-india-varieties-packaging-buyer-checklist": "تصدير الأرز من الهند: الأصناف والتعبئة وقائمة المشتري",
+    "apeda-products-export-guide-international-buyers": "دليل منتجات APEDA للمشترين الدوليين",
+    "spice-board-products-from-india-importers-guide": "منتجات مجلس التوابل الهندي للمستوردين",
+    "choose-reliable-agricultural-exporter-from-india": "كيفية اختيار مصدر زراعي موثوق من الهند",
+    "export-packaging-standards-spices-rice-fruits-vegetables": "معايير تعبئة التوابل والأرز والفواكه والخضروات",
+    "indian-millets-export-types-uses-global-demand": "الدخن الهندي للتصدير: الأنواع والاستخدامات والطلب",
+    "fresh-fruits-vegetables-export-india-quality-shipping": "تصدير الفواكه والخضروات الطازجة من الهند",
+    "documents-required-importing-food-products-from-india": "الوثائق المطلوبة لاستيراد المنتجات الغذائية من الهند",
+    "private-label-spice-manufacturing-export-opportunities-india": "تصنيع وتصدير توابل العلامة الخاصة من الهند",
+  },
+};
+
 const translations: Record<string, typeof base> = {
   en: base,
   de: {
@@ -118,7 +232,7 @@ const translations: Record<string, typeof base> = {
     common: { searchProducts: "ابحث عن المنتجات", all: "الكل", featured: "مميز", allProducts: "كل المنتجات", productCount: "منتجات", noProducts: "لم يتم العثور على منتجات.", clearFilters: "مسح الفلاتر", viewDetails: "عرض التفاصيل", viewMore: "عرض المزيد", showLess: "عرض أقل", origin: "المنشأ", moq: "الحد الأدنى", leadTime: "مدة التجهيز", hs: "HS", requestQuote: "طلب عرض سعر", viewAllProducts: "عرض كل المنتجات" },
     footer: { navigation: "التنقل", products: "المنتجات", contactUs: "اتصل بنا", quickEnquiry: "استفسار سريع", sendExportEnquiry: "إرسال استفسار تصدير", privacy: "الخصوصية", terms: "الشروط", cookies: "ملفات تعريف الارتباط", shipping: "الشحن", description: "سلع زراعية هندية للمشترين المحترفين مع دعم في التوريد والتعبئة والتوثيق." },
     productsPage: { eyebrow: "كتالوج التصدير", title: "كتالوج المنتجات", body: "تصفح المنتجات الزراعية الهندية النشطة حسب الفئة أو البحث أو طلب عرض سعر خاص بالمنتج.", featuredCategories: "الفئات الرئيسية", ctaTitle: "هل تحتاج إلى منتج غير موجود؟", ctaBody: "أرسل المنتج والدرجة والتعبئة والكمية والوجهة ومتطلبات الوثائق.", requestProduct: "اطلب منتجاً", whatsapp: "تواصل عبر واتساب" },
-    resources: { ...base.resources, eyebrow: "موارد المشترين", title: "موارد التصدير للمشترين", body: "إرشادات عملية حول التوريد والتعبئة والجودة والوثائق والخدمات اللوجستية والطلبات الكبيرة.", cta: "إرسال استفسار", viewProducts: "عرض المنتجات" },
+    resources: { ...base.resources, eyebrow: "موارد المشترين", title: "موارد التصدير للمشترين", body: "إرشادات عملية حول التوريد والتعبئة والجودة والوثائق والخدمات اللوجستية والطلبات الكبيرة.", cta: "إرسال استفسار", viewProducts: "عرض المنتجات", cards: translatedResourceCards.ar },
     blog: { eyebrow: "أدلة المشترين", title: "مركز معرفة التصدير", body: "اقرأ إرشادات التوريد والوثائق والتعبئة وتخطيط المنتجات للواردات الزراعية الهندية.", open: "قراءة المقالات" },
     contact: { eyebrow: "استفسار تصدير", title: "اتصل بـ GOPU Exports", body: "شارك المنتج والوجهة والكمية والتعبئة والوثائق المطلوبة.", open: "فتح نموذج الاستفسار" },
   },
@@ -127,7 +241,7 @@ const translations: Record<string, typeof base> = {
     common: { searchProducts: "搜索产品", all: "全部", featured: "推荐", allProducts: "所有产品", productCount: "产品", noProducts: "未找到产品。", clearFilters: "清除筛选", viewDetails: "查看详情", viewMore: "查看更多", showLess: "收起", origin: "产地", moq: "起订量", leadTime: "交期", hs: "HS", requestQuote: "询价", viewAllProducts: "查看全部产品" },
     footer: { navigation: "导航", products: "产品", contactUs: "联系我们", quickEnquiry: "快速询盘", sendExportEnquiry: "发送出口询盘", privacy: "隐私", terms: "条款", cookies: "Cookie", shipping: "运输", description: "面向专业买家的印度农产品，支持采购、包装和出口文件沟通。" },
     productsPage: { eyebrow: "出口目录", title: "产品目录", body: "按类别、关键词和产品询价浏览可供应的印度农产品。", featuredCategories: "重点类别", ctaTitle: "没有找到需要的产品？", ctaBody: "请发送产品、等级、包装、数量、目的地和文件要求。", requestProduct: "提交产品需求", whatsapp: "WhatsApp 联系" },
-    resources: { ...base.resources, eyebrow: "买家资源", title: "出口买家资源", body: "关于采购、包装、质量控制、文件、物流、贴牌和大宗订单的实用指南。", cta: "发送询盘", viewProducts: "查看产品" },
+    resources: { ...base.resources, eyebrow: "买家资源", title: "出口买家资源", body: "关于采购、包装、质量控制、文件、物流、贴牌和大宗订单的实用指南。", cta: "发送询盘", viewProducts: "查看产品", cards: translatedResourceCards.zh },
     blog: { eyebrow: "买家指南", title: "出口知识中心", body: "阅读印度农产品进口的采购、文件、包装和产品规划文章。", open: "阅读文章" },
     contact: { eyebrow: "出口询盘", title: "联系 GOPU Exports", body: "请提供产品、目的地、数量、包装和文件要求。", open: "打开询盘表单" },
   },
@@ -136,7 +250,7 @@ const translations: Record<string, typeof base> = {
     common: { searchProducts: "Buscar productos", all: "Todos", featured: "Destacados", allProducts: "Todos los productos", productCount: "productos", noProducts: "No se encontraron productos.", clearFilters: "Limpiar filtros", viewDetails: "Ver detalles", viewMore: "Ver más", showLess: "Ver menos", origin: "Origen", moq: "MOQ", leadTime: "Plazo", hs: "HS", requestQuote: "Solicitar cotización", viewAllProducts: "Ver todos los productos" },
     footer: { navigation: "Navegación", products: "Productos", contactUs: "Contacto", quickEnquiry: "Consulta rápida", sendExportEnquiry: "Enviar consulta de exportación", privacy: "Privacidad", terms: "Términos", cookies: "Cookies", shipping: "Envío", description: "Productos agrícolas indios para compradores profesionales con apoyo de abastecimiento, empaque y documentación." },
     productsPage: { eyebrow: "Catálogo de exportación", title: "Catálogo de productos", body: "Explore productos agrícolas indios activos por categoría, búsqueda y solicitud de cotización.", featuredCategories: "Categorías destacadas", ctaTitle: "¿Necesita un producto no listado?", ctaBody: "Envíe producto, grado, empaque, cantidad, destino y documentos requeridos.", requestProduct: "Solicitar producto", whatsapp: "WhatsApp" },
-    resources: { ...base.resources, eyebrow: "Recursos para compradores", title: "Recursos de exportación", body: "Guías prácticas sobre abastecimiento, empaque, calidad, documentación, logística, marca privada y pedidos al por mayor.", cta: "Enviar consulta", viewProducts: "Ver productos" },
+    resources: { ...base.resources, eyebrow: "Recursos para compradores", title: "Recursos de exportación", body: "Guías prácticas sobre abastecimiento, empaque, calidad, documentación, logística, marca privada y pedidos al por mayor.", cta: "Enviar consulta", viewProducts: "Ver productos", cards: translatedResourceCards.es },
     blog: { eyebrow: "Guías para compradores", title: "Centro de conocimiento de exportación", body: "Lea guías de abastecimiento, documentación, empaque y planificación de productos para importar desde India.", open: "Leer artículos" },
     contact: { eyebrow: "Consulta de exportación", title: "Contactar GOPU Exports", body: "Comparta producto, destino, cantidad, empaque y requisitos documentales.", open: "Abrir formulario" },
   },
@@ -145,7 +259,7 @@ const translations: Record<string, typeof base> = {
     common: { searchProducts: "Rechercher des produits", all: "Tous", featured: "Sélection", allProducts: "Tous les produits", productCount: "produits", noProducts: "Aucun produit trouvé.", clearFilters: "Effacer les filtres", viewDetails: "Voir les détails", viewMore: "Voir plus", showLess: "Voir moins", origin: "Origine", moq: "MOQ", leadTime: "Délai", hs: "HS", requestQuote: "Demander un devis", viewAllProducts: "Voir tous les produits" },
     footer: { navigation: "Navigation", products: "Produits", contactUs: "Contact", quickEnquiry: "Demande rapide", sendExportEnquiry: "Envoyer une demande export", privacy: "Confidentialité", terms: "Conditions", cookies: "Cookies", shipping: "Expédition", description: "Produits agricoles indiens pour acheteurs professionnels avec accompagnement sourcing, emballage et documentation." },
     productsPage: { eyebrow: "Catalogue export", title: "Catalogue produits", body: "Parcourez les produits agricoles indiens actifs par catégorie, recherche et demande de devis.", featuredCategories: "Catégories clés", ctaTitle: "Vous cherchez un produit non listé ?", ctaBody: "Envoyez produit, grade, emballage, quantité, destination et documents requis.", requestProduct: "Demander un produit", whatsapp: "WhatsApp" },
-    resources: { ...base.resources, eyebrow: "Ressources acheteurs", title: "Ressources export pour acheteurs", body: "Guides pratiques sur sourcing, emballage, qualité, documentation, logistique, marque privée et commandes en gros.", cta: "Envoyer une demande", viewProducts: "Voir les produits" },
+    resources: { ...base.resources, eyebrow: "Ressources acheteurs", title: "Ressources export pour acheteurs", body: "Guides pratiques sur sourcing, emballage, qualité, documentation, logistique, marque privée et commandes en gros.", cta: "Envoyer une demande", viewProducts: "Voir les produits", cards: translatedResourceCards.fr },
     blog: { eyebrow: "Guides acheteurs", title: "Centre de connaissances export", body: "Lisez des guides sur sourcing, documents, emballage et planification produit pour importer depuis l’Inde.", open: "Lire les articles" },
     contact: { eyebrow: "Demande export", title: "Contacter GOPU Exports", body: "Partagez produit, destination, quantité, emballage et besoins documentaires.", open: "Ouvrir le formulaire" },
   },
@@ -212,4 +326,30 @@ export function localizedProductDescription(name: string, category: string, loca
     fr: `${name} est disponible pour les demandes B2B. Indiquez le grade, l’emballage, la quantité, la destination et les documents requis.`,
   };
   return map[localeCode] ?? `${name} in ${c} is available for B2B sourcing discussions. Share grade, packing, quantity, destination, and document requirements.`;
+}
+
+export function localizedBlogTitle(slug: string, localeCode: string, fallback: string) {
+  return translatedBlogTitles[localeCode]?.[slug] ?? fallback;
+}
+
+export function localizedArticleExcerpt(localeCode: string) {
+  const map: TextMap = {
+    de: "Professioneller Einkaufsleitfaden mit praktischen Punkten zu Spezifikation, Verpackung, Dokumenten und Anfragevorbereitung.",
+    ar: "دليل مهني للمشترين يتناول المواصفات والتعبئة والوثائق وطريقة إعداد الاستفسار.",
+    zh: "面向专业买方的指南，涵盖规格、包装、文件和询盘准备要点。",
+    es: "Guía profesional para compradores con puntos prácticos sobre especificación, empaque, documentos y preparación de consultas.",
+    fr: "Guide professionnel pour acheteurs avec points pratiques sur spécifications, emballage, documents et préparation de demande.",
+  };
+  return map[localeCode] ?? "Professional buyer guide covering specifications, packaging, documents, and enquiry preparation.";
+}
+
+export function localizedDetailLabel(key: "packaging" | "shelfLife", localeCode: string) {
+  const map: Record<string, Record<"packaging" | "shelfLife", string>> = {
+    de: { packaging: "Verpackung", shelfLife: "Haltbarkeit" },
+    ar: { packaging: "التعبئة", shelfLife: "مدة الصلاحية" },
+    zh: { packaging: "包装", shelfLife: "保质期" },
+    es: { packaging: "Empaque", shelfLife: "Vida útil" },
+    fr: { packaging: "Emballage", shelfLife: "Durée de conservation" },
+  };
+  return map[localeCode]?.[key] ?? (key === "packaging" ? "Packaging" : "Shelf life");
 }

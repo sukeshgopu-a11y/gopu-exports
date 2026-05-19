@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getLocale, isLocale, localeCodes } from "@/lib/i18n";
-import { categoryLabel, localizedProductDescription, uiForLocale } from "@/lib/localizedContent";
+import { categoryLabel, localizedDetailLabel, localizedProductDescription, uiForLocale } from "@/lib/localizedContent";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
 
@@ -67,9 +67,9 @@ export default async function LocalizedProductPage({ params }: Props) {
     [text.common.origin, product.origin],
     [text.common.moq, product.moq],
     [text.common.leadTime, product.lead],
-    ["Packaging", product.packaging],
+    [localizedDetailLabel("packaging", code), product.packaging],
     [text.common.hs, product.hs],
-    ["Shelf life", product.shelfLife],
+    [localizedDetailLabel("shelfLife", code), product.shelfLife],
   ].filter(([, value]) => Boolean(value));
 
   return (
@@ -86,7 +86,7 @@ export default async function LocalizedProductPage({ params }: Props) {
               {localizedProductDescription(product.title, product.category, code)}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href={`/contact?product=${encodeURIComponent(product.title)}`} className="rounded-xl bg-[#0E7490] px-6 py-3 text-sm font-bold text-white">
+              <Link href={`/${code}/contact?product=${encodeURIComponent(product.title)}`} className="rounded-xl bg-[#0E7490] px-6 py-3 text-sm font-bold text-white">
                 {text.common.requestQuote}
               </Link>
               <a href="https://wa.me/918712816876" target="_blank" rel="noreferrer" className="rounded-xl border border-[#22C55E]/40 px-6 py-3 text-sm font-bold text-[#16A34A]">

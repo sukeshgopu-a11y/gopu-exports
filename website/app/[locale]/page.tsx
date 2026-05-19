@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLocale, isLocale, localeCodes, localizedHomeCopy } from "@/lib/i18n";
+import { uiForLocale } from "@/lib/localizedContent";
 
 const BASE_URL = "https://gopuexports.com";
 
@@ -38,6 +39,7 @@ export default async function LocalizedLandingPage({
   if (!isLocale(code) || code === "en") notFound();
   const locale = getLocale(code);
   const copy = localizedHomeCopy[locale.code] ?? localizedHomeCopy.en;
+  const { text } = uiForLocale(locale.code);
 
   return (
     <main dir={locale.dir} className="min-h-screen bg-[#F5F7FA]">
@@ -49,10 +51,10 @@ export default async function LocalizedLandingPage({
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-slate-600">{copy.body}</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/products" className="rounded-lg bg-[#0E7490] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0A5A70]">
+            <Link href={`/${locale.code}/products`} className="rounded-lg bg-[#0E7490] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0A5A70]">
               {copy.cta}
             </Link>
-            <Link href="/contact" className="rounded-lg border border-[#D9E2EC] bg-white px-6 py-3 text-sm font-bold text-[#0F172A] transition hover:border-[#0E7490] hover:text-[#0E7490]">
+            <Link href={`/${locale.code}/contact`} className="rounded-lg border border-[#D9E2EC] bg-white px-6 py-3 text-sm font-bold text-[#0F172A] transition hover:border-[#0E7490] hover:text-[#0E7490]">
               admin@gopuexports.com
             </Link>
           </div>
@@ -61,12 +63,12 @@ export default async function LocalizedLandingPage({
 
       <section className="mx-auto grid max-w-5xl gap-4 px-6 py-12 sm:grid-cols-2 sm:px-8 lg:grid-cols-3">
         {[
-          "Rice & grains",
-          "Indian spices",
-          "Fresh produce",
-          "Packaging support",
-          "Export documentation",
-          "Buyer communication",
+          text.nav[2],
+          text.productsPage.featuredCategories,
+          text.resources.cards[1]?.[0] ?? text.resources.title,
+          text.resources.cards[4]?.[0] ?? text.resources.title,
+          text.contact.eyebrow,
+          text.footer.quickEnquiry,
         ].map((item) => (
           <div key={item} className="rounded-2xl border border-[#D9E2EC] bg-white p-5">
             <p className="text-sm font-bold text-[#0F172A]">{item}</p>

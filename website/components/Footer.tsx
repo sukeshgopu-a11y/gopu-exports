@@ -112,6 +112,7 @@ export default function Footer() {
   const pathname = usePathname();
   const { locale, text } = uiForLocale(localeFromPath(pathname));
   const prefix = locale.code === "en" ? "" : `/${locale.code}`;
+  const localizedHome = prefix || "/";
   const navLinks = NAV_LINKS.map((link, index) => ({
     ...link,
     label: text.nav[index] ?? link.label,
@@ -265,7 +266,7 @@ export default function Footer() {
           {/* ── Brand column ── */}
           <div className="footer-col-0 sm:col-span-2 lg:col-span-1">
             {/* Logo with glow */}
-            <Link href="/" aria-label="GOPU Exports Home" className="relative inline-flex">
+            <Link href={localizedHome} aria-label="GOPU Exports Home" className="relative inline-flex">
               <div className="glow-amber absolute -inset-3 rounded-xl bg-amber-400/5 blur-xl" />
               <BrandLogo variant="light" className="relative h-14 w-auto" />
               <span itemProp="name" className="sr-only">GOPU Exports</span>
@@ -313,9 +314,11 @@ export default function Footer() {
           <nav aria-label="Product links" className="footer-col-2">
             <SectionHeading>{text.footer.products}</SectionHeading>
             <ul className="mt-5 space-y-3">
-              {PRODUCT_LINKS.map((link) => (
+              {PRODUCT_LINKS.map((link, index) => (
                 <li key={link.href}>
-                  <FooterLink href={link.href}>{link.label}</FooterLink>
+                  <FooterLink href={link.href === "/products" ? `${prefix}/products` : `${prefix}${link.href}`}>
+                    {index === PRODUCT_LINKS.length - 1 ? `${text.common.viewAllProducts} ->` : link.label}
+                  </FooterLink>
                 </li>
               ))}
             </ul>
@@ -352,7 +355,7 @@ export default function Footer() {
             <div className="mt-6">
               <SectionHeading>{text.footer.quickEnquiry}</SectionHeading>
               <Link
-                href="/contact"
+                href={`${prefix}/contact`}
                 className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:from-amber-300 hover:to-amber-400"
               >
                 {text.footer.sendExportEnquiry}
@@ -368,7 +371,7 @@ export default function Footer() {
           <div className="relative mx-auto flex max-w-6xl flex-col gap-3 px-5 py-5 text-[12px] text-slate-500
             sm:flex-row sm:items-center sm:justify-between sm:px-8">
 
-            <p>© {year} <span className="text-slate-300 font-medium">GOPU Exports</span>. All rights reserved.</p>
+            <p>© {year} <span className="text-slate-300 font-medium">GOPU Exports</span>.</p>
 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               <div className="flex flex-wrap gap-1.5">

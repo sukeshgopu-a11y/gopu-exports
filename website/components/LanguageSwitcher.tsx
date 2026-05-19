@@ -11,9 +11,9 @@ export default function LanguageSwitcher({ compact = false }: { compact?: boolea
   const rest = current === DEFAULT_LOCALE ? pathname : `/${parts.slice(1).join("/")}`;
 
   const hrefFor = (code: string) => {
-    if (code === DEFAULT_LOCALE) return rest === "/" || rest === "" ? "/" : rest;
-    if (["/products", "/blog", "/contact", "/resources", "/enquiry", "/privacy-policy", "/terms-and-conditions", "/cookie-policy", "/shipping-policy"].includes(rest)) return `/${code}${rest}`;
-    return `/${code}`;
+    const safeRest = rest === "" ? "/" : rest;
+    if (code === DEFAULT_LOCALE) return safeRest === "/" ? "/" : safeRest;
+    return safeRest === "/" ? `/${code}` : `/${code}${safeRest}`;
   };
 
   return (

@@ -42,7 +42,7 @@ export default async function LocalizedResourcesPage({ params }: Props) {
           {EXPORT_OPERATION_PAGES.map((page, index) => {
             const card = text.resources.cards[index] ?? [page.title, page.description];
             return (
-              <Link key={page.slug} href={`/resources/${page.slug}`} className="rounded-2xl border border-[#D9E2EC] bg-white p-6 shadow-sm transition hover:border-[#0E7490]">
+              <Link key={page.slug} href={`/${locale}/resources/${page.slug}`} className="rounded-2xl border border-[#D9E2EC] bg-white p-6 shadow-sm transition hover:border-[#0E7490]">
                 <h2 className="text-xl font-black tracking-[-0.03em]">{card[0]}</h2>
                 <p className="mt-3 text-sm leading-7 text-[#64748B]">{card[1]}</p>
               </Link>
