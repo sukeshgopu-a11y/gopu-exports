@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   if (searchParams.get("active") === "true") query = query.eq("is_active", true);
   if (searchParams.get("featured") === "true") query = query.eq("is_featured", true);
   if (searchParams.get("category")) query = query.eq("category", searchParams.get("category"));
-  if (searchParams.get("limit")) query = query.limit(Number(searchParams.get("limit")));
+  if (searchParams.get("limit")) query = query.limit(Math.min(Number(searchParams.get("limit")), 250));
 
   const { data, error } = await query.returns<ProductRow[]>();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

@@ -99,24 +99,24 @@ export default function Navbar() {
 
         {/* TOP BAR */}
         <div className="border-b border-[#16304F] bg-[#071624]">
-          <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-[1600px] flex-col items-start gap-1.5 px-4 py-2 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
 
             {/* LEFT — contact */}
-            <div className="flex flex-wrap items-center gap-3 text-[11px] text-white/80 sm:gap-5 sm:text-xs">
+            <div className="grid w-full grid-cols-1 gap-1.5 text-[11px] text-white/85 min-[390px]:grid-cols-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center sm:gap-5 sm:text-xs">
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="flex items-center gap-1.5 transition hover:text-[#67C9D8]"
+                className="flex min-w-0 items-center gap-1.5 transition hover:text-[#67C9D8]"
               >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect width="20" height="16" x="2" y="4" rx="2" />
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
-                <span>{CONTACT_EMAIL}</span>
+                <span className="min-w-0 truncate">{CONTACT_EMAIL}</span>
               </a>
               <div className="h-3 w-px bg-white/15 hidden sm:block" />
               <a
                 href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}
-                className="flex items-center gap-1.5 transition hover:text-[#67C9D8]"
+                className="flex items-center gap-1.5 transition hover:text-[#67C9D8] min-[390px]:justify-end sm:justify-start"
               >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16.92z" />
@@ -145,7 +145,7 @@ export default function Navbar() {
         </div>
 
         {/* MAIN NAVBAR */}
-        <div className={`border-b border-[#D9E2EC] bg-white/98 backdrop-blur-md transition-all duration-300 ${scrolled ? "py-2.5" : "py-4"}`}>
+        <div className={`border-b border-[#D9E2EC] bg-white/98 backdrop-blur-md transition-all duration-300 ${scrolled ? "py-2" : "py-3 sm:py-4"}`}>
           <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 sm:px-6 lg:px-8">
 
             {/* LOGO */}

@@ -5,7 +5,7 @@ import BrandLogo from "@/components/BrandLogo";
 
 export default function Topbar() {
   return (
-    <header className="h-24 bg-white border-b border-gray-100 px-10 flex items-center justify-between">
+    <header className="min-h-20 bg-white border-b border-gray-100 px-4 py-4 sm:px-6 lg:h-24 lg:px-10 flex items-center justify-between gap-4">
 
       {/* Left */}
       <div className="flex items-center gap-4">
@@ -15,14 +15,14 @@ export default function Topbar() {
             Dashboard
           </h2>
 
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-500 mt-1 text-sm">
             Welcome back, Admin
           </p>
         </div>
       </div>
 
       {/* Right */}
-      <div className="flex items-center gap-5">
+      <div className="hidden items-center gap-5 md:flex">
 
         {/* Search */}
         <div className="flex items-center bg-gray-100 rounded-2xl px-4 py-3 w-80">

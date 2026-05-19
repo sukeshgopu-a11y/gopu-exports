@@ -5,12 +5,17 @@ export async function POST(req: Request) {
   const { email, password } = await req.json();
   const supabase = await createClient();
 
+  if (!email || !password) {
+    return NextResponse.json({ error: "Email and password are required." }, { status: 400 });
+  }
+
   const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
+    email: String(email).trim().toLowerCase(),
+    password: String(password),
   });
 
   if (error || !data.user) {
+    console.warn("Admin login failed", { email: String(email).trim().toLowerCase(), reason: error?.message });
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 
@@ -23,8 +28,11 @@ export async function POST(req: Request) {
 
   if (adminError || !adminUser) {
     await supabase.auth.signOut();
+    console.warn("Non-admin dashboard login blocked", { userId: data.user.id });
     return NextResponse.json({ error: "Admin access required" }, { status: 403 });
   }
 
-  return NextResponse.json({ success: true });
+  const response = NextResponse.json({ success: true });
+  response.headers.set("Cache-Control", "no-store");
+  return response;
 }

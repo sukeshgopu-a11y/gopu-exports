@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Search, Download, Trash2, RefreshCw } from "lucide-react";
+import { DashboardSkeleton, InlineError } from "@/components/dashboard/LoadingStates";
+import { useToast } from "@/components/dashboard/ToastProvider";
+import { dashboardFetch, getErrorMessage } from "@/lib/dashboardApi";
 
 type Inquiry = {
   _id: string;
@@ -32,13 +35,17 @@ export default function InquiriesPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Inquiry | null>(null);
+  const [error, setError] = useState("");
+  const toast = useToast();
 
   const load = async () => {
     setLoading(true);
+    setError("");
     try {
-      const res = await fetch("/api/inquiries");
-      const data = await res.json();
+      const data = await dashboardFetch<Inquiry[]>("/api/inquiries?limit=100");
       setInquiries(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(getErrorMessage(err, "Inquiries could not be loaded."));
     } finally {
       setLoading(false);
     }
@@ -52,22 +59,30 @@ export default function InquiriesPage() {
   }, []);
 
   const updateStatus = async (id: string, status: string) => {
-    await fetch(`/api/inquiries/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
-    });
-    setInquiries((prev) =>
-      prev.map((i) => (i._id === id ? { ...i, status: status as Inquiry["status"] } : i))
-    );
-    if (selected?._id === id) setSelected((s) => s ? { ...s, status: status as Inquiry["status"] } : s);
+    try {
+      const updated = await dashboardFetch<Inquiry>(`/api/inquiries/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      setInquiries((prev) => prev.map((i) => (i._id === id ? updated : i)));
+      if (selected?._id === id) setSelected(updated);
+      toast.success("Inquiry status updated.");
+    } catch (err) {
+      toast.error(getErrorMessage(err, "Status update failed."));
+    }
   };
 
   const deleteInquiry = async (id: string) => {
     if (!confirm("Delete this inquiry?")) return;
-    await fetch(`/api/inquiries/${id}`, { method: "DELETE" });
-    setInquiries((prev) => prev.filter((i) => i._id !== id));
-    if (selected?._id === id) setSelected(null);
+    try {
+      await dashboardFetch<{ success?: boolean }>(`/api/inquiries/${id}`, { method: "DELETE" });
+      setInquiries((prev) => prev.filter((i) => i._id !== id));
+      if (selected?._id === id) setSelected(null);
+      toast.success("Inquiry deleted.");
+    } catch (err) {
+      toast.error(getErrorMessage(err, "Delete failed."));
+    }
   };
 
   const exportCSV = () => {
@@ -94,7 +109,7 @@ export default function InquiriesPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col gap-4 mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-4xl font-extrabold text-[#0F172A]">Inquiries</h1>
           <p className="text-gray-500 mt-1 text-sm">
@@ -118,6 +133,8 @@ export default function InquiriesPage() {
         </div>
       </div>
 
+      {error && <div className="mb-5"><InlineError message={error} onRetry={load} /></div>}
+
       {/* Search */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 mb-6 flex items-center gap-3 max-w-sm">
         <Search size={18} className="text-gray-400 shrink-0" />
@@ -134,9 +151,7 @@ export default function InquiriesPage() {
         {/* Table */}
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
           {loading ? (
-            <div className="flex items-center justify-center h-48 text-gray-400 text-sm">
-              Loading inquiries…
-            </div>
+            <DashboardSkeleton rows={5} />
           ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-48 text-gray-400 text-sm gap-2">
               <span className="text-3xl">📭</span>

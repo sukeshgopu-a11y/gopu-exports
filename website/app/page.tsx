@@ -110,7 +110,7 @@ export default async function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-br from-[#071624]/80 via-[#08182F]/60 to-[#0E7490]/30" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-[1450px] px-6 pb-20 pt-24 sm:px-8 lg:pt-32 lg:pb-28">
+        <div className="relative z-10 mx-auto max-w-[1450px] px-5 pb-14 pt-16 sm:px-8 sm:pb-20 sm:pt-24 lg:pt-32 lg:pb-28">
           <div className="max-w-[680px]">
             <div className="flex items-center gap-4">
               <div className="h-[2px] w-14 bg-[#0E7490]" />
@@ -119,35 +119,35 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <h1 className="mt-6 text-[48px] font-black leading-[0.92] tracking-[-0.05em] text-white lg:text-[68px]">
+            <h1 className="mt-5 text-[38px] font-black leading-[0.96] tracking-[-0.04em] text-white sm:mt-6 sm:text-[48px] lg:text-[68px]">
               Delivering Quality<br />Products To<br />
               <span className="text-[#67C9D8]">Global Markets.</span>
             </h1>
 
-            <p className="mt-7 max-w-[560px] text-[17px] leading-[1.8] text-slate-300">
+            <p className="mt-5 max-w-[560px] text-[15px] leading-[1.7] text-slate-300 sm:mt-7 sm:text-[17px] sm:leading-[1.8]">
               GOPU Exports supplies premium spices, rice, and agricultural
               commodities to importers, distributors, and procurement teams
               worldwide — backed by full documentation, certified quality,
               and reliable logistics.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-6 flex flex-col gap-3 min-[420px]:flex-row sm:mt-8 sm:flex-wrap sm:gap-4">
               <Link
                 href="/products"
-                className="rounded-lg bg-[#0E7490] px-8 py-4 text-[13px] font-bold tracking-wide text-white shadow-lg transition hover:bg-[#0A5A70] hover:shadow-xl"
+                className="rounded-lg bg-[#0E7490] px-6 py-3.5 text-center text-[12px] font-bold tracking-wide text-white shadow-lg transition hover:bg-[#0A5A70] hover:shadow-xl sm:px-8 sm:py-4 sm:text-[13px]"
               >
                 EXPLORE PRODUCTS →
               </Link>
               <Link
                 href="/contact"
-                className="rounded-lg border border-white/25 bg-white/10 px-8 py-4 text-[13px] font-bold tracking-wide text-white backdrop-blur-sm transition hover:bg-white/20"
+                className="rounded-lg border border-white/25 bg-white/10 px-6 py-3.5 text-center text-[12px] font-bold tracking-wide text-white backdrop-blur-sm transition hover:bg-white/20 sm:px-8 sm:py-4 sm:text-[13px]"
               >
                 GET A QUOTE →
               </Link>
             </div>
 
             {/* Trust pillars — no fake numbers */}
-            <div className="mt-10 flex flex-wrap gap-3">
+            <div className="mt-7 flex flex-wrap gap-2.5 sm:mt-10 sm:gap-3">
               {["APEDA Certified", "FSSAI Licensed", "ISO 22000", "HACCP", "IEC Registered"].map((tag) => (
                 <span
                   key={tag}

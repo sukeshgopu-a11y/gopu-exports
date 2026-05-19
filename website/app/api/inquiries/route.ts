@@ -3,16 +3,22 @@ import { createPublicClient } from "@/src/lib/supabase/public";
 import { inquiryToApi, type InquiryRow } from "@/src/lib/supabase/data";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const supabase = await requireAdminClient();
   if (!supabase) return unauthorized();
+  const { searchParams } = new URL(req.url);
+  const limit = Math.min(Number(searchParams.get("limit") ?? 100), 250);
+  const offset = Math.max(Number(searchParams.get("offset") ?? 0), 0);
   const { data, error } = await supabase
     .from("inquiries")
-    .select("*")
+    .select("id,name,email,phone,company,country,message,product_id,status,created_at")
     .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1)
     .returns<InquiryRow[]>();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json((data ?? []).map(inquiryToApi));
+  const response = NextResponse.json((data ?? []).map(inquiryToApi));
+  response.headers.set("Cache-Control", "no-store");
+  return response;
 }
 
 export async function POST(req: NextRequest) {

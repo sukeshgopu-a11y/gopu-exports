@@ -15,6 +15,8 @@ import {
   FileText,
 } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
+import { dashboardFetch, getErrorMessage } from "@/lib/dashboardApi";
+import { useToast } from "@/components/dashboard/ToastProvider";
 
 const NAV = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -31,15 +33,21 @@ const NAV = [
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const toast = useToast();
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/dashboard/login");
-    router.refresh();
+    try {
+      await dashboardFetch<{ success: boolean }>("/api/auth/logout", { method: "POST" });
+      router.push("/dashboard/login");
+      router.refresh();
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Logout failed. Please refresh and try again."));
+    }
   };
 
   return (
-    <aside className="w-64 min-h-screen bg-[#0B1220] text-white px-5 py-7 flex flex-col shrink-0">
+    <>
+    <aside className="hidden w-64 min-h-screen bg-[#0B1220] text-white px-5 py-7 md:flex flex-col shrink-0">
 
       {/* Logo */}
       <div className="mb-10 px-2">
@@ -86,5 +94,28 @@ export default function Sidebar() {
         <p className="text-[10px] text-slate-600 mt-0.5">Admin Panel v2.0</p>
       </div>
     </aside>
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 px-2 py-2 shadow-[0_-8px_30px_rgba(15,23,42,0.10)] backdrop-blur md:hidden">
+      <div className="flex gap-1 overflow-x-auto pb-1">
+        {NAV.map(({ name, href, icon: Icon }) => {
+          const active =
+            pathname === href ||
+            (href !== "/dashboard" && pathname.startsWith(href));
+          return (
+            <Link
+              key={name}
+              href={href}
+              aria-label={name}
+              className={`flex min-w-[72px] flex-col items-center justify-center rounded-xl px-2 py-2 text-[10px] font-semibold transition ${
+                active ? "bg-[#E6F4F7] text-[#0E7490]" : "text-slate-500"
+              }`}
+            >
+              <Icon size={18} />
+              <span className="mt-1 max-w-full truncate">{name}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
+    </>
   );
 }

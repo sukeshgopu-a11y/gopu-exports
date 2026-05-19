@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Plus, Pencil, Trash2, X, Check, Search, Upload, Download, FileUp, Save } from "lucide-react";
+import { DashboardSkeleton, InlineError } from "@/components/dashboard/LoadingStates";
+import { useToast } from "@/components/dashboard/ToastProvider";
+import { dashboardFetch, getErrorMessage } from "@/lib/dashboardApi";
 
 type Spec = { label: string; value: string };
 
@@ -243,13 +246,17 @@ export default function ProductsPage() {
   const [bulkText, setBulkText] = useState("");
   const [bulkSaving, setBulkSaving] = useState(false);
   const [bulkError, setBulkError] = useState("");
+  const [error, setError] = useState("");
+  const toast = useToast();
 
   const load = async () => {
     setLoading(true);
+    setError("");
     try {
-      const res = await fetch("/api/products");
-      const data = await res.json();
+      const data = await dashboardFetch<ProductDB[]>("/api/products?limit=250");
       setProducts(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(getErrorMessage(err, "Products could not be loaded."));
     } finally {
       setLoading(false);
     }
@@ -324,10 +331,9 @@ export default function ProductsPage() {
     const fd = new FormData();
     fd.append("file", file);
     fd.append("bucket", "products");
-    const res = await fetch("/api/upload", { method: "POST", body: fd });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error ?? "Upload failed");
+    const data = await dashboardFetch<{ url: string }>("/api/upload", { method: "POST", body: fd, timeoutMs: 30000 });
     setForm((f) => ({ ...f, image: data.url }));
+    toast.success("Image uploaded.");
   };
 
   const autoSlug = (title: string) =>
@@ -349,42 +355,53 @@ export default function ProductsPage() {
       };
 
       if (editing) {
-        const res = await fetch(`/api/products/${editing._id}`, {
+        const updated = await dashboardFetch<ProductDB>(`/api/products/${editing._id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-        const updated = await res.json();
         setProducts((prev) => prev.map((p) => (p._id === editing._id ? updated : p)));
+        toast.success("Product updated.");
       } else {
-        const res = await fetch("/api/products", {
+        const created = await dashboardFetch<ProductDB>("/api/products", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-        const created = await res.json();
         setProducts((prev) => [created, ...prev]);
+        toast.success("Product created.");
       }
       setShowForm(false);
+    } catch (err) {
+      toast.error(getErrorMessage(err, "Product save failed."));
     } finally {
       setSaving(false);
     }
   };
 
   const toggle = async (p: ProductDB) => {
-    const res = await fetch(`/api/products/${p._id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ active: !p.active }),
-    });
-    const updated = await res.json();
-    setProducts((prev) => prev.map((x) => (x._id === p._id ? updated : x)));
+    try {
+      const updated = await dashboardFetch<ProductDB>(`/api/products/${p._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ active: !p.active }),
+      });
+      setProducts((prev) => prev.map((x) => (x._id === p._id ? updated : x)));
+      toast.success(updated.active ? "Product is visible." : "Product is hidden.");
+    } catch (err) {
+      toast.error(getErrorMessage(err, "Visibility update failed."));
+    }
   };
 
   const remove = async (id: string) => {
     if (!confirm("Delete this product?")) return;
-    await fetch(`/api/products/${id}`, { method: "DELETE" });
-    setProducts((prev) => prev.filter((p) => p._id !== id));
+    try {
+      await dashboardFetch<{ success?: boolean }>(`/api/products/${id}`, { method: "DELETE" });
+      setProducts((prev) => prev.filter((p) => p._id !== id));
+      toast.success("Product deleted.");
+    } catch (err) {
+      toast.error(getErrorMessage(err, "Delete failed."));
+    }
   };
 
   const seed = async () => {
@@ -392,12 +409,11 @@ export default function ProductsPage() {
     setSeeding(true);
     setSeedMsg(null);
     try {
-      const res = await fetch("/api/admin/seed", { method: "POST" });
-      const data = await res.json();
+      const data = await dashboardFetch<{ message?: string }>("/api/admin/seed", { method: "POST", timeoutMs: 30000 });
       setSeedMsg(data.message ?? "Done.");
       await load();
-    } catch {
-      setSeedMsg("Seed failed — check console.");
+    } catch (err) {
+      setSeedMsg(getErrorMessage(err, "Seed failed."));
     } finally {
       setSeeding(false);
     }
@@ -485,18 +501,17 @@ export default function ProductsPage() {
           metaTitle: item.metaTitle || item.title,
         };
         const existing = products.find((product) => product.slug === item.slug);
-        const res = await fetch(existing ? `/api/products/${existing._id}` : "/api/products", {
+        await dashboardFetch<ProductDB>(existing ? `/api/products/${existing._id}` : "/api/products", {
           method: existing ? "PATCH" : "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? `Failed to save ${item.title}`);
         if (existing) updated++;
         else created++;
       }
       setBulkOpen(false);
       setSeedMsg(`Bulk save complete: ${created} created, ${updated} updated.`);
+      toast.success("Bulk product save complete.");
       await load();
     } catch (error) {
       setBulkError(error instanceof Error ? error.message : "Bulk save failed.");
@@ -513,14 +528,14 @@ export default function ProductsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col gap-4 mb-6 xl:flex-row xl:items-center xl:justify-between">
         <div>
           <h1 className="text-4xl font-extrabold text-[#0F172A]">Products</h1>
           <p className="text-gray-500 mt-1 text-sm">
             {products.length} products · {products.filter((p) => p.active).length} active
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={exportProducts}
             className="flex items-center gap-2 border border-gray-200 text-gray-600 hover:bg-gray-50 transition px-4 py-3 rounded-xl font-medium text-sm"
@@ -566,6 +581,8 @@ export default function ProductsPage() {
         </div>
       )}
 
+      {error && <div className="mb-5"><InlineError message={error} onRetry={load} /></div>}
+
       {/* Search */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 mb-5 flex items-center gap-3 max-w-sm">
         <Search size={16} className="text-gray-400 shrink-0" />
@@ -579,7 +596,7 @@ export default function ProductsPage() {
 
       <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
         {loading ? (
-          <div className="flex items-center justify-center h-48 text-gray-400 text-sm">Loading…</div>
+          <DashboardSkeleton rows={6} />
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-64 text-gray-400 text-sm gap-4">
             <span className="text-4xl">📦</span>

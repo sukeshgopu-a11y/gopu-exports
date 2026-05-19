@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { TrendingUp, Package, Globe, MessageSquare } from "lucide-react";
+import { DashboardSkeleton, InlineError } from "@/components/dashboard/LoadingStates";
+import { dashboardFetch, getErrorMessage } from "@/lib/dashboardApi";
 
 type Stats = {
   total: number;
@@ -29,29 +31,27 @@ export default function DashboardPage() {
   });
   const [recent, setRecent] = useState<InquirySummary[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const load = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const data = await dashboardFetch<{ stats: Stats; recent: InquirySummary[] }>("/api/dashboard/summary");
+      setStats(data.stats);
+      setRecent(data.recent);
+    } catch (err) {
+      setError(getErrorMessage(err, "Dashboard summary could not be loaded."));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    Promise.all([
-      fetch("/api/inquiries").then((r) => r.json()),
-      fetch("/api/products").then((r) => r.json()),
-    ]).then(([inquiries, products]) => {
-      const inqs = Array.isArray(inquiries) ? inquiries as InquirySummary[] : [];
-      const prods = Array.isArray(products) ? products : [];
-      const markets = new Set(
-        inqs
-          .map((i) => i.country?.trim())
-          .filter((country): country is string => Boolean(country))
-      );
-      const responded = inqs.filter((i) => ["Replied", "Closed"].includes(i.status ?? "")).length;
-      setStats({
-        total: inqs.length,
-        newCount: inqs.filter((i) => i.status === "New").length,
-        products: prods.length,
-        markets: markets.size,
-        responseRate: inqs.length > 0 ? Math.round((responded / inqs.length) * 100) : 0,
-      });
-      setRecent(inqs.slice(0, 5));
-    }).finally(() => setLoading(false));
+    const id = window.setTimeout(() => {
+      void load();
+    }, 0);
+    return () => window.clearTimeout(id);
   }, []);
 
   const statCards = [
@@ -64,9 +64,11 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-extrabold text-[#0F172A]">Dashboard</h1>
+        <h1 className="text-3xl font-extrabold text-[#0F172A] sm:text-4xl">Dashboard</h1>
         <p className="text-gray-500 mt-1 text-sm">Welcome back, GOPU Exports Admin</p>
       </div>
+
+      {error && <InlineError message={error} onRetry={load} />}
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
@@ -95,7 +97,7 @@ export default function DashboardPage() {
           </a>
         </div>
         {loading ? (
-          <p className="text-gray-400 text-sm">Loading…</p>
+          <DashboardSkeleton rows={4} />
         ) : recent.length === 0 ? (
           <div className="text-center py-8 text-gray-400 text-sm">
             <p className="text-2xl mb-2">📭</p>

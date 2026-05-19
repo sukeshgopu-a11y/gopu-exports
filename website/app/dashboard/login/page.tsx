@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import BrandLogo from "@/components/BrandLogo";
+import { dashboardFetch, getErrorMessage } from "@/lib/dashboardApi";
 
 export default function DashboardLoginPage() {
   const router = useRouter();
@@ -17,29 +18,23 @@ export default function DashboardLoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
+      await dashboardFetch<{ success: boolean }>("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
-      if (res.ok) {
-        router.push("/dashboard");
-        router.refresh();
-      } else {
-        const data = await res.json();
-        setError(data.error ?? "Invalid credentials");
-      }
-    } catch {
-      setError("Network error. Please try again.");
+      router.push("/dashboard");
+      router.refresh();
+    } catch (err) {
+      setError(getErrorMessage(err, "Network error. Please try again."));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#F1F5F9] flex items-center justify-center px-4">
-      <div className="bg-white w-full max-w-md rounded-3xl shadow-xl p-10">
+    <div className="min-h-screen bg-[#F1F5F9] flex items-center justify-center px-4 py-8">
+      <div className="bg-white w-full max-w-md rounded-3xl shadow-xl p-6 sm:p-10">
 
         <div className="mb-8 text-center">
           <div className="flex justify-center">

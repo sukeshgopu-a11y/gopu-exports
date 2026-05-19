@@ -13,8 +13,14 @@ export async function POST(req: Request) {
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
+    if (!file.type.startsWith("image/")) {
+      return NextResponse.json({ error: "Only image uploads are allowed" }, { status: 400 });
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      return NextResponse.json({ error: "Image must be 4 MB or smaller" }, { status: 400 });
+    }
 
-    const ext = file.name.split(".").pop();
+    const ext = (file.name.split(".").pop() || "webp").toLowerCase().replace(/[^a-z0-9]/g, "");
     const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
     const { error } = await supabase.storage

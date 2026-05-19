@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Download, Eye, RefreshCw, Search, Trash2 } from "lucide-react";
+import { DashboardSkeleton, InlineError } from "@/components/dashboard/LoadingStates";
+import { useToast } from "@/components/dashboard/ToastProvider";
+import { dashboardFetch, getErrorMessage } from "@/lib/dashboardApi";
 
 type Quote = {
   _id: string;
@@ -31,13 +34,17 @@ export default function QuotesPage() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [error, setError] = useState("");
+  const toast = useToast();
 
   const load = async () => {
     setLoading(true);
+    setError("");
     try {
-      const res = await fetch("/api/quotes");
-      const data = await res.json();
+      const data = await dashboardFetch<Quote[]>("/api/quotes?limit=100");
       setQuotes(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(getErrorMessage(err, "Quote requests could not be loaded."));
     } finally {
       setLoading(false);
     }
@@ -51,19 +58,28 @@ export default function QuotesPage() {
   }, []);
 
   const updateStatus = async (id: string, status: string) => {
-    const res = await fetch(`/api/quotes/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
-    });
-    const updated = await res.json();
-    setQuotes((prev) => prev.map((q) => (q._id === id ? updated : q)));
+    try {
+      const updated = await dashboardFetch<Quote>(`/api/quotes/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      setQuotes((prev) => prev.map((q) => (q._id === id ? updated : q)));
+      toast.success("Quote status updated.");
+    } catch (err) {
+      toast.error(getErrorMessage(err, "Status update failed."));
+    }
   };
 
   const deleteQuote = async (id: string) => {
     if (!confirm("Delete this quote request?")) return;
-    await fetch(`/api/quotes/${id}`, { method: "DELETE" });
-    setQuotes((prev) => prev.filter((q) => q._id !== id));
+    try {
+      await dashboardFetch<{ success?: boolean }>(`/api/quotes/${id}`, { method: "DELETE" });
+      setQuotes((prev) => prev.filter((q) => q._id !== id));
+      toast.success("Quote request deleted.");
+    } catch (err) {
+      toast.error(getErrorMessage(err, "Delete failed."));
+    }
   };
 
   const exportCSV = () => {
@@ -94,7 +110,7 @@ export default function QuotesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col gap-4 mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-4xl font-extrabold text-[#0F172A]">Quote Requests</h1>
           <p className="text-gray-500 mt-1 text-sm">
@@ -112,6 +128,8 @@ export default function QuotesPage() {
         </div>
       </div>
 
+      {error && <div className="mb-5"><InlineError message={error} onRetry={load} /></div>}
+
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 mb-6 flex items-center gap-3 max-w-sm">
         <Search size={18} className="text-gray-400 shrink-0" />
         <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search quotes..." className="outline-none w-full text-sm" />
@@ -119,7 +137,7 @@ export default function QuotesPage() {
 
       <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
         {loading ? (
-          <div className="flex items-center justify-center h-48 text-gray-400 text-sm">Loading quotes...</div>
+          <DashboardSkeleton rows={5} />
         ) : filtered.length === 0 ? (
           <div className="flex items-center justify-center h-48 text-gray-400 text-sm">
             {search ? "No matching quote requests" : "No quote requests yet"}
