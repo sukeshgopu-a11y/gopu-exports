@@ -96,7 +96,7 @@ export default function DashboardAnalyticsPage() {
         <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#0E7490]">Visitor intelligence</p>
         <h1 className="mt-2 text-4xl font-black text-slate-900">Analytics</h1>
         <p className="mt-2 max-w-2xl text-slate-600">
-          Privacy-friendly website events from consenting visitors. Counts are real Supabase data only.
+          Privacy-friendly website events from passive analytics. Counts are real Supabase data only.
         </p>
       </div>
 

@@ -21,6 +21,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/resources",
     "/blog",
     "/contact",
+    "/privacy-policy",
+    "/terms-and-conditions",
+    "/cookie-policy",
+    "/shipping-policy",
   ].map((path) => ({
     url: `${BASE_URL}${path}`,
     lastModified: new Date(),
@@ -29,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const localizedRoutes: MetadataRoute.Sitemap = LOCALES.filter((locale) => locale.code !== DEFAULT_LOCALE).flatMap((locale) =>
-    ["", "/products", "/blog", "/contact"].map((path) => ({
+    ["", "/products", "/blog", "/contact", "/resources", "/enquiry", "/privacy-policy", "/terms-and-conditions", "/cookie-policy", "/shipping-policy"].map((path) => ({
       url: `${BASE_URL}/${locale.code}${path}`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,

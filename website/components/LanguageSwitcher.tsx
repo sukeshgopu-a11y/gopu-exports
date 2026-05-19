@@ -12,7 +12,7 @@ export default function LanguageSwitcher({ compact = false }: { compact?: boolea
 
   const hrefFor = (code: string) => {
     if (code === DEFAULT_LOCALE) return rest === "/" || rest === "" ? "/" : rest;
-    if (["/products", "/blog", "/contact"].includes(rest)) return `/${code}${rest}`;
+    if (["/products", "/blog", "/contact", "/resources", "/enquiry", "/privacy-policy", "/terms-and-conditions", "/cookie-policy", "/shipping-policy"].includes(rest)) return `/${code}${rest}`;
     return `/${code}`;
   };
 

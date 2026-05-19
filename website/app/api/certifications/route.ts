@@ -16,6 +16,9 @@ export async function GET(req: NextRequest) {
     .order("name", { ascending: true });
 
   if (searchParams.get("active") === "true") query = query.eq("is_active", true);
+  const limit = Math.min(Number(searchParams.get("limit") ?? 250), 250);
+  const offset = Math.max(Number(searchParams.get("offset") ?? 0), 0);
+  query = query.range(offset, offset + limit - 1);
 
   const { data, error } = await query.returns<CertificationRow[]>();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

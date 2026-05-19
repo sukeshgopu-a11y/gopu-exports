@@ -6,7 +6,8 @@ import { CATEGORY_LANDING_PAGES } from "@/lib/categoryLandingPages";
 import { PRODUCTS } from "@/lib/products";
 import Link from "next/link";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Products",

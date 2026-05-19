@@ -26,12 +26,15 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
   const [query, setQuery] = useState("");
 
   useEffect(() => {
+    if (initialProducts.length > 0) {
+      return;
+    }
     fetch("/api/products?active=true", { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => setProducts(Array.isArray(data) ? data : []))
       .catch(() => setProducts([]))
       .finally(() => setLoading(false));
-  }, []);
+  }, [initialProducts.length]);
 
   const categories = [
     "All",

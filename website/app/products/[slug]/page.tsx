@@ -6,7 +6,8 @@ import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
 import { getProductBySlug } from "@/lib/products";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 type Spec = { label: string; value: string };
 type Product = {

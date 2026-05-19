@@ -4,7 +4,8 @@ import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
 import PublicCertificationBadges from "@/components/PublicCertificationBadges";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 type FeaturedProduct = {
   slug: string;

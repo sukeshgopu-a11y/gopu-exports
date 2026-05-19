@@ -1,12 +1,10 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 
-const CONSENT_KEY = "gopu-analytics-consent";
+const OPT_OUT_KEY = "gopu-analytics-opt-out";
 const SESSION_KEY = "gopu-analytics-session";
-
-type Consent = "accepted" | "declined" | null;
 
 function getSessionId() {
   let sessionId = window.localStorage.getItem(SESSION_KEY);
@@ -34,7 +32,8 @@ function detectBrowser() {
 }
 
 async function trackEvent(eventType: string, metadata: Record<string, unknown> = {}) {
-  if (window.localStorage.getItem(CONSENT_KEY) !== "accepted") return;
+  if (window.localStorage.getItem(OPT_OUT_KEY) === "true") return;
+  if (navigator.doNotTrack === "1") return;
 
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), 4000);
@@ -64,14 +63,9 @@ async function trackEvent(eventType: string, metadata: Record<string, unknown> =
 
 export default function AnalyticsTracker() {
   const pathname = usePathname();
-  const [consent, setConsent] = useState<Consent>(() => {
-    if (typeof window === "undefined") return null;
-    return (window.localStorage.getItem(CONSENT_KEY) as Consent) ?? null;
-  });
   const routeKey = useMemo(() => pathname ?? "/", [pathname]);
 
   useEffect(() => {
-    if (consent !== "accepted") return;
     if (pathname?.startsWith("/products/")) {
       trackEvent("product_view", { slug: pathname.split("/").filter(Boolean)[1] ?? "" });
     }
@@ -79,10 +73,9 @@ export default function AnalyticsTracker() {
       title: document.title,
       search: window.location.search,
     });
-  }, [consent, pathname, routeKey]);
+  }, [pathname, routeKey]);
 
   useEffect(() => {
-    if (consent !== "accepted") return;
     const startedAt = Date.now();
     const sentDepths = new Set<number>();
 
@@ -137,39 +130,7 @@ export default function AnalyticsTracker() {
       document.removeEventListener("visibilitychange", onVisibility);
       document.removeEventListener("click", onClick);
     };
-  }, [consent]);
+  }, []);
 
-  const choose = (value: Exclude<Consent, null>) => {
-    window.localStorage.setItem(CONSENT_KEY, value);
-    setConsent(value);
-  };
-
-  if (consent) return null;
-
-  return (
-    <div className="fixed inset-x-3 bottom-3 z-[80] mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl shadow-slate-900/15 sm:bottom-5 sm:flex sm:items-center sm:justify-between sm:gap-5">
-      <div>
-        <p className="text-sm font-bold text-slate-900">Privacy-friendly website analytics</p>
-        <p className="mt-1 text-xs leading-5 text-slate-600">
-          We use anonymous analytics to understand buyer interest and improve product enquiry flows. No passwords or form messages are tracked.
-        </p>
-      </div>
-      <div className="mt-3 flex gap-2 sm:mt-0">
-        <button
-          type="button"
-          onClick={() => choose("declined")}
-          className="rounded-lg border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-50"
-        >
-          Decline
-        </button>
-        <button
-          type="button"
-          onClick={() => choose("accepted")}
-          className="rounded-lg bg-[#0E7490] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#0A5A70]"
-        >
-          Accept
-        </button>
-      </div>
-    </div>
-  );
+  return null;
 }

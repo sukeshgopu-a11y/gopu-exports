@@ -356,7 +356,7 @@ export default function Footer() {
               <div className="flex flex-wrap gap-1.5">
                 <PublicCertificationBadges variant="footer" limit={4} />
               </div>
-              {[["Privacy", "/privacy-policy"], ["Terms", "/terms-and-conditions"], ["Shipping", "/shipping-policy"]].map(([label, href]) => (
+              {[["Privacy", "/privacy-policy"], ["Terms", "/terms-and-conditions"], ["Cookies", "/cookie-policy"], ["Shipping", "/shipping-policy"]].map(([label, href]) => (
                 <Link key={href} href={href}
                   className="relative text-slate-500 transition-colors hover:text-amber-300 after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-amber-300 after:transition-all hover:after:w-full">
                   {label}
