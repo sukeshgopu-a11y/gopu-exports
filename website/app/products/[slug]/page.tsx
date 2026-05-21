@@ -199,6 +199,10 @@ export default async function ProductDetailsPage({ params }: Props) {
       { "@type": "PropertyValue", name: "MOQ", value: commercialMoq },
       product.packaging ? { "@type": "PropertyValue", name: "Packaging", value: product.packaging } : null,
       product.hs ? { "@type": "PropertyValue", name: "HS Code", value: product.hs } : null,
+      product.shelfLife ? { "@type": "PropertyValue", name: "Shelf Life", value: product.shelfLife } : null,
+      product.certifications?.length
+        ? { "@type": "PropertyValue", name: "Certifications", value: product.certifications.join(", ") }
+        : null,
     ].filter(Boolean),
   };
   const breadcrumbSchema = {

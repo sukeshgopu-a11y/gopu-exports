@@ -3,7 +3,7 @@ import { createPublicClient } from "@/src/lib/supabase/public";
 import { quoteToApi, type QuoteRow } from "@/src/lib/supabase/data";
 import { getLeadEmailConfigurationError, sendLeadEmails } from "@/lib/leadEmail";
 import { updateLeadEmailStatus } from "@/lib/leadStatus";
-import { buildSourceUrl, buildTimestamp, normalizeLeadPhone, rejectSpam, stringField, validateEmail } from "@/lib/leadValidation";
+import { buildSourceUrl, buildTimestamp, normalizeLeadPhone, prepareLeadRequest, rejectSpam, stringField, validateEmail } from "@/lib/leadValidation";
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 
@@ -30,7 +30,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const supabase = createPublicClient();
-  const body = await req.json();
+  const prepared = await prepareLeadRequest(req);
+  if (!prepared.ok) {
+    return NextResponse.json({ error: prepared.error }, { status: prepared.status });
+  }
+  const body = prepared.body;
 
   if (rejectSpam(body)) {
     return NextResponse.json({ success: true }, { status: 201 });

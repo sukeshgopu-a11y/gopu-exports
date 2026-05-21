@@ -8,7 +8,7 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: "Certifications & Business Verification",
   description:
-    "GOPU Exports business verification and certification availability for international buyers, including IEC, CIN, GST, FSSAI, APEDA, and Spice Board status.",
+    "GOPU Exports business verification and certification availability for international buyers, including IEC, CIN, GST, FSSAI, APEDA, and Spice Board registration status.",
   alternates: { canonical: "/certifications" },
 };
 
@@ -60,7 +60,7 @@ export default function CertificationsPage() {
               <FileText className="h-7 w-7 text-[#0E7490]" />
               <div>
                 <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#0E7490]">Trade & Product Certifications</p>
-                <h2 className="mt-1 text-3xl font-black tracking-[-0.04em]">Available on request</h2>
+                <h2 className="mt-1 text-3xl font-black tracking-[-0.04em]">Current and in-progress registrations</h2>
               </div>
             </div>
             <div className="mt-7 grid gap-3">
@@ -87,7 +87,7 @@ export default function CertificationsPage() {
                 <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#67C9D8]">Buyer Note</p>
               </div>
               <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
-                Document copies and additional license details can be shared with verified buyers during procurement discussions. For buyer verification and export enquiries, contact {COMPANY.contactPerson}.
+                Document copies and additional license details can be shared with verified buyers during procurement discussions. NABL lab testing and SGS inspections can be coordinated on request where required by product, destination, or buyer specification. For buyer verification and export enquiries, contact {COMPANY.contactPerson}.
               </p>
             </div>
             <Link href="/contact?verification=true" className="shrink-0 rounded-xl bg-white px-5 py-3 text-sm font-black text-[#071624] transition hover:bg-[#F0F9FA]">

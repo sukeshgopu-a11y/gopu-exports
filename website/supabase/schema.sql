@@ -315,13 +315,19 @@ using (exists (select 1 from public.admin_users where id = (select auth.uid()) a
 with check (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'));
 
 drop policy if exists "Anyone can create inquiries" on public.inquiries;
-create policy "Anyone can create inquiries"
+create policy "Public can create validated inquiries only"
 on public.inquiries for insert
 to anon, authenticated
 with check (
-  length(trim(name)) > 0
-  and length(trim(email)) > 3
+  length(trim(name)) between 2 and 160
+  and length(trim(company)) between 2 and 200
+  and length(trim(email)) between 6 and 254
   and position('@' in email) > 1
+  and length(trim(coalesce(phone, full_phone_e164, whatsapp_number_e164, ''))) between 8 and 40
+  and length(trim(country)) between 2 and 120
+  and length(trim(product_name)) between 2 and 200
+  and length(trim(quantity)) between 1 and 120
+  and coalesce(length(message), 0) <= 12000
 );
 
 drop policy if exists "Admins can manage inquiries" on public.inquiries;
@@ -332,13 +338,19 @@ using (exists (select 1 from public.admin_users where id = (select auth.uid()) a
 with check (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'));
 
 drop policy if exists "Anyone can create quotes" on public.quotes;
-create policy "Anyone can create quotes"
+create policy "Public can create validated quotes only"
 on public.quotes for insert
 to anon, authenticated
 with check (
-  length(trim(name)) > 0
-  and length(trim(email)) > 3
+  length(trim(name)) between 2 and 160
+  and length(trim(company)) between 2 and 200
+  and length(trim(email)) between 6 and 254
   and position('@' in email) > 1
+  and length(trim(coalesce(phone, full_phone_e164, whatsapp_number_e164, ''))) between 8 and 40
+  and length(trim(country)) between 2 and 120
+  and length(trim(product_name)) between 2 and 200
+  and length(trim(quantity)) between 1 and 120
+  and coalesce(length(message), 0) <= 12000
 );
 
 drop policy if exists "Admins can manage quotes" on public.quotes;
@@ -385,9 +397,12 @@ to authenticated
 using (id = (select auth.uid()));
 
 drop policy if exists "Public can read site settings" on public.site_settings;
-create policy "Public can read site settings"
+create policy "Public can read published site settings"
 on public.site_settings for select
-using (true);
+using (
+  key in ('blogs', 'categories', 'contact', 'company', 'social', 'founder')
+  or exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin')
+);
 
 drop policy if exists "Admins can manage site settings" on public.site_settings;
 create policy "Admins can manage site settings"
@@ -397,7 +412,7 @@ using (exists (select 1 from public.admin_users where id = (select auth.uid()) a
 with check (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'));
 
 drop policy if exists "Anyone can insert visitor events" on public.visitor_events;
-create policy "Anyone can insert visitor events"
+create policy "Public can insert bounded visitor events"
 on public.visitor_events for insert
 to anon, authenticated
 with check (
@@ -413,6 +428,10 @@ with check (
     'scroll_depth',
     'session_duration'
   )
+  and coalesce(length(session_id), 0) <= 128
+  and coalesce(length(path), 0) <= 1024
+  and coalesce(length(referrer), 0) <= 2048
+  and pg_column_size(metadata) <= 8192
 );
 
 drop policy if exists "Admins can read visitor events" on public.visitor_events;
@@ -430,10 +449,10 @@ using (exists (select 1 from public.admin_users where id = (select auth.uid()) a
 -- Public image buckets used by dashboard uploads.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values
-  ('gallery', 'gallery', true, 10485760, array['image/jpeg','image/png','image/webp','image/gif']),
-  ('products', 'products', true, 10485760, array['image/jpeg','image/png','image/webp','image/gif']),
-  ('certifications', 'certifications', true, 10485760, array['image/jpeg','image/png','image/webp','image/gif']),
-  ('blogs', 'blogs', true, 10485760, array['image/jpeg','image/png','image/webp','image/gif'])
+  ('gallery', 'gallery', true, 4194304, array['image/jpeg','image/png','image/webp','image/gif']),
+  ('products', 'products', true, 4194304, array['image/jpeg','image/png','image/webp','image/gif']),
+  ('certifications', 'certifications', true, 4194304, array['image/jpeg','image/png','image/webp','image/gif']),
+  ('blogs', 'blogs', true, 4194304, array['image/jpeg','image/png','image/webp','image/gif'])
 on conflict (id) do update set
   public = excluded.public,
   file_size_limit = excluded.file_size_limit,

@@ -46,6 +46,11 @@ SUPABASE_SERVICE_ROLE_KEY=
 RESEND_API_KEY=
 ADMIN_EMAIL=admin@gopuexports.com
 EMAIL_FROM=GOPU Exports <onboarding@resend.dev>
+TURNSTILE_SECRET_KEY=
+TURNSTILE_REQUIRED=false
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
 ```
 
 `RESEND_API_KEY` enables instant admin inquiry notifications and customer auto-replies. `ADMIN_EMAIL` defaults to `admin@gopuexports.com` if not set. `EMAIL_FROM` should be a verified Resend sender/domain for production email delivery. Use `GOPU Exports <onboarding@resend.dev>` temporarily until the `gopuexports.com` sender is verified in Resend.
+
+`TURNSTILE_REQUIRED=true` enables server-side Cloudflare Turnstile verification for lead forms after the frontend site key and widget are configured. Leave it `false` until Turnstile is fully provisioned to avoid blocking legitimate buyers.

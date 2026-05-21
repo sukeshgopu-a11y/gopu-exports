@@ -28,9 +28,9 @@ export const COMPANY = {
     { label: "GST", value: "36AAMCG8793P1ZE", status: "Verified" },
   ],
   pendingCertifications: [
-    { label: "FSSAI", value: "Available on request", status: "Pending public display" },
-    { label: "APEDA", value: "Available on request", status: "Pending public display" },
-    { label: "Spice Board", value: "Available on request", status: "Pending public display" },
+    { label: "FSSAI", value: "Active", status: "License reference shared with verified buyers on request" },
+    { label: "APEDA", value: "Registration in progress", status: "Registration details will be published after completion" },
+    { label: "Spice Board", value: "Registration in progress", status: "Registration details will be published after completion" },
   ],
   social: {
     linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL ?? "https://www.linkedin.com/company/gopu-exports/",
