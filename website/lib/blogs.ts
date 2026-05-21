@@ -50,6 +50,98 @@ function post(input: Omit<BlogPost, "_id" | "author" | "published" | "content" |
 
 export const DEFAULT_BLOGS: BlogPost[] = [
   post({
+    id: "blog-india-agri-export-outlook-2026",
+    date: "2026-05-21T00:00:00.000Z",
+    title: "India Agri Export Outlook 2026: What Importers Should Watch",
+    slug: "india-agri-export-outlook-2026-importers",
+    excerpt: "A current market note for global buyers reviewing Indian rice, cereals, spices, oil seeds, and processed agricultural sourcing in 2026.",
+    metaTitle: "India Agri Export Outlook 2026 | Importer Market Update",
+    metaDescription: "Current 2026 India import-export signals for buyers sourcing agricultural products, rice, spices, cereals, oil seeds, and processed food products.",
+    tags: ["India exports 2026", "agri exports", "import export news"],
+    image: "/blog/india-agri-export-outlook-2026.svg",
+    sections: [
+      {
+        heading: "India trade signals as of 21 May 2026",
+        body: [
+          "India's import and export environment in May 2026 is active, but serious buyers should look beyond headline growth. The Ministry of Commerce and Industry reported that India's total merchandise and services exports for April 2026 were estimated at US$80.80 billion, compared with US$71.13 billion in April 2025. Merchandise exports were reported at US$43.56 billion, while merchandise imports were US$71.94 billion.",
+          "For agricultural importers, the practical message is not only that India remains a large sourcing market. The real takeaway is that product-level clarity, packaging discussions, documentation planning, and destination-country compliance need to be handled before price comparison."
+        ],
+      },
+      {
+        heading: "Agri and processed food opportunities",
+        body: [
+          "APEDA's 2026 updates have highlighted India's diverse agricultural and processed food export basket, including Basmati rice, non-Basmati rice, organic products, plant-based products, fruits, pulses, vegetables, and region-specific produce. APEDA also noted work on packaging design solutions and technical standards for selected GI and regional products, which matters for shelf life, transit protection, and retail presentation.",
+          "Buyers should treat this as a signal to make enquiries category-wise. A rice buyer may also evaluate millets, pulses, oil seeds, or selected processed agricultural products depending on destination demand and import rules."
+        ],
+      },
+      {
+        heading: "Buyer risks in the current market",
+        body: [
+          "The biggest risk in 2026 is mismatch. Buyers lose time when they ask for only a generic price without grain length, broken percentage, spice form, moisture limit, packing type, destination port, private-label requirement, inspection preference, or documentation needs.",
+          "A strong enquiry should include product name, grade or specification target, destination country, quantity range, packing preference, expected shipment month, and any certificate or lab-test requirement."
+        ],
+      },
+      {
+        heading: "How GOPU Exports recommends buyers proceed",
+        body: [
+          "Begin with a specification-led conversation. Share the product, destination, quantity, packing, intended use, shipment timeline, and document checklist. This allows the supplier to respond with realistic sourcing, packaging, and shipment planning instead of a generic stock message.",
+          "As of 21 May 2026, India's export story remains positive, but the best procurement outcomes will come from structured enquiries and careful documentation before cargo moves."
+        ],
+      },
+    ],
+    faqs: [
+      { question: "What should importers ask before comparing prices?", answer: "Ask for product specification, packing, quantity, destination, document requirements, inspection options, and shipment timing before comparing price." },
+      { question: "Are rice and cereals still relevant for India sourcing in 2026?", answer: "Yes. Recent trade updates show positive signals for cereals, while APEDA continues to highlight rice and agricultural products in export promotion activity." },
+      { question: "Can buyers request unlisted agricultural products?", answer: "Yes. Buyers can use the contact form and select Others to describe exact product, quantity, destination, and documentation needs." },
+    ],
+  }),
+  post({
+    id: "blog-rice-spice-import-checklist-2026",
+    date: "2026-05-21T00:00:00.000Z",
+    title: "Rice and Spice Import Checklist 2026 for Global Buyers",
+    slug: "rice-spice-import-checklist-2026",
+    excerpt: "A practical checklist for importers sourcing Indian rice, spices, spice powders, blended masalas, and private-label food products.",
+    metaTitle: "Rice and Spice Import Checklist 2026 | Buyer Guide",
+    metaDescription: "Import checklist for buyers sourcing Indian rice and spices in 2026, including specifications, packing, MOQ, documents, and shipment planning.",
+    tags: ["rice imports", "spice imports", "buyer checklist"],
+    image: "/blog/rice-spice-import-checklist-2026.svg",
+    sections: [
+      {
+        heading: "Why buyers need a checklist in 2026",
+        body: [
+          "Importing rice and spices from India requires more than asking for the lowest price. A supplier needs to know the product form, grade, packing, quantity, destination, shipment timing, and documentation expectations before giving a useful quote.",
+          "A buyer who asks only for a generic price usually receives an incomplete offer. A structured checklist reduces errors, quote revisions, and delays."
+        ],
+      },
+      {
+        heading: "Rice enquiry checklist",
+        body: [
+          "For rice, confirm whether the requirement is Basmati, non-Basmati, parboiled, raw, steam, broken rice, long grain, or a buyer-specific grade. Add expected broken percentage, grain length, cooking characteristics, packing size, destination port, and shipment quantity.",
+          "Packing can include 5 kg, 10 kg, 25 kg, 50 kg, jumbo bag, private label, or bulk packing. Destination country and port should be shared early because compliance and freight assumptions can differ."
+        ],
+      },
+      {
+        heading: "Spice enquiry checklist",
+        body: [
+          "For spices, product form is essential. Whole red chilli, chilli powder, turmeric fingers, turmeric powder, cumin seeds, coriander seeds, black pepper, blended masala, and private-label spices each require different quality and documentation discussions.",
+          "Buyers should ask about moisture, purity, packing material, shelf-life assumptions, lab testing, residue limits where applicable, and whether the product is for retail packing, food service, manufacturing, or wholesale distribution."
+        ],
+      },
+      {
+        heading: "Documents and communication",
+        body: [
+          "Depending on the destination, buyers may discuss commercial invoice, packing list, certificate of origin, phytosanitary certificate, fumigation where applicable, lab reports, specification sheets, and buyer-specific declarations.",
+          "A clean enquiry to GOPU Exports should include full name, company name, email, phone with country code, destination country, product, quantity range, packing preference, intended use, shipment timing, and special compliance requirements."
+        ],
+      },
+    ],
+    faqs: [
+      { question: "Can buyers request private-label rice or spices?", answer: "Yes. Private-label enquiries should include pack size, artwork status, destination label rules, quantity, and expected launch timeline." },
+      { question: "Should buyers request samples first?", answer: "For new supplier relationships, samples or specification review are usually sensible before larger orders." },
+      { question: "Can MOQ be fixed immediately?", answer: "MOQ depends on product, packing, destination, and availability. Share the target quantity so LCL, FCL, or phased shipment options can be discussed." },
+    ],
+  }),
+  post({
     id: "blog-import-indian-spices-bulk",
     date: "2026-05-18T00:00:00.000Z",
     title: "How to Import Indian Spices in Bulk: Complete Buyer Guide",

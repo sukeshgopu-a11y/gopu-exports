@@ -41,6 +41,10 @@ function countryFlag(country: CountryCode) {
     .replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt(0)));
 }
 
+function displayLocalPhone(localPhone: string) {
+  return localPhone.replace(/(\d{3})(?=\d)/g, "$1 ").trim();
+}
+
 function cleanLocalPhone(value: string) {
   return value.replace(/\D/g, "").slice(0, 18);
 }
@@ -109,29 +113,32 @@ export function InternationalPhoneInput({
 
   return (
     <div ref={rootRef} className="relative">
-      <div className={`flex min-h-[46px] w-full overflow-hidden rounded-xl border bg-[#F8FAFC] transition focus-within:ring-2 focus-within:ring-[#0E7490]/10 ${error ? "border-red-300" : "border-[#D9E2EC] focus-within:border-[#0E7490]"}`}>
+      <div className="flex w-full gap-2">
         <button
           type="button"
           onClick={() => setOpen((current) => !current)}
-          className="flex min-w-[136px] items-center gap-2 border-r border-[#D9E2EC] bg-white px-3 text-left text-sm font-semibold text-[#0F172A] outline-none transition hover:bg-[#F1F5F9] sm:min-w-[188px]"
+          className={`flex min-h-[52px] w-[116px] shrink-0 items-center justify-center gap-2 rounded-xl border bg-white px-3 text-left text-sm font-semibold text-[#0F172A] shadow-sm outline-none transition hover:bg-[#F8FAFC] sm:w-[142px] ${error ? "border-red-300" : "border-[#D9E2EC] focus:border-[#0E7490] focus:ring-2 focus:ring-[#0E7490]/10"}`}
           aria-label="Select phone country"
         >
-          <span className="text-lg leading-none">{countryFlag(country)}</span>
-          <span className="hidden max-w-[92px] truncate sm:inline">{countryName(country)}</span>
-          <span className="ml-auto text-[#0E7490]">+{getCountryCallingCode(country)}</span>
+          <span className="text-2xl leading-none">{countryFlag(country)}</span>
+          <span className="text-xs font-black text-[#0E7490]">+{getCountryCallingCode(country)}</span>
+          <span className="ml-auto text-[10px] text-[#475569]">▼</span>
         </button>
-        <input
-          value={localPhone}
-          onChange={(event) => setLocalPhone(cleanLocalPhone(event.target.value))}
-          inputMode="numeric"
-          autoComplete="tel-national"
-          placeholder="Local phone number"
-          className="min-w-0 flex-1 bg-transparent px-4 py-2.5 text-sm outline-none"
-        />
+        <label className={`flex min-h-[52px] min-w-0 flex-1 items-center rounded-xl border bg-[#F8FAFC] px-4 shadow-sm transition focus-within:bg-white focus-within:ring-2 focus-within:ring-[#0E7490]/10 ${error ? "border-red-300" : "border-[#D9E2EC] focus-within:border-[#0E7490]"}`}>
+          <span className="mr-2 shrink-0 text-sm font-bold text-[#0F172A]">+{getCountryCallingCode(country)}</span>
+          <input
+            value={displayLocalPhone(localPhone)}
+            onChange={(event) => setLocalPhone(cleanLocalPhone(event.target.value))}
+            inputMode="numeric"
+            autoComplete="tel-national"
+            placeholder="Local phone number"
+            className="min-w-0 flex-1 bg-transparent py-2.5 text-sm outline-none"
+          />
+        </label>
       </div>
 
       {open ? (
-        <div className="absolute left-0 right-0 z-40 mt-2 overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-2xl">
+        <div className="absolute left-0 right-0 z-40 mt-2 overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-2xl sm:max-w-[520px]">
           <div className="border-b border-[#EEF2F7] p-3">
             <input
               value={search}
@@ -152,7 +159,7 @@ export function InternationalPhoneInput({
                 }}
                 className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition hover:bg-[#E6F4F7] ${item === country ? "bg-[#E6F4F7] font-bold text-[#0A5A70]" : "text-[#334155]"}`}
               >
-                <span className="text-lg">{countryFlag(item)}</span>
+                <span className="text-2xl">{countryFlag(item)}</span>
                 <span className="min-w-0 flex-1 truncate">{countryName(item)}</span>
                 <span className="font-semibold text-[#0E7490]">+{getCountryCallingCode(item)}</span>
               </button>

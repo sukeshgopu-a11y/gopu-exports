@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Rice and Spice Import Checklist 2026</title>
+  <desc id="desc">Editorial blog cover for GOPU Exports showing rice, spices, and procurement checklist documents.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fbf8ef"/>
+      <stop offset="0.48" stop-color="#eef7f8"/>
+      <stop offset="1" stop-color="#d9edf1"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b2739"/>
+      <stop offset="1" stop-color="#06131f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1250" cy="205" r="235" fill="#0f7f95" opacity="0.12"/>
+  <circle cx="1350" cy="670" r="265" fill="#f4b335" opacity="0.14"/>
+  <rect x="80" y="80" width="1440" height="740" rx="42" fill="#ffffff" stroke="#d5e2e7" stroke-width="3"/>
+  <rect x="80" y="80" width="520" height="740" rx="42" fill="url(#panel)"/>
+  <path d="M80 575 C195 520 330 650 485 560 C540 528 575 520 600 530 L600 820 L80 820 Z" fill="#12384f"/>
+  <g transform="translate(150 180)">
+    <ellipse cx="165" cy="285" rx="140" ry="54" fill="#f0dca4"/>
+    <ellipse cx="165" cy="275" rx="124" ry="40" fill="#fff7da"/>
+    <g fill="#f8f0d8" stroke="#cfb675" stroke-width="1.5">
+      <ellipse cx="90" cy="267" rx="18" ry="5" transform="rotate(-12 90 267)"/>
+      <ellipse cx="140" cy="289" rx="18" ry="5" transform="rotate(18 140 289)"/>
+      <ellipse cx="205" cy="257" rx="18" ry="5" transform="rotate(-25 205 257)"/>
+      <ellipse cx="248" cy="288" rx="18" ry="5" transform="rotate(9 248 288)"/>
+      <ellipse cx="160" cy="245" rx="18" ry="5" transform="rotate(30 160 245)"/>
+    </g>
+    <path d="M350 305 C420 250 495 245 550 310 C485 340 415 350 350 305Z" fill="#bb1f22"/>
+    <path d="M370 330 C425 292 482 290 528 332 C475 352 421 355 370 330Z" fill="#d93427"/>
+    <circle cx="402" cy="206" r="44" fill="#d8911d"/>
+    <circle cx="466" cy="218" r="34" fill="#2b1f1b"/>
+  </g>
+  <g transform="translate(720 155)">
+    <text x="0" y="0" fill="#0f7f95" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="800" letter-spacing="7">IMPORTER BUYER GUIDE</text>
+    <text x="0" y="92" fill="#071827" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="900">Rice &amp; Spice</text>
+    <text x="0" y="180" fill="#071827" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="900">Import Checklist</text>
+    <text x="0" y="244" fill="#516575" font-family="Arial, Helvetica, sans-serif" font-size="30">Practical steps for global buyers in 2026</text>
+    <g transform="translate(0 320)" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#0b2739">
+      <rect x="0" y="-34" width="595" height="64" rx="18" fill="#f6fbfc" stroke="#d3e2e8"/>
+      <text x="64" y="8">Product specification review</text>
+      <path d="M25 -3 L40 12 L66 -20" fill="none" stroke="#0f7f95" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="0" y="54" width="595" height="64" rx="18" fill="#f6fbfc" stroke="#d3e2e8"/>
+      <text x="64" y="96">Packing, MOQ, and destination rules</text>
+      <path d="M25 85 L40 100 L66 68" fill="none" stroke="#0f7f95" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="0" y="142" width="595" height="64" rx="18" fill="#f6fbfc" stroke="#d3e2e8"/>
+      <text x="64" y="184">Documentation and shipment planning</text>
+      <path d="M25 173 L40 188 L66 156" fill="none" stroke="#0f7f95" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+  <rect x="720" y="735" width="445" height="72" rx="36" fill="#0f7f95"/>
+  <text x="760" y="781" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="800">Updated 21 May 2026</text>
+</svg>

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">India Agri Export Outlook 2026</title>
+  <desc id="desc">Editorial blog cover for GOPU Exports showing a port, rice, spices, and export documentation.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071827"/>
+      <stop offset="0.55" stop-color="#0b3650"/>
+      <stop offset="1" stop-color="#0f7f95"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="74%" cy="30%" r="52%">
+      <stop offset="0" stop-color="#f4c45f" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#f4c45f" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="72" height="72" patternUnits="userSpaceOnUse">
+      <path d="M72 0H0V72" fill="none" stroke="#ffffff" stroke-opacity="0.06"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+  <path d="M0 700 C230 610 390 760 640 660 C900 555 1050 635 1290 560 C1420 520 1515 520 1600 545 L1600 900 L0 900 Z" fill="#04111d" opacity="0.72"/>
+  <g transform="translate(945 190)" opacity="0.9">
+    <rect x="0" y="260" width="420" height="120" rx="6" fill="#193f59"/>
+    <rect x="28" y="230" width="126" height="64" fill="#0f7f95"/>
+    <rect x="164" y="230" width="126" height="64" fill="#e8a626"/>
+    <rect x="300" y="230" width="126" height="64" fill="#17445e"/>
+    <rect x="60" y="185" width="126" height="64" fill="#d7652c"/>
+    <rect x="196" y="185" width="126" height="64" fill="#0f7f95"/>
+    <path d="M20 180 L70 80 L120 180" fill="none" stroke="#b9d3df" stroke-width="10" stroke-linecap="round"/>
+    <path d="M115 180 L250 45 L385 180" fill="none" stroke="#b9d3df" stroke-width="8" stroke-linecap="round"/>
+    <path d="M55 92 H390" stroke="#b9d3df" stroke-width="7"/>
+    <circle cx="70" cy="82" r="12" fill="#f4c45f"/>
+  </g>
+  <g transform="translate(150 520)">
+    <ellipse cx="150" cy="170" rx="135" ry="52" fill="#f7e6b6"/>
+    <ellipse cx="150" cy="160" rx="120" ry="38" fill="#fff8db"/>
+    <g fill="#f4f0da" stroke="#d2bb87" stroke-width="1.5">
+      <ellipse cx="75" cy="157" rx="18" ry="5" transform="rotate(-10 75 157)"/>
+      <ellipse cx="135" cy="146" rx="18" ry="5" transform="rotate(20 135 146)"/>
+      <ellipse cx="188" cy="169" rx="18" ry="5" transform="rotate(-25 188 169)"/>
+      <ellipse cx="220" cy="151" rx="18" ry="5" transform="rotate(12 220 151)"/>
+      <ellipse cx="113" cy="177" rx="18" ry="5" transform="rotate(8 113 177)"/>
+    </g>
+    <circle cx="355" cy="155" r="46" fill="#772c20"/>
+    <circle cx="405" cy="176" r="42" fill="#d91f1f"/>
+    <circle cx="452" cy="148" r="34" fill="#df9a23"/>
+  </g>
+  <g transform="translate(110 115)">
+    <text x="0" y="0" fill="#77d7e7" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="8">GOPU EXPORTS NEWS</text>
+    <text x="0" y="92" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="84" font-weight="800">India Agri Export</text>
+    <text x="0" y="188" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="84" font-weight="800">Outlook 2026</text>
+    <text x="0" y="252" fill="#d7e6ef" font-family="Arial, Helvetica, sans-serif" font-size="30">Current signals for global importers</text>
+    <rect x="0" y="306" width="420" height="72" rx="36" fill="#f4b335"/>
+    <text x="36" y="352" fill="#071827" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="800">Updated 21 May 2026</text>
+  </g>
+</svg>

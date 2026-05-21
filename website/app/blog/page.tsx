@@ -33,7 +33,9 @@ async function getPosts() {
     .maybeSingle();
 
   const posts = Array.isArray(data?.value) ? (data.value as BlogPost[]) : [];
-  const source = posts.length > 0 ? posts : DEFAULT_BLOGS;
+  const bySlug = new Map(DEFAULT_BLOGS.map((post) => [post.slug, post as BlogPost]));
+  posts.forEach((post) => bySlug.set(post.slug, post));
+  const source = Array.from(bySlug.values());
   return source
     .filter((post) => post.published)
     .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
