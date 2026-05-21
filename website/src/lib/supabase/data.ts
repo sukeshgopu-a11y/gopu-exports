@@ -32,6 +32,12 @@ export type InquiryRow = {
   name: string;
   email: string;
   phone: string | null;
+  country_name?: string | null;
+  country_code?: string | null;
+  dial_code?: string | null;
+  local_phone?: string | null;
+  full_phone_e164?: string | null;
+  whatsapp_number_e164?: string | null;
   company: string | null;
   country: string | null;
   message: string | null;
@@ -49,6 +55,12 @@ export type QuoteRow = {
   name: string;
   email: string;
   phone: string | null;
+  country_name?: string | null;
+  country_code?: string | null;
+  dial_code?: string | null;
+  local_phone?: string | null;
+  full_phone_e164?: string | null;
+  whatsapp_number_e164?: string | null;
   company: string | null;
   country: string | null;
   product_name: string | null;
@@ -242,6 +254,12 @@ export function inquiryToApi(row: InquiryRow) {
     name: row.name,
     email: row.email,
     phone: row.phone ?? "",
+    country_name: row.country_name ?? "",
+    country_code: row.country_code ?? "",
+    dial_code: row.dial_code ?? "",
+    local_phone: row.local_phone ?? "",
+    full_phone_e164: row.full_phone_e164 ?? row.phone ?? "",
+    whatsapp_number_e164: row.whatsapp_number_e164 ?? row.full_phone_e164 ?? row.phone ?? "",
     company: row.company ?? "",
     country: row.country ?? "",
     product: row.product_name ?? "",
@@ -265,6 +283,12 @@ export function quoteToApi(row: QuoteRow) {
     name: row.name,
     email: row.email,
     phone: row.phone ?? "",
+    country_name: row.country_name ?? "",
+    country_code: row.country_code ?? "",
+    dial_code: row.dial_code ?? "",
+    local_phone: row.local_phone ?? "",
+    full_phone_e164: row.full_phone_e164 ?? row.phone ?? "",
+    whatsapp_number_e164: row.whatsapp_number_e164 ?? row.full_phone_e164 ?? row.phone ?? "",
     company: row.company ?? "",
     country: row.country ?? "",
     product: row.product_name ?? "",

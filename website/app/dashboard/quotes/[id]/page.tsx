@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { ArrowLeft, MessageCircle, Phone, Trash2 } from "lucide-react";
 
 type Quote = {
   _id: string;
@@ -10,6 +10,8 @@ type Quote = {
   company?: string;
   email: string;
   phone?: string;
+  full_phone_e164?: string;
+  whatsapp_number_e164?: string;
   product?: string;
   quantity?: string;
   country?: string;
@@ -17,6 +19,10 @@ type Quote = {
   status: "New" | "Pending" | "Read" | "Contacted" | "Replied" | "Closed";
   createdAt: string;
 };
+
+function phoneDigits(value?: string) {
+  return String(value ?? "").replace(/\D/g, "");
+}
 
 const STATUS_COLORS: Record<string, string> = {
   New: "bg-green-100 text-green-700",
@@ -127,6 +133,27 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             </div>
           ))}
         </div>
+
+        {(quote.full_phone_e164 || quote.phone) && (
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <a
+              href={`tel:${quote.full_phone_e164 || quote.phone}`}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+            >
+              <Phone size={16} />
+              Call {quote.phone}
+            </a>
+            <a
+              href={`https://wa.me/${phoneDigits(quote.whatsapp_number_e164 || quote.full_phone_e164 || quote.phone)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700 transition hover:bg-green-100"
+            >
+              <MessageCircle size={16} />
+              WhatsApp
+            </a>
+          </div>
+        )}
 
         <div className="mt-4 rounded-2xl bg-gray-50 px-4 py-3">
           <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400">Requirements</p>

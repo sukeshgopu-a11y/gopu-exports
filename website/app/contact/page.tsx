@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { InternationalPhoneInput, type InternationalPhoneValue } from "@/components/InternationalPhoneInput";
 import { COMPANY } from "@/lib/company";
 
 const INCOTERMS = ["FOB", "CIF", "CFR", "EXW", "DDP"];
@@ -11,6 +12,11 @@ const EMPTY_FORM = {
   company: "",
   email: "",
   phone: "",
+  phoneCountryName: "India",
+  phoneCountryCode: "IN",
+  phoneDialCode: "+91",
+  localPhone: "",
+  whatsappNumber: "",
   country: "",
   countryOther: "",
   port: "",
@@ -79,13 +85,6 @@ function Select({ children, value, onChange }: { children: React.ReactNode; valu
       {children}
     </select>
   );
-}
-
-function cleanPhoneInput(value: string) {
-  const trimmed = value.trim();
-  const hasLeadingPlus = trimmed.startsWith("+");
-  const digits = trimmed.replace(/\D/g, "");
-  return `${hasLeadingPlus ? "+" : ""}${digits}`;
 }
 
 function FormSection({ title, note, children }: { title: string; note: string; children: React.ReactNode }) {
@@ -170,7 +169,7 @@ export default function ContactPage() {
   const [form, setForm] = useState(getInitialForm);
 
   const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-      const value = key === "phone" ? cleanPhoneInput(e.target.value) : e.target.value;
+      const value = e.target.value;
       setForm((f) => ({ ...f, [key]: value }));
       setFieldErrors((current) => {
         if (!current[key]) return current;
@@ -180,6 +179,25 @@ export default function ContactPage() {
       });
     };
 
+  const setPhone = useCallback((phone: InternationalPhoneValue) => {
+    setForm((current) => ({
+      ...current,
+      phone: phone.full_phone_e164,
+      phoneCountryName: phone.country_name,
+      phoneCountryCode: phone.country_code,
+      phoneDialCode: phone.dial_code,
+      localPhone: phone.local_phone,
+      whatsappNumber: phone.whatsapp_number_e164,
+    }));
+    setFieldErrors((current) => {
+      if (!current.phone) return current;
+      if (!phone.is_valid) return current;
+      const next = { ...current };
+      delete next.phone;
+      return next;
+    });
+  }, []);
+
   const handleSubmit = async (e: { preventDefault(): void }) => {
     e.preventDefault();
     setError("");
@@ -187,8 +205,8 @@ export default function ContactPage() {
     if (!form.name.trim()) nextErrors.name = "Full name is required.";
     if (!form.company.trim()) nextErrors.company = "Company / organisation name is required.";
     if (!form.email.trim()) nextErrors.email = "Email address is required.";
-    if (!form.phone.trim()) nextErrors.phone = "Phone / WhatsApp number is required for enquiry follow-up.";
-    if (form.phone.trim() && !/^\+?\d{7,15}$/.test(form.phone.trim())) nextErrors.phone = "Use numbers only. A single leading + is allowed.";
+    if (!form.localPhone.trim()) nextErrors.phone = "Phone / WhatsApp number is required for enquiry follow-up.";
+    if (form.localPhone.trim() && !form.phone.trim()) nextErrors.phone = "Please enter a valid phone number for the selected country.";
     if (!form.country.trim()) nextErrors.country = "Destination country is required.";
     if (form.country === OTHER && !form.countryOther.trim()) nextErrors.countryOther = "Please enter the destination country.";
     if (!form.port.trim()) nextErrors.port = "Destination port or city is required.";
@@ -216,6 +234,12 @@ export default function ContactPage() {
           ...form,
           source_url: window.location.href,
           country,
+          country_name: form.phoneCountryName,
+          country_code: form.phoneCountryCode,
+          dial_code: form.phoneDialCode,
+          local_phone: form.localPhone,
+          full_phone_e164: form.phone,
+          whatsapp_number_e164: form.whatsappNumber,
           product,
           product_name: product,
           frequency,
@@ -411,7 +435,19 @@ export default function ContactPage() {
                     <FieldError message={fieldErrors.email} />
                   </Field>
                   <Field label="WhatsApp / Phone *">
-                    <Input required inputMode="tel" pattern="\\+?[0-9]*" placeholder="+918712816876" value={form.phone} onChange={set("phone")} />
+                    <InternationalPhoneInput
+                      value={{
+                        country_name: form.phoneCountryName,
+                        country_code: form.phoneCountryCode as InternationalPhoneValue["country_code"],
+                        dial_code: form.phoneDialCode,
+                        local_phone: form.localPhone,
+                        full_phone_e164: form.phone,
+                        whatsapp_number_e164: form.whatsappNumber,
+                        is_valid: Boolean(form.phone),
+                      }}
+                      onChange={setPhone}
+                      error={fieldErrors.phone}
+                    />
                     <FieldError message={fieldErrors.phone} />
                   </Field>
                 </FormSection>

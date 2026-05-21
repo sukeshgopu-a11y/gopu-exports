@@ -2,7 +2,7 @@ import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { quoteToApi, type QuoteRow } from "@/src/lib/supabase/data";
 import { sendLeadEmails } from "@/lib/leadEmail";
-import { buildSourceUrl, buildTimestamp, rejectSpam, stringField, validateEmail, validatePhone } from "@/lib/leadValidation";
+import { buildSourceUrl, buildTimestamp, normalizeLeadPhone, rejectSpam, stringField, validateEmail } from "@/lib/leadValidation";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -35,7 +35,8 @@ export async function POST(req: NextRequest) {
   const name = stringField(body, "name", "fullName", "full_name");
   const company = stringField(body, "company", "companyName", "company_name");
   const email = stringField(body, "email");
-  const phone = stringField(body, "phone", "phoneNumber", "phone_number");
+  const phoneDetails = normalizeLeadPhone(body);
+  const phone = phoneDetails?.full_phone_e164 ?? "";
   const country = stringField(body, "country", "destination", "destination_country");
   const productName = stringField(body, "product_name", "product", "productInterested");
   const quantity = stringField(body, "quantity");
@@ -67,9 +68,9 @@ export async function POST(req: NextRequest) {
   }
 
   if (!validateEmail(email)) return NextResponse.json({ error: "Valid email address is required" }, { status: 400 });
-  if (!validatePhone(phone)) {
+  if (!phoneDetails) {
     return NextResponse.json(
-      { error: "Phone number must contain only numbers. One leading + is allowed." },
+      { error: "Please enter a valid phone number for the selected country." },
       { status: 400 }
     );
   }
@@ -80,27 +81,44 @@ export async function POST(req: NextRequest) {
     `Timestamp: ${timestamp}`,
   ].filter(Boolean).join("\n\n");
 
+  const baseInsert = {
+    name,
+    email,
+    phone,
+    company,
+    country,
+    product_name: productName,
+    quantity,
+    message: storedMessage,
+    status: "new",
+  };
+
   const { error } = await supabase
     .from("quotes")
     .insert({
-      name,
-      email,
-      phone,
-      company,
-      country,
-      product_name: productName,
-      quantity,
-      message: storedMessage,
-      status: "new",
+      ...baseInsert,
+      country_name: phoneDetails.country_name,
+      country_code: phoneDetails.country_code,
+      dial_code: phoneDetails.dial_code,
+      local_phone: phoneDetails.local_phone,
+      full_phone_e164: phoneDetails.full_phone_e164,
+      whatsapp_number_e164: phoneDetails.whatsapp_number_e164,
     });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error && /country_name|country_code|dial_code|local_phone|full_phone_e164|whatsapp_number_e164|schema cache/i.test(error.message)) {
+    const fallback = await supabase.from("quotes").insert(baseInsert);
+    if (fallback.error) return NextResponse.json({ error: fallback.error.message }, { status: 400 });
+  } else if (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+
   await sendLeadEmails({
     kind: "quote",
     name,
     company,
     email,
     phone,
+    phoneDetails,
     country,
     product: productName,
     quantity,

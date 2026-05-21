@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Download, Eye, RefreshCw, Search, Trash2 } from "lucide-react";
+import { Download, Eye, MessageCircle, Phone, RefreshCw, Search, Trash2 } from "lucide-react";
 import { DashboardSkeleton, InlineError } from "@/components/dashboard/LoadingStates";
 import { useToast } from "@/components/dashboard/ToastProvider";
 import { dashboardFetch, getErrorMessage } from "@/lib/dashboardApi";
@@ -13,6 +13,8 @@ type Quote = {
   company?: string;
   email: string;
   phone?: string;
+  full_phone_e164?: string;
+  whatsapp_number_e164?: string;
   product?: string;
   quantity?: string;
   country?: string;
@@ -20,6 +22,10 @@ type Quote = {
   status: "New" | "Pending" | "Read" | "Contacted" | "Replied" | "Closed";
   createdAt: string;
 };
+
+function phoneDigits(value?: string) {
+  return String(value ?? "").replace(/\D/g, "");
+}
 
 const STATUS_COLORS: Record<string, string> = {
   New: "bg-green-100 text-green-700",
@@ -175,6 +181,26 @@ export default function QuotesPage() {
                       <p className="font-semibold text-[#0F172A] text-sm">{item.name}</p>
                       {item.company && <p className="text-gray-400 text-xs">{item.company}</p>}
                       <p className="text-gray-400 text-xs">{item.email}</p>
+                      {item.phone && (
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <a
+                            href={`tel:${item.full_phone_e164 || item.phone}`}
+                            className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-[11px] font-semibold text-gray-600 hover:bg-gray-200"
+                          >
+                            <Phone size={12} />
+                            {item.phone}
+                          </a>
+                          <a
+                            href={`https://wa.me/${phoneDigits(item.whatsapp_number_e164 || item.full_phone_e164 || item.phone)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-[11px] font-semibold text-green-700 hover:bg-green-100"
+                          >
+                            <MessageCircle size={12} />
+                            WhatsApp
+                          </a>
+                        </div>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-gray-600 text-sm">{item.product || "-"}</td>
                     <td className="px-6 py-4 text-gray-600 text-sm">{item.quantity || "-"}</td>

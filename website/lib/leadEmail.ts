@@ -1,11 +1,22 @@
 type LeadKind = "inquiry" | "quote";
 
+type PhoneDetails = {
+  country_name: string;
+  country_code: string;
+  dial_code: string;
+  local_phone: string;
+  full_phone_e164: string;
+  whatsapp_number_e164: string;
+  formatted_international: string;
+};
+
 export type LeadEmailPayload = {
   kind: LeadKind;
   name: string;
   company?: string;
   email: string;
   phone?: string;
+  phoneDetails?: PhoneDetails;
   country?: string;
   product?: string;
   quantity?: string;
@@ -27,11 +38,19 @@ function escapeHtml(value: string) {
 }
 
 function rows(payload: LeadEmailPayload): Array<[string, string | undefined]> {
+  const phone = payload.phoneDetails?.formatted_international || payload.phone;
+  const whatsapp = payload.phoneDetails?.whatsapp_number_e164
+    ? payload.phoneDetails.formatted_international
+    : payload.phone;
   return [
     ["Full Name", payload.name],
     ["Company Name", payload.company],
     ["Email", payload.email],
-    ["Phone Number", payload.phone],
+    ["Phone Number", phone],
+    ["WhatsApp", whatsapp],
+    ["Phone Country", payload.phoneDetails?.country_name],
+    ["Dial Code", payload.phoneDetails?.dial_code],
+    ["Local Phone", payload.phoneDetails?.local_phone],
     ["Country", payload.country],
     ["Product Interested", payload.product],
     ["Quantity", payload.quantity],

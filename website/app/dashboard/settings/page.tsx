@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Save, Check } from "lucide-react";
+import { InternationalPhoneInput, type InternationalPhoneValue } from "@/components/InternationalPhoneInput";
 
 type ContactSettings = {
   companyName: string;
@@ -51,6 +52,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
 
   useEffect(() => {
     fetch("/api/site-settings?key=contact")
@@ -65,8 +67,19 @@ export default function SettingsPage() {
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setContact((c) => ({ ...c, [key]: e.target.value }));
 
+  const setPhone = useCallback((phone: InternationalPhoneValue) => {
+    if (!phone.local_phone) return;
+    setContact((current) => ({
+      ...current,
+      phone: phone.full_phone_e164 || `${phone.dial_code} ${phone.local_phone}`.trim(),
+      whatsapp: phone.whatsapp_number_e164 || phone.local_phone,
+    }));
+    setPhoneError(phone.local_phone && !phone.is_valid ? "Please enter a valid phone number for the selected country." : "");
+  }, []);
+
   const handleSave = async (e: { preventDefault(): void }) => {
     e.preventDefault();
+    if (phoneError) return;
     setSaving(true);
     try {
       await fetch("/api/site-settings", {
@@ -108,10 +121,13 @@ export default function SettingsPage() {
               <Input type="email" value={contact.email} onChange={set("email")} />
             </Field>
             <Field label="Phone Number">
-              <Input value={contact.phone} onChange={set("phone")} />
-            </Field>
-            <Field label="WhatsApp Number (digits only)">
-              <Input value={contact.whatsapp} onChange={set("whatsapp")} placeholder="918712816876" />
+              <InternationalPhoneInput
+                value={null}
+                onChange={setPhone}
+                error={phoneError}
+              />
+              {phoneError ? <p className="mt-1.5 text-xs font-semibold text-red-600">{phoneError}</p> : null}
+              <p className="mt-1.5 text-xs text-gray-500">Current saved phone: {contact.phone}</p>
             </Field>
             <Field label="Website URL">
               <Input value={contact.website} onChange={set("website")} />

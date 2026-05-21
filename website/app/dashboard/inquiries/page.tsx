@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Copy, Download, Mail, RefreshCw, Save, Search, Trash2 } from "lucide-react";
+import { Copy, Download, Mail, MessageCircle, Phone, RefreshCw, Save, Search, Trash2 } from "lucide-react";
 import { DashboardSkeleton, InlineError } from "@/components/dashboard/LoadingStates";
 import { useToast } from "@/components/dashboard/ToastProvider";
 import { dashboardFetch, getErrorMessage } from "@/lib/dashboardApi";
@@ -12,6 +12,8 @@ type Inquiry = {
   company?: string;
   email: string;
   phone?: string;
+  full_phone_e164?: string;
+  whatsapp_number_e164?: string;
   product?: string;
   country?: string;
   quantity?: string;
@@ -30,6 +32,19 @@ const STATUS_COLORS: Record<string, string> = {
   Replied: "bg-blue-100 text-blue-700",
   Closed: "bg-gray-100 text-gray-500",
 };
+
+function phoneDigits(value?: string) {
+  return String(value ?? "").replace(/\D/g, "");
+}
+
+function phoneHref(value?: string) {
+  return value ? `tel:${value}` : "";
+}
+
+function whatsappHref(value?: string) {
+  const digits = phoneDigits(value);
+  return digits ? `https://wa.me/${digits}` : "";
+}
 
 export default function InquiriesPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
@@ -311,6 +326,26 @@ export default function InquiriesPage() {
                     <span className="text-[#0F172A] font-medium">{value}</span>
                   </div>
                 ) : null
+              )}
+              {(selected.full_phone_e164 || selected.phone) && (
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <a
+                    href={phoneHref(selected.full_phone_e164 || selected.phone)}
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-3 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+                  >
+                    <Phone size={15} />
+                    Call
+                  </a>
+                  <a
+                    href={whatsappHref(selected.whatsapp_number_e164 || selected.full_phone_e164 || selected.phone)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-green-200 bg-green-50 px-3 py-2.5 text-sm font-semibold text-green-700 transition hover:bg-green-100"
+                  >
+                    <MessageCircle size={15} />
+                    WhatsApp
+                  </a>
+                </div>
               )}
               {selected.notes && (
                 <div>

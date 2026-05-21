@@ -34,6 +34,12 @@ create table if not exists public.inquiries (
   name text not null,
   email text not null,
   phone text,
+  country_name text,
+  country_code text,
+  dial_code text,
+  local_phone text,
+  full_phone_e164 text,
+  whatsapp_number_e164 text,
   company text,
   country text,
   message text,
@@ -52,6 +58,12 @@ create table if not exists public.quotes (
   name text not null,
   email text not null,
   phone text,
+  country_name text,
+  country_code text,
+  dial_code text,
+  local_phone text,
+  full_phone_e164 text,
+  whatsapp_number_e164 text,
   company text,
   country text,
   product_name text,
@@ -163,9 +175,11 @@ create index if not exists inquiries_created_at_idx on public.inquiries (created
 create index if not exists inquiries_status_created_at_idx on public.inquiries (status, created_at desc);
 create index if not exists inquiries_country_idx on public.inquiries (country) where country is not null;
 create index if not exists inquiries_product_name_idx on public.inquiries (product_name) where product_name is not null;
+create index if not exists inquiries_full_phone_e164_idx on public.inquiries (full_phone_e164) where full_phone_e164 is not null;
 create index if not exists quotes_status_idx on public.quotes (status);
 create index if not exists quotes_created_at_idx on public.quotes (created_at desc);
 create index if not exists quotes_status_created_at_idx on public.quotes (status, created_at desc);
+create index if not exists quotes_full_phone_e164_idx on public.quotes (full_phone_e164) where full_phone_e164 is not null;
 create index if not exists certifications_active_order_idx on public.certifications (is_active, sort_order);
 create index if not exists gallery_images_active_order_idx on public.gallery_images (is_active, sort_order, created_at desc);
 create index if not exists site_settings_key_idx on public.site_settings (key);
