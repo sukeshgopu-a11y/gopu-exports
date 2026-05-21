@@ -20,6 +20,12 @@ type Inquiry = {
   incoterm?: string;
   notes?: string;
   adminNotes?: string;
+  admin_email_sent?: boolean;
+  admin_email_sent_at?: string;
+  admin_email_error?: string;
+  customer_auto_reply_sent?: boolean;
+  customer_auto_reply_sent_at?: string;
+  customer_auto_reply_error?: string;
   status: "New" | "Pending" | "Read" | "Contacted" | "Replied" | "Closed";
   createdAt: string;
 };
@@ -44,6 +50,64 @@ function phoneHref(value?: string) {
 function whatsappHref(value?: string) {
   const digits = phoneDigits(value);
   return digits ? `https://wa.me/${digits}` : "";
+}
+
+function formatPhone(value?: string) {
+  const raw = String(value ?? "").trim();
+  if (!raw) return "";
+  return raw.replace(/^(\+\d{1,3})(\d{3})(\d{3})(\d+)$/, "$1 $2 $3 $4");
+}
+
+function EmailDeliveryBadges({ item }: { item: Inquiry }) {
+  const failed = Boolean(item.admin_email_error || item.customer_auto_reply_error);
+  return (
+    <div className="mt-2 flex flex-wrap gap-1.5">
+      {item.admin_email_sent && (
+        <span className="rounded-full bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-700">Admin email sent</span>
+      )}
+      {item.customer_auto_reply_sent && (
+        <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-700">Customer reply sent</span>
+      )}
+      {failed && (
+        <span className="rounded-full bg-red-50 px-2 py-1 text-[10px] font-bold text-red-700">Email failed</span>
+      )}
+    </div>
+  );
+}
+
+function LeadActionButtons({ item, compact = false }: { item: Inquiry; compact?: boolean }) {
+  const phoneValue = item.full_phone_e164 || item.phone;
+  const whatsappValue = item.whatsapp_number_e164 || item.full_phone_e164 || item.phone;
+  const actionClass = compact
+    ? "inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold"
+    : "inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold";
+  return (
+    <div className={`flex flex-wrap gap-2 ${compact ? "mt-2" : ""}`}>
+      {phoneValue && (
+        <a href={phoneHref(phoneValue)} className={`${actionClass} bg-gray-100 text-gray-700 hover:bg-gray-200`}>
+          <Phone size={compact ? 12 : 15} />
+          {compact ? formatPhone(phoneValue) || "Call" : "Call"}
+        </a>
+      )}
+      {whatsappValue && (
+        <a
+          href={whatsappHref(whatsappValue)}
+          target="_blank"
+          rel="noreferrer"
+          className={`${actionClass} bg-green-50 text-green-700 hover:bg-green-100`}
+        >
+          <MessageCircle size={compact ? 12 : 15} />
+          WhatsApp
+        </a>
+      )}
+      {item.email && (
+        <a href={`mailto:${item.email}`} className={`${actionClass} bg-sky-50 text-sky-700 hover:bg-sky-100`}>
+          <Mail size={compact ? 12 : 15} />
+          Email
+        </a>
+      )}
+    </div>
+  );
 }
 
 export default function InquiriesPage() {
@@ -249,6 +313,10 @@ export default function InquiriesPage() {
                         <p className="font-semibold text-[#0F172A] text-sm">{item.name}</p>
                         {item.company && <p className="text-gray-400 text-xs">{item.company}</p>}
                         <p className="text-gray-400 text-xs">{item.email}</p>
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <p className="mt-1 text-[11px] font-semibold text-gray-500">{item.country || "Country not set"}</p>
+                          <LeadActionButtons item={item} compact />
+                        </div>
                       </td>
                       <td className="px-6 py-4 text-gray-600 text-sm">{item.product || "—"}</td>
                       <td className="px-6 py-4 text-gray-600 text-sm">{item.country || "—"}</td>
@@ -263,6 +331,7 @@ export default function InquiriesPage() {
                             <option key={s} value={s}>{s}</option>
                           ))}
                         </select>
+                        <EmailDeliveryBadges item={item} />
                       </td>
                       <td className="px-6 py-4 text-gray-400 text-xs">
                         {new Date(item.createdAt).toLocaleDateString()}
@@ -312,9 +381,10 @@ export default function InquiriesPage() {
               </button>
             </div>
             <div className="space-y-3 text-sm">
+              <EmailDeliveryBadges item={selected} />
               {[
                 ["Email", selected.email],
-                ["Phone", selected.phone],
+                ["Phone", formatPhone(selected.full_phone_e164 || selected.phone) || selected.phone],
                 ["Country", selected.country],
                 ["Product", selected.product],
                 ["Quantity", selected.quantity],
@@ -328,23 +398,8 @@ export default function InquiriesPage() {
                 ) : null
               )}
               {(selected.full_phone_e164 || selected.phone) && (
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                  <a
-                    href={phoneHref(selected.full_phone_e164 || selected.phone)}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-3 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
-                  >
-                    <Phone size={15} />
-                    Call
-                  </a>
-                  <a
-                    href={whatsappHref(selected.whatsapp_number_e164 || selected.full_phone_e164 || selected.phone)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-green-200 bg-green-50 px-3 py-2.5 text-sm font-semibold text-green-700 transition hover:bg-green-100"
-                  >
-                    <MessageCircle size={15} />
-                    WhatsApp
-                  </a>
+                <div className="pt-1">
+                  <LeadActionButtons item={selected} />
                 </div>
               )}
               {selected.notes && (

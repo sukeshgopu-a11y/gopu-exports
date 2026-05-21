@@ -45,7 +45,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 RESEND_API_KEY=
 ADMIN_EMAIL=admin@gopuexports.com
-RESEND_FROM_EMAIL=
+EMAIL_FROM=GOPU Exports <onboarding@resend.dev>
 ```
 
-`RESEND_API_KEY` enables instant admin inquiry notifications and customer auto-replies. `ADMIN_EMAIL` defaults to `admin@gopuexports.com` if not set. `RESEND_FROM_EMAIL` should be a verified Resend sender/domain for production email delivery.
+`RESEND_API_KEY` enables instant admin inquiry notifications and customer auto-replies. `ADMIN_EMAIL` defaults to `admin@gopuexports.com` if not set. `EMAIL_FROM` should be a verified Resend sender/domain for production email delivery. Use `GOPU Exports <onboarding@resend.dev>` temporarily until the `gopuexports.com` sender is verified in Resend.

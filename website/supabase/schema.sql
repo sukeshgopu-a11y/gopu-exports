@@ -49,6 +49,13 @@ create table if not exists public.inquiries (
   admin_notes text,
   product_id uuid references public.products(id) on delete set null,
   status text not null default 'new' check (status in ('new', 'pending', 'read', 'contacted', 'replied', 'closed')),
+  admin_email_sent boolean not null default false,
+  admin_email_sent_at timestamptz,
+  admin_email_error text,
+  customer_auto_reply_sent boolean not null default false,
+  customer_auto_reply_sent_at timestamptz,
+  customer_auto_reply_error text,
+  delivery_token text default encode(gen_random_bytes(16), 'hex'),
   created_at timestamptz not null default now()
 );
 
@@ -70,8 +77,33 @@ create table if not exists public.quotes (
   quantity text,
   message text,
   status text not null default 'new' check (status in ('new', 'pending', 'read', 'contacted', 'replied', 'closed')),
+  admin_email_sent boolean not null default false,
+  admin_email_sent_at timestamptz,
+  admin_email_error text,
+  customer_auto_reply_sent boolean not null default false,
+  customer_auto_reply_sent_at timestamptz,
+  customer_auto_reply_error text,
+  delivery_token text default encode(gen_random_bytes(16), 'hex'),
   created_at timestamptz not null default now()
 );
+
+alter table public.inquiries
+  add column if not exists admin_email_sent boolean not null default false,
+  add column if not exists admin_email_sent_at timestamptz,
+  add column if not exists admin_email_error text,
+  add column if not exists customer_auto_reply_sent boolean not null default false,
+  add column if not exists customer_auto_reply_sent_at timestamptz,
+  add column if not exists customer_auto_reply_error text,
+  add column if not exists delivery_token text default encode(gen_random_bytes(16), 'hex');
+
+alter table public.quotes
+  add column if not exists admin_email_sent boolean not null default false,
+  add column if not exists admin_email_sent_at timestamptz,
+  add column if not exists admin_email_error text,
+  add column if not exists customer_auto_reply_sent boolean not null default false,
+  add column if not exists customer_auto_reply_sent_at timestamptz,
+  add column if not exists customer_auto_reply_error text,
+  add column if not exists delivery_token text default encode(gen_random_bytes(16), 'hex');
 
 -- Certifications and compliance logos shown on the public website.
 create table if not exists public.certifications (
@@ -176,10 +208,12 @@ create index if not exists inquiries_status_created_at_idx on public.inquiries (
 create index if not exists inquiries_country_idx on public.inquiries (country) where country is not null;
 create index if not exists inquiries_product_name_idx on public.inquiries (product_name) where product_name is not null;
 create index if not exists inquiries_full_phone_e164_idx on public.inquiries (full_phone_e164) where full_phone_e164 is not null;
+create index if not exists inquiries_delivery_token_idx on public.inquiries (delivery_token) where delivery_token is not null;
 create index if not exists quotes_status_idx on public.quotes (status);
 create index if not exists quotes_created_at_idx on public.quotes (created_at desc);
 create index if not exists quotes_status_created_at_idx on public.quotes (status, created_at desc);
 create index if not exists quotes_full_phone_e164_idx on public.quotes (full_phone_e164) where full_phone_e164 is not null;
+create index if not exists quotes_delivery_token_idx on public.quotes (delivery_token) where delivery_token is not null;
 create index if not exists certifications_active_order_idx on public.certifications (is_active, sort_order);
 create index if not exists gallery_images_active_order_idx on public.gallery_images (is_active, sort_order, created_at desc);
 create index if not exists site_settings_key_idx on public.site_settings (key);
@@ -200,6 +234,7 @@ alter table public.visitor_events enable row level security;
 grant usage on schema public to anon, authenticated;
 grant select on public.products, public.certifications, public.gallery_images, public.site_settings to anon, authenticated;
 grant insert on public.inquiries, public.quotes to anon, authenticated;
+grant update (admin_email_sent, admin_email_sent_at, admin_email_error, customer_auto_reply_sent, customer_auto_reply_sent_at, customer_auto_reply_error) on public.inquiries, public.quotes to anon, authenticated;
 grant select, insert, update, delete on public.products, public.inquiries, public.quotes, public.certifications, public.gallery_images, public.site_settings to authenticated;
 grant select on public.admin_users to authenticated;
 grant insert on public.visitor_events to anon, authenticated;
@@ -237,6 +272,19 @@ to authenticated
 using (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'))
 with check (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'));
 
+drop policy if exists "Delivery token can update inquiry email status" on public.inquiries;
+create policy "Delivery token can update inquiry email status"
+on public.inquiries for update
+to anon, authenticated
+using (
+  delivery_token is not null
+  and delivery_token = coalesce((current_setting('request.headers', true)::jsonb ->> 'x-lead-delivery-token'), '')
+)
+with check (
+  delivery_token is not null
+  and delivery_token = coalesce((current_setting('request.headers', true)::jsonb ->> 'x-lead-delivery-token'), '')
+);
+
 drop policy if exists "Anyone can create quotes" on public.quotes;
 create policy "Anyone can create quotes"
 on public.quotes for insert
@@ -253,6 +301,19 @@ on public.quotes for all
 to authenticated
 using (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'))
 with check (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'));
+
+drop policy if exists "Delivery token can update quote email status" on public.quotes;
+create policy "Delivery token can update quote email status"
+on public.quotes for update
+to anon, authenticated
+using (
+  delivery_token is not null
+  and delivery_token = coalesce((current_setting('request.headers', true)::jsonb ->> 'x-lead-delivery-token'), '')
+)
+with check (
+  delivery_token is not null
+  and delivery_token = coalesce((current_setting('request.headers', true)::jsonb ->> 'x-lead-delivery-token'), '')
+);
 
 drop policy if exists "Public can read active certifications" on public.certifications;
 create policy "Public can read active certifications"

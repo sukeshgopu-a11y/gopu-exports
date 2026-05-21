@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowLeft, MessageCircle, Phone, Trash2 } from "lucide-react";
+import { ArrowLeft, Mail, MessageCircle, Phone, Trash2 } from "lucide-react";
 
 type Quote = {
   _id: string;
@@ -16,12 +16,41 @@ type Quote = {
   quantity?: string;
   country?: string;
   notes?: string;
+  admin_email_sent?: boolean;
+  admin_email_sent_at?: string;
+  admin_email_error?: string;
+  customer_auto_reply_sent?: boolean;
+  customer_auto_reply_sent_at?: string;
+  customer_auto_reply_error?: string;
   status: "New" | "Pending" | "Read" | "Contacted" | "Replied" | "Closed";
   createdAt: string;
 };
 
 function phoneDigits(value?: string) {
   return String(value ?? "").replace(/\D/g, "");
+}
+
+function formatPhone(value?: string) {
+  const raw = String(value ?? "").trim();
+  if (!raw) return "";
+  return raw.replace(/^(\+\d{1,3})(\d{3})(\d{3})(\d+)$/, "$1 $2 $3 $4");
+}
+
+function EmailDeliveryBadges({ quote }: { quote: Quote }) {
+  const failed = Boolean(quote.admin_email_error || quote.customer_auto_reply_error);
+  return (
+    <div className="mt-3 flex flex-wrap gap-1.5">
+      {quote.admin_email_sent && (
+        <span className="rounded-full bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-700">Admin email sent</span>
+      )}
+      {quote.customer_auto_reply_sent && (
+        <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-700">Customer reply sent</span>
+      )}
+      {failed && (
+        <span className="rounded-full bg-red-50 px-2 py-1 text-[10px] font-bold text-red-700">Email failed</span>
+      )}
+    </div>
+  );
 }
 
 const STATUS_COLORS: Record<string, string> = {
@@ -87,7 +116,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
     ["Name", quote.name],
     ["Company", quote.company],
     ["Email", quote.email],
-    ["Phone", quote.phone],
+    ["Phone", formatPhone(quote.full_phone_e164 || quote.phone) || quote.phone],
     ["Product", quote.product],
     ["Quantity", quote.quantity],
     ["Country", quote.country],
@@ -113,6 +142,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#0E7490]">Quote Request</p>
             <h1 className="mt-2 text-3xl font-extrabold text-[#0F172A]">{quote.name}</h1>
             {quote.company && <p className="mt-1 text-sm text-gray-500">{quote.company}</p>}
+            <EmailDeliveryBadges quote={quote} />
           </div>
           <select
             value={quote.status}
@@ -135,13 +165,13 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
         </div>
 
         {(quote.full_phone_e164 || quote.phone) && (
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
             <a
               href={`tel:${quote.full_phone_e164 || quote.phone}`}
               className="inline-flex items-center justify-center gap-2 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
             >
               <Phone size={16} />
-              Call {quote.phone}
+              Call {formatPhone(quote.full_phone_e164 || quote.phone) || quote.phone}
             </a>
             <a
               href={`https://wa.me/${phoneDigits(quote.whatsapp_number_e164 || quote.full_phone_e164 || quote.phone)}`}
@@ -151,6 +181,13 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
             >
               <MessageCircle size={16} />
               WhatsApp
+            </a>
+            <a
+              href={`mailto:${quote.email}`}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-700 transition hover:bg-sky-100"
+            >
+              <Mail size={16} />
+              Email
             </a>
           </div>
         )}

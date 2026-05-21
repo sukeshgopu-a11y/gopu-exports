@@ -47,6 +47,12 @@ export type InquiryRow = {
   admin_notes: string | null;
   product_id: string | null;
   status: string;
+  admin_email_sent?: boolean | null;
+  admin_email_sent_at?: string | null;
+  admin_email_error?: string | null;
+  customer_auto_reply_sent?: boolean | null;
+  customer_auto_reply_sent_at?: string | null;
+  customer_auto_reply_error?: string | null;
   created_at: string;
 };
 
@@ -67,6 +73,12 @@ export type QuoteRow = {
   quantity: string | null;
   message: string | null;
   status: string;
+  admin_email_sent?: boolean | null;
+  admin_email_sent_at?: string | null;
+  admin_email_error?: string | null;
+  customer_auto_reply_sent?: boolean | null;
+  customer_auto_reply_sent_at?: string | null;
+  customer_auto_reply_error?: string | null;
   created_at: string;
 };
 
@@ -272,6 +284,12 @@ export function inquiryToApi(row: InquiryRow) {
     admin_notes: row.admin_notes ?? "",
     product_id: row.product_id,
     status: toUiStatus(row.status),
+    admin_email_sent: Boolean(row.admin_email_sent),
+    admin_email_sent_at: row.admin_email_sent_at ?? "",
+    admin_email_error: row.admin_email_error ?? "",
+    customer_auto_reply_sent: Boolean(row.customer_auto_reply_sent),
+    customer_auto_reply_sent_at: row.customer_auto_reply_sent_at ?? "",
+    customer_auto_reply_error: row.customer_auto_reply_error ?? "",
     createdAt: row.created_at,
   };
 }
@@ -297,6 +315,12 @@ export function quoteToApi(row: QuoteRow) {
     notes: row.message ?? "",
     message: row.message ?? "",
     status: toUiStatus(row.status),
+    admin_email_sent: Boolean(row.admin_email_sent),
+    admin_email_sent_at: row.admin_email_sent_at ?? "",
+    admin_email_error: row.admin_email_error ?? "",
+    customer_auto_reply_sent: Boolean(row.customer_auto_reply_sent),
+    customer_auto_reply_sent_at: row.customer_auto_reply_sent_at ?? "",
+    customer_auto_reply_error: row.customer_auto_reply_error ?? "",
     createdAt: row.created_at,
   };
 }

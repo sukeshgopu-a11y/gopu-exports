@@ -1,9 +1,11 @@
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { inquiryToApi, type InquiryRow } from "@/src/lib/supabase/data";
-import { sendLeadEmails } from "@/lib/leadEmail";
+import { getLeadEmailConfigurationError, sendLeadEmails } from "@/lib/leadEmail";
+import { updateLeadEmailStatus } from "@/lib/leadStatus";
 import { buildSourceUrl, buildTimestamp, normalizeLeadPhone, rejectSpam, stringField, validateEmail } from "@/lib/leadValidation";
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 
 export async function GET(req: NextRequest) {
   const supabase = await requireAdminClient();
@@ -13,7 +15,7 @@ export async function GET(req: NextRequest) {
   const offset = Math.max(Number(searchParams.get("offset") ?? 0), 0);
   const { data, error } = await supabase
     .from("inquiries")
-    .select("id,name,email,phone,company,country,message,product_name,quantity,incoterm,admin_notes,product_id,status,created_at")
+    .select("*")
     .order("created_at", { ascending: false })
     .range(offset, offset + limit - 1)
     .returns<InquiryRow[]>();
@@ -43,6 +45,8 @@ export async function POST(req: NextRequest) {
   const sourceUrl = buildSourceUrl(req, body);
   const timestamp = buildTimestamp();
   const buyerMessage = stringField(body, "message", "notes");
+  const leadId = randomUUID();
+  const deliveryToken = randomUUID();
 
   const required: Record<string, string> = {
     name: "Full name is required",
@@ -88,6 +92,7 @@ export async function POST(req: NextRequest) {
   ].filter(Boolean).join("\n\n");
 
   const baseInsert = {
+    id: leadId,
     name,
     company,
     email,
@@ -99,12 +104,22 @@ export async function POST(req: NextRequest) {
     message: storedMessage,
     product_id: body.product_id ?? null,
     status: "new",
+    delivery_token: deliveryToken,
+  };
+
+  const initialEmailError = getLeadEmailConfigurationError();
+  const emailStatusDefaults = {
+    admin_email_sent: false,
+    admin_email_error: initialEmailError,
+    customer_auto_reply_sent: false,
+    customer_auto_reply_error: initialEmailError,
   };
 
   const { error } = await supabase
     .from("inquiries")
     .insert({
       ...baseInsert,
+      ...emailStatusDefaults,
       country_name: phoneDetails.country_name,
       country_code: phoneDetails.country_code,
       dial_code: phoneDetails.dial_code,
@@ -113,14 +128,19 @@ export async function POST(req: NextRequest) {
       whatsapp_number_e164: phoneDetails.whatsapp_number_e164,
     });
 
-  if (error && /country_name|country_code|dial_code|local_phone|full_phone_e164|whatsapp_number_e164|schema cache/i.test(error.message)) {
-    const fallback = await supabase.from("inquiries").insert(baseInsert);
+  if (error && /country_name|country_code|dial_code|local_phone|full_phone_e164|whatsapp_number_e164|admin_email_sent|customer_auto_reply_sent|delivery_token|schema cache/i.test(error.message)) {
+    const fallbackInsert: Record<string, unknown> = { ...baseInsert };
+    delete fallbackInsert.delivery_token;
+    const fallback = await supabase.from("inquiries").insert(fallbackInsert);
     if (fallback.error) return NextResponse.json({ error: fallback.error.message }, { status: 400 });
   } else if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 
-  await sendLeadEmails({
+  console.log("Lead saved successfully", { leadId, kind: "inquiry" });
+
+  const delivery = await sendLeadEmails({
+    id: leadId,
     kind: "inquiry",
     name,
     company,
@@ -134,5 +154,7 @@ export async function POST(req: NextRequest) {
     sourceUrl,
     timestamp,
   });
+  await updateLeadEmailStatus("inquiries", leadId, delivery, deliveryToken);
+
   return NextResponse.json({ success: true }, { status: 201 });
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Download, Eye, MessageCircle, Phone, RefreshCw, Search, Trash2 } from "lucide-react";
+import { Download, Eye, Mail, MessageCircle, Phone, RefreshCw, Search, Trash2 } from "lucide-react";
 import { DashboardSkeleton, InlineError } from "@/components/dashboard/LoadingStates";
 import { useToast } from "@/components/dashboard/ToastProvider";
 import { dashboardFetch, getErrorMessage } from "@/lib/dashboardApi";
@@ -19,12 +19,41 @@ type Quote = {
   quantity?: string;
   country?: string;
   notes?: string;
+  admin_email_sent?: boolean;
+  admin_email_sent_at?: string;
+  admin_email_error?: string;
+  customer_auto_reply_sent?: boolean;
+  customer_auto_reply_sent_at?: string;
+  customer_auto_reply_error?: string;
   status: "New" | "Pending" | "Read" | "Contacted" | "Replied" | "Closed";
   createdAt: string;
 };
 
 function phoneDigits(value?: string) {
   return String(value ?? "").replace(/\D/g, "");
+}
+
+function formatPhone(value?: string) {
+  const raw = String(value ?? "").trim();
+  if (!raw) return "";
+  return raw.replace(/^(\+\d{1,3})(\d{3})(\d{3})(\d+)$/, "$1 $2 $3 $4");
+}
+
+function EmailDeliveryBadges({ item }: { item: Quote }) {
+  const failed = Boolean(item.admin_email_error || item.customer_auto_reply_error);
+  return (
+    <div className="mt-2 flex flex-wrap gap-1.5">
+      {item.admin_email_sent && (
+        <span className="rounded-full bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-700">Admin email sent</span>
+      )}
+      {item.customer_auto_reply_sent && (
+        <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-700">Customer reply sent</span>
+      )}
+      {failed && (
+        <span className="rounded-full bg-red-50 px-2 py-1 text-[10px] font-bold text-red-700">Email failed</span>
+      )}
+    </div>
+  );
 }
 
 const STATUS_COLORS: Record<string, string> = {
@@ -181,6 +210,7 @@ export default function QuotesPage() {
                       <p className="font-semibold text-[#0F172A] text-sm">{item.name}</p>
                       {item.company && <p className="text-gray-400 text-xs">{item.company}</p>}
                       <p className="text-gray-400 text-xs">{item.email}</p>
+                      {item.country && <p className="mt-1 text-[11px] font-semibold text-gray-500">{item.country}</p>}
                       {item.phone && (
                         <div className="mt-2 flex flex-wrap gap-2">
                           <a
@@ -188,7 +218,7 @@ export default function QuotesPage() {
                             className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-[11px] font-semibold text-gray-600 hover:bg-gray-200"
                           >
                             <Phone size={12} />
-                            {item.phone}
+                            {formatPhone(item.full_phone_e164 || item.phone) || item.phone}
                           </a>
                           <a
                             href={`https://wa.me/${phoneDigits(item.whatsapp_number_e164 || item.full_phone_e164 || item.phone)}`}
@@ -198,6 +228,13 @@ export default function QuotesPage() {
                           >
                             <MessageCircle size={12} />
                             WhatsApp
+                          </a>
+                          <a
+                            href={`mailto:${item.email}`}
+                            className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-1 text-[11px] font-semibold text-sky-700 hover:bg-sky-100"
+                          >
+                            <Mail size={12} />
+                            Email
                           </a>
                         </div>
                       )}
@@ -215,6 +252,7 @@ export default function QuotesPage() {
                           <option key={s} value={s}>{s}</option>
                         ))}
                       </select>
+                      <EmailDeliveryBadges item={item} />
                     </td>
                     <td className="px-6 py-4 text-gray-400 text-xs">{new Date(item.createdAt).toLocaleDateString()}</td>
                     <td className="px-6 py-4">
