@@ -30,10 +30,17 @@ async function updateWithDeliveryToken(table: LeadTable, id: string, delivery: L
   const supabase = createTokenUpdateClient(deliveryToken);
   if (!supabase) return false;
 
-  const { error } = await supabase
-    .from(table)
-    .update(deliveryToStatusUpdate(delivery))
-    .eq("id", id);
+  const functionName = table === "quotes" ? "record_quote_email_delivery" : "record_inquiry_email_delivery";
+  const { error } = await supabase.rpc(functionName, {
+    p_id: id,
+    p_delivery_token: deliveryToken,
+    p_admin_email_sent: delivery.admin.sent,
+    p_admin_email_sent_at: delivery.admin.sentAt ?? null,
+    p_admin_email_error: delivery.admin.error ?? null,
+    p_customer_auto_reply_sent: delivery.customer.sent,
+    p_customer_auto_reply_sent_at: delivery.customer.sentAt ?? null,
+    p_customer_auto_reply_error: delivery.customer.error ?? null,
+  });
 
   if (error) {
     console.error("Lead email token status update failed", { table, id, error: error.message });

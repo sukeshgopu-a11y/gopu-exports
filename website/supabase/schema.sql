@@ -105,6 +105,64 @@ alter table public.quotes
   add column if not exists customer_auto_reply_error text,
   add column if not exists delivery_token text default encode(gen_random_bytes(16), 'hex');
 
+-- Server route handlers use these token-gated functions when no service role key
+-- is configured. The token is generated server-side and is never returned to buyers.
+create or replace function public.record_inquiry_email_delivery(
+  p_id uuid,
+  p_delivery_token text,
+  p_admin_email_sent boolean,
+  p_admin_email_sent_at timestamptz,
+  p_admin_email_error text,
+  p_customer_auto_reply_sent boolean,
+  p_customer_auto_reply_sent_at timestamptz,
+  p_customer_auto_reply_error text
+)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  update public.inquiries
+  set
+    admin_email_sent = p_admin_email_sent,
+    admin_email_sent_at = p_admin_email_sent_at,
+    admin_email_error = p_admin_email_error,
+    customer_auto_reply_sent = p_customer_auto_reply_sent,
+    customer_auto_reply_sent_at = p_customer_auto_reply_sent_at,
+    customer_auto_reply_error = p_customer_auto_reply_error
+  where id = p_id and delivery_token = p_delivery_token;
+end;
+$$;
+
+create or replace function public.record_quote_email_delivery(
+  p_id uuid,
+  p_delivery_token text,
+  p_admin_email_sent boolean,
+  p_admin_email_sent_at timestamptz,
+  p_admin_email_error text,
+  p_customer_auto_reply_sent boolean,
+  p_customer_auto_reply_sent_at timestamptz,
+  p_customer_auto_reply_error text
+)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  update public.quotes
+  set
+    admin_email_sent = p_admin_email_sent,
+    admin_email_sent_at = p_admin_email_sent_at,
+    admin_email_error = p_admin_email_error,
+    customer_auto_reply_sent = p_customer_auto_reply_sent,
+    customer_auto_reply_sent_at = p_customer_auto_reply_sent_at,
+    customer_auto_reply_error = p_customer_auto_reply_error
+  where id = p_id and delivery_token = p_delivery_token;
+end;
+$$;
+
 -- Certifications and compliance logos shown on the public website.
 create table if not exists public.certifications (
   id uuid primary key default gen_random_uuid(),
@@ -234,11 +292,12 @@ alter table public.visitor_events enable row level security;
 grant usage on schema public to anon, authenticated;
 grant select on public.products, public.certifications, public.gallery_images, public.site_settings to anon, authenticated;
 grant insert on public.inquiries, public.quotes to anon, authenticated;
-grant update (admin_email_sent, admin_email_sent_at, admin_email_error, customer_auto_reply_sent, customer_auto_reply_sent_at, customer_auto_reply_error) on public.inquiries, public.quotes to anon, authenticated;
 grant select, insert, update, delete on public.products, public.inquiries, public.quotes, public.certifications, public.gallery_images, public.site_settings to authenticated;
 grant select on public.admin_users to authenticated;
 grant insert on public.visitor_events to anon, authenticated;
 grant select, delete on public.visitor_events to authenticated;
+grant execute on function public.record_inquiry_email_delivery(uuid, text, boolean, timestamptz, text, boolean, timestamptz, text) to anon, authenticated;
+grant execute on function public.record_quote_email_delivery(uuid, text, boolean, timestamptz, text, boolean, timestamptz, text) to anon, authenticated;
 
 drop policy if exists "Public can read active products" on public.products;
 create policy "Public can read active products"
@@ -272,19 +331,6 @@ to authenticated
 using (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'))
 with check (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'));
 
-drop policy if exists "Delivery token can update inquiry email status" on public.inquiries;
-create policy "Delivery token can update inquiry email status"
-on public.inquiries for update
-to anon, authenticated
-using (
-  delivery_token is not null
-  and delivery_token = coalesce((current_setting('request.headers', true)::jsonb ->> 'x-lead-delivery-token'), '')
-)
-with check (
-  delivery_token is not null
-  and delivery_token = coalesce((current_setting('request.headers', true)::jsonb ->> 'x-lead-delivery-token'), '')
-);
-
 drop policy if exists "Anyone can create quotes" on public.quotes;
 create policy "Anyone can create quotes"
 on public.quotes for insert
@@ -301,19 +347,6 @@ on public.quotes for all
 to authenticated
 using (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'))
 with check (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'));
-
-drop policy if exists "Delivery token can update quote email status" on public.quotes;
-create policy "Delivery token can update quote email status"
-on public.quotes for update
-to anon, authenticated
-using (
-  delivery_token is not null
-  and delivery_token = coalesce((current_setting('request.headers', true)::jsonb ->> 'x-lead-delivery-token'), '')
-)
-with check (
-  delivery_token is not null
-  and delivery_token = coalesce((current_setting('request.headers', true)::jsonb ->> 'x-lead-delivery-token'), '')
-);
 
 drop policy if exists "Public can read active certifications" on public.certifications;
 create policy "Public can read active certifications"
