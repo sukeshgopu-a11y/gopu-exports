@@ -1,2 +1,3 @@
-export { POST } from "@/app/api/inquiries/route";
+export const dynamic = "force-dynamic";
 
+export { POST } from "@/app/api/inquiries/route";

@@ -7,6 +7,8 @@ import { buildSourceUrl, buildTimestamp, normalizeLeadPhone, rejectSpam, stringF
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   const supabase = await requireAdminClient();
   if (!supabase) return unauthorized();
