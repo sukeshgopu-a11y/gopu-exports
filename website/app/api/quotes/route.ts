@@ -121,10 +121,13 @@ export async function POST(req: NextRequest) {
     });
 
   if (error && /country_name|country_code|dial_code|local_phone|full_phone_e164|whatsapp_number_e164|admin_email_sent|customer_auto_reply_sent|delivery_token|schema cache/i.test(error.message)) {
-    const fallbackInsert: Record<string, unknown> = { ...baseInsert };
-    delete fallbackInsert.delivery_token;
-    const fallback = await supabase.from("quotes").insert(fallbackInsert);
-    if (fallback.error) return NextResponse.json({ error: fallback.error.message }, { status: 400 });
+    const fallbackWithToken = await supabase.from("quotes").insert(baseInsert);
+    if (fallbackWithToken.error) {
+      const fallbackInsert: Record<string, unknown> = { ...baseInsert };
+      delete fallbackInsert.delivery_token;
+      const fallback = await supabase.from("quotes").insert(fallbackInsert);
+      if (fallback.error) return NextResponse.json({ error: fallback.error.message }, { status: 400 });
+    }
   } else if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
