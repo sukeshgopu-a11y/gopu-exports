@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   MessageSquare,
@@ -36,11 +37,18 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const toast = useToast();
+  const [newInquiries, setNewInquiries] = useState(0);
+
+  useEffect(() => {
+    dashboardFetch<{ stats?: { newCount?: number } }>("/api/dashboard/summary")
+      .then((data) => setNewInquiries(data.stats?.newCount ?? 0))
+      .catch(() => setNewInquiries(0));
+  }, []);
 
   const handleLogout = async () => {
     try {
       await dashboardFetch<{ success: boolean }>("/api/auth/logout", { method: "POST" });
-      router.push("/dashboard/login");
+      router.push("/admin/login");
       router.refresh();
     } catch (error) {
       toast.error(getErrorMessage(error, "Logout failed. Please refresh and try again."));
@@ -78,7 +86,12 @@ export default function Sidebar() {
               }`}
             >
               <Icon size={18} />
-              {name}
+              <span className="flex-1">{name}</span>
+              {name === "Inquiries" && newInquiries > 0 && (
+                <span className="rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-black text-white">
+                  {newInquiries > 99 ? "99+" : newInquiries}
+                </span>
+              )}
             </Link>
           );
         })}
@@ -109,12 +122,17 @@ export default function Sidebar() {
               key={name}
               href={href}
               aria-label={name}
-              className={`flex min-w-[72px] flex-col items-center justify-center rounded-xl px-2 py-2 text-[10px] font-semibold transition ${
+              className={`relative flex min-w-[72px] flex-col items-center justify-center rounded-xl px-2 py-2 text-[10px] font-semibold transition ${
                 active ? "bg-[#E6F4F7] text-[#0E7490]" : "text-slate-500"
               }`}
             >
               <Icon size={18} />
               <span className="mt-1 max-w-full truncate">{name}</span>
+              {name === "Inquiries" && newInquiries > 0 && (
+                <span className="absolute right-1 top-1 rounded-full bg-red-500 px-1.5 text-[9px] font-black text-white">
+                  {newInquiries > 99 ? "99+" : newInquiries}
+                </span>
+              )}
             </Link>
           );
         })}

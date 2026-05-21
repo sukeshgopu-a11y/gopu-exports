@@ -209,11 +209,12 @@ export default function ContactPage() {
       const country = form.country === OTHER ? form.countryOther : form.country;
       const product = form.product === OTHER ? form.productOther : form.product;
       const frequency = form.frequency === OTHER ? form.frequencyOther : form.frequency;
-      const res = await fetch("/api/inquiries", {
+      const res = await fetch("/api/inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
+          source_url: window.location.href,
           country,
           product,
           product_name: product,

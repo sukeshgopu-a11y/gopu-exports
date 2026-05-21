@@ -34,6 +34,7 @@ export default function QuotesPage() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
   const [error, setError] = useState("");
   const toast = useToast();
 
@@ -105,7 +106,7 @@ export default function QuotesPage() {
 
   const filtered = quotes.filter((q) => {
     const haystack = [q.name, q.email, q.company, q.product, q.country].join(" ").toLowerCase();
-    return haystack.includes(search.toLowerCase());
+    return (statusFilter === "All" || q.status === statusFilter) && haystack.includes(search.toLowerCase());
   });
 
   return (
@@ -130,9 +131,20 @@ export default function QuotesPage() {
 
       {error && <div className="mb-5"><InlineError message={error} onRetry={load} /></div>}
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 mb-6 flex items-center gap-3 max-w-sm">
-        <Search size={18} className="text-gray-400 shrink-0" />
-        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search quotes..." className="outline-none w-full text-sm" />
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 flex items-center gap-3 max-w-sm flex-1">
+          <Search size={18} className="text-gray-400 shrink-0" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search quotes..." className="outline-none w-full text-sm" />
+        </div>
+        <select
+          value={statusFilter}
+          onChange={(event) => setStatusFilter(event.target.value)}
+          className="rounded-2xl border border-gray-100 bg-white px-4 py-3 text-sm font-semibold text-gray-600 shadow-sm outline-none"
+        >
+          {["All","New","Pending","Read","Contacted","Replied","Closed"].map((status) => (
+            <option key={status} value={status}>{status === "All" ? "All statuses" : status}</option>
+          ))}
+        </select>
       </div>
 
       <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">

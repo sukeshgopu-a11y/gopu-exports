@@ -7,6 +7,10 @@ export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   if (pathname === "/dashboard/login") {
+    return NextResponse.redirect(new URL("/admin/login", request.url));
+  }
+
+  if (pathname === "/admin/login") {
     return response;
   }
 
@@ -43,7 +47,7 @@ export async function proxy(request: NextRequest) {
     : { data: null };
 
   if (!user || !adminUser) {
-    const url = new URL("/dashboard/login", request.url);
+    const url = new URL("/admin/login", request.url);
     url.searchParams.set("reason", user ? "admin" : "session");
     return NextResponse.redirect(url);
   }
@@ -52,5 +56,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard/:path*", "/admin/login"],
 };

@@ -34,3 +34,18 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Production Environment
+
+Required environment variables:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+RESEND_API_KEY=
+ADMIN_EMAIL=admin@gopuexports.com
+RESEND_FROM_EMAIL=
+```
+
+`RESEND_API_KEY` enables instant admin inquiry notifications and customer auto-replies. `ADMIN_EMAIL` defaults to `admin@gopuexports.com` if not set. `RESEND_FROM_EMAIL` should be a verified Resend sender/domain for production email delivery.

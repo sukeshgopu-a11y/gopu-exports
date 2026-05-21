@@ -1,6 +1,8 @@
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { inquiryToApi, type InquiryRow } from "@/src/lib/supabase/data";
+import { sendLeadEmails } from "@/lib/leadEmail";
+import { buildSourceUrl, buildTimestamp, rejectSpam, stringField, validateEmail, validatePhone } from "@/lib/leadValidation";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -25,7 +27,22 @@ export async function POST(req: NextRequest) {
   const supabase = createPublicClient();
   const body = await req.json();
 
-  const productName = String(body.product_name ?? body.product ?? "").trim();
+  if (rejectSpam(body)) {
+    return NextResponse.json({ success: true }, { status: 201 });
+  }
+
+  const name = stringField(body, "name", "fullName", "full_name");
+  const company = stringField(body, "company", "companyName", "company_name");
+  const email = stringField(body, "email");
+  const phone = stringField(body, "phone", "phoneNumber", "phone_number");
+  const country = stringField(body, "country", "destination", "destination_country");
+  const productName = stringField(body, "product_name", "product", "productInterested");
+  const quantity = stringField(body, "quantity");
+  const incoterm = stringField(body, "incoterm");
+  const sourceUrl = buildSourceUrl(req, body);
+  const timestamp = buildTimestamp();
+  const buyerMessage = stringField(body, "message", "notes");
+
   const required: Record<string, string> = {
     name: "Full name is required",
     company: "Company / organisation name is required",
@@ -38,36 +55,66 @@ export async function POST(req: NextRequest) {
   };
 
   for (const [field, message] of Object.entries(required)) {
-    const value = field === "product_name" ? productName : body[field];
+    const value =
+      field === "product_name" ? productName :
+      field === "name" ? name :
+      field === "company" ? company :
+      field === "email" ? email :
+      field === "phone" ? phone :
+      field === "country" ? country :
+      field === "quantity" ? quantity :
+      stringField(body, field);
     if (!String(value ?? "").trim()) {
       return NextResponse.json({ error: message }, { status: 400 });
     }
   }
 
-  const phone = String(body.phone ?? "").trim();
-  if (!/^\+?\d{7,15}$/.test(phone)) {
+  if (!validateEmail(email)) {
+    return NextResponse.json({ error: "Valid email address is required" }, { status: 400 });
+  }
+
+  if (!validatePhone(phone)) {
     return NextResponse.json(
       { error: "Phone number must contain only numbers. One leading + is allowed." },
       { status: 400 }
     );
   }
 
+  const storedMessage = [
+    buyerMessage,
+    sourceUrl ? `Source URL: ${sourceUrl}` : "",
+    `Timestamp: ${timestamp}`,
+  ].filter(Boolean).join("\n\n");
+
   const { error } = await supabase
     .from("inquiries")
     .insert({
-      name: String(body.name).trim(),
-      company: String(body.company).trim(),
-      email: String(body.email).trim(),
+      name,
+      company,
+      email,
       phone,
-      country: String(body.country).trim(),
+      country,
       product_name: productName,
-      quantity: String(body.quantity).trim(),
-      incoterm: body.incoterm ?? "",
-      message: body.message ?? body.notes ?? "",
+      quantity,
+      incoterm,
+      message: storedMessage,
       product_id: body.product_id ?? null,
       status: "new",
     });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  await sendLeadEmails({
+    kind: "inquiry",
+    name,
+    company,
+    email,
+    phone,
+    country,
+    product: productName,
+    quantity,
+    message: buyerMessage,
+    sourceUrl,
+    timestamp,
+  });
   return NextResponse.json({ success: true }, { status: 201 });
 }
