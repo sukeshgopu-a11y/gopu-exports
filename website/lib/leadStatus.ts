@@ -64,12 +64,20 @@ export async function updateLeadEmailStatus(
       .eq("id", id);
 
     if (error) {
-      console.error("Lead email status update failed", { table, id, error: error.message });
-      await updateWithDeliveryToken(table, id, delivery, deliveryToken);
+      const tokenUpdated = await updateWithDeliveryToken(table, id, delivery, deliveryToken);
+      if (tokenUpdated) {
+        console.info("Lead email status updated with delivery token", { table, id });
+      } else {
+        console.error("Lead email status update failed", { table, id, error: error.message });
+      }
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.error("Lead email status update skipped", { table, id, error: message });
-    await updateWithDeliveryToken(table, id, delivery, deliveryToken);
+    const tokenUpdated = await updateWithDeliveryToken(table, id, delivery, deliveryToken);
+    if (tokenUpdated) {
+      console.info("Lead email status updated with delivery token", { table, id });
+    } else {
+      console.error("Lead email status update skipped", { table, id, error: message });
+    }
   }
 }
