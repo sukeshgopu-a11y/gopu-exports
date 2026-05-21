@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { InternationalPhoneInput, type InternationalPhoneValue } from "@/components/InternationalPhoneInput";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { COMPANY } from "@/lib/company";
 
 const INCOTERMS = ["FOB", "CIF", "CFR", "EXW", "DDP"];
@@ -165,6 +166,9 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? "";
 
   const [form, setForm] = useState(getInitialForm);
 
@@ -198,6 +202,16 @@ export default function ContactPage() {
     });
   }, []);
 
+  const setTurnstile = useCallback((token: string) => {
+    setTurnstileToken(token);
+    setFieldErrors((current) => {
+      if (!current.turnstile) return current;
+      const next = { ...current };
+      delete next.turnstile;
+      return next;
+    });
+  }, []);
+
   const handleSubmit = async (e: { preventDefault(): void }) => {
     e.preventDefault();
     setError("");
@@ -215,6 +229,7 @@ export default function ContactPage() {
     if (!form.quantity.trim()) nextErrors.quantity = "Quantity is required.";
     if (!form.frequency.trim()) nextErrors.frequency = "Shipment frequency is required.";
     if (form.frequency === OTHER && !form.frequencyOther.trim()) nextErrors.frequencyOther = "Please enter the shipment frequency.";
+    if (turnstileSiteKey && !turnstileToken) nextErrors.turnstile = "Please complete the security verification.";
 
     setFieldErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) {
@@ -254,6 +269,7 @@ export default function ContactPage() {
           ]
             .filter(Boolean)
             .join("\n\n"),
+          cf_turnstile_token: turnstileToken,
         }),
       });
       if (res.ok) {
@@ -267,12 +283,18 @@ export default function ContactPage() {
           },
         }));
         setSubmitted(true);
+        setTurnstileToken("");
+        setTurnstileResetKey((key) => key + 1);
       } else {
         const d = await res.json();
         setError(d.error ?? "Something went wrong. Please try again.");
+        setTurnstileToken("");
+        setTurnstileResetKey((key) => key + 1);
       }
     } catch {
       setError("Network error. Please try again.");
+      setTurnstileToken("");
+      setTurnstileResetKey((key) => key + 1);
     } finally {
       setLoading(false);
     }
@@ -409,7 +431,7 @@ export default function ContactPage() {
                   Thank you, {form.name}. Our team will review your requirement and respond with practical next steps.
                 </p>
                 <button
-                  onClick={() => { setSubmitted(false); setForm(EMPTY_FORM); }}
+                  onClick={() => { setSubmitted(false); setForm(EMPTY_FORM); setTurnstileToken(""); setTurnstileResetKey((key) => key + 1); }}
                   className="mt-6 px-6 py-3 rounded-xl bg-[#0E7490] text-white text-sm font-bold hover:bg-[#0A5A70] transition"
                 >
                   Submit Another
@@ -568,6 +590,18 @@ export default function ContactPage() {
                   </div>
                 )}
 
+                {turnstileSiteKey && (
+                  <div>
+                    <TurnstileWidget
+                      key={turnstileResetKey}
+                      siteKey={turnstileSiteKey}
+                      onToken={setTurnstile}
+                      onExpire={() => setTurnstile("")}
+                    />
+                    <FieldError message={fieldErrors.turnstile} />
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   disabled={loading}
@@ -593,7 +627,7 @@ export default function ContactPage() {
                   Urgent requirement? Call <a href={COMPANY.phoneHref} className="font-black underline">{COMPANY.phone}</a>.
                 </div>
                 <button
-                  onClick={() => { setSubmitted(false); setForm(EMPTY_FORM); setFieldErrors({}); }}
+                  onClick={() => { setSubmitted(false); setForm(EMPTY_FORM); setFieldErrors({}); setTurnstileToken(""); setTurnstileResetKey((key) => key + 1); }}
                   className="mt-6 w-full rounded-xl bg-[#0E7490] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#0A5A70]"
                 >
                   Submit Another Enquiry

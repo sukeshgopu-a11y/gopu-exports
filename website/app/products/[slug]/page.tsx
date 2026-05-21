@@ -268,9 +268,9 @@ export default async function ProductDetailsPage({ params }: Props) {
                 <Link href={`/contact?product=${encodeURIComponent(product.title)}`} className="inline-flex items-center gap-2 rounded-xl bg-[#0E7490] px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-white transition hover:bg-[#0A5A70]">
                   Product Enquiry <ArrowRight size={15} />
                 </Link>
-                <Link href={`/contact?product=${encodeURIComponent(product.title)}&catalogue=1`} className="inline-flex items-center gap-2 rounded-xl border border-[#D9E2EC] bg-white px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-[#0F172A] transition hover:border-[#0E7490] hover:text-[#0E7490]">
+                <a href={`/api/products/${product.slug}/specification`} download className="inline-flex items-center gap-2 rounded-xl border border-[#D9E2EC] bg-white px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-[#0F172A] transition hover:border-[#0E7490] hover:text-[#0E7490]">
                   Download Specification <FileText size={15} />
-                </Link>
+                </a>
               </div>
             </div>
 
