@@ -43,11 +43,6 @@ type Props = { params: Promise<{ slug: string }> };
 
 const SITE_URL = "https://gopuexports.com";
 
-function absoluteUrl(value?: string) {
-  if (!value) return `${SITE_URL}/logos/og-image.png`;
-  return value.startsWith("/") ? `${SITE_URL}${value}` : value;
-}
-
 function DetailRow({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
   return (
@@ -174,37 +169,6 @@ export default async function ProductDetailsPage({ params }: Props) {
   const heroMoq = compactMoq(product, commercialMoq);
   const midpoint = Math.ceil(specs.length / 2);
   const productUrl = `${SITE_URL}/products/${product.slug}`;
-  const schemaDescription =
-    product.metaDescription ||
-    product.description ||
-    product.tagline ||
-    `${product.title} export product details for B2B buyers reviewing specifications, packaging, MOQ, and shipment requirements.`;
-
-  const productSchema = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.title,
-    image: absoluteUrl(product.image),
-    description: schemaDescription,
-    brand: { "@type": "Brand", name: "GOPU Exports" },
-    offers: {
-      "@type": "Offer",
-      priceCurrency: "USD",
-      availability: "https://schema.org/InStock",
-      url: productUrl,
-    },
-    category: product.category,
-    additionalProperty: [
-      product.origin ? { "@type": "PropertyValue", name: "Origin", value: product.origin } : null,
-      { "@type": "PropertyValue", name: "MOQ", value: commercialMoq },
-      product.packaging ? { "@type": "PropertyValue", name: "Packaging", value: product.packaging } : null,
-      product.hs ? { "@type": "PropertyValue", name: "HS Code", value: product.hs } : null,
-      product.shelfLife ? { "@type": "PropertyValue", name: "Shelf Life", value: product.shelfLife } : null,
-      product.certifications?.length
-        ? { "@type": "PropertyValue", name: "Certifications", value: product.certifications.join(", ") }
-        : null,
-    ].filter(Boolean),
-  };
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -217,7 +181,6 @@ export default async function ProductDetailsPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
-      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
       <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
       <div className="border-b border-[#E2E8F0] bg-white">

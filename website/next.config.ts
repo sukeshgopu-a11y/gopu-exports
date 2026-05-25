@@ -8,12 +8,17 @@ const nextConfig: NextConfig = {
       {
         source: localePattern,
         destination: "/",
-        permanent: false,
+        permanent: true,
       },
       {
         source: `${localePattern}/:path*`,
         destination: "/:path*",
-        permanent: false,
+        permanent: true,
+      },
+      {
+        source: "/enquiry",
+        destination: "/contact",
+        permanent: true,
       },
     ];
   },
