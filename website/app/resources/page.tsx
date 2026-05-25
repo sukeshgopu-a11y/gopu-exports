@@ -4,7 +4,7 @@ import { ArrowRight, ClipboardCheck, PackageCheck, Ship } from "lucide-react";
 import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
 
 export const metadata: Metadata = {
-  title: "Export Buyer Resources | GOPU Exports",
+  title: "Export Buyer Resources",
   description:
     "Practical export buyer resources for Indian agricultural products, packaging, documentation, logistics, private label, and bulk sourcing.",
   alternates: { canonical: "/resources" },

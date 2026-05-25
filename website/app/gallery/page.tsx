@@ -7,6 +7,7 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Gallery",
+  alternates: { canonical: "/gallery" },
   description:
     "View GOPU Exports' product gallery — premium spices, basmati rice, fresh fruits and vegetables ready for global export.",
 };

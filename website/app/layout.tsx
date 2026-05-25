@@ -26,9 +26,6 @@ export const metadata: Metadata = {
     "agricultural commodity exporter",
   ],
   metadataBase: new URL("https://gopuexports.com"),
-  alternates: {
-    canonical: "/",
-  },
   icons: {
     icon: [
       { url: "/favicon.ico?v=3" },

@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import { ToastProvider } from "@/components/dashboard/ToastProvider";
+
+export const metadata: Metadata = {
+  title: "Admin Dashboard",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
+};
 
 export default function DashboardLayout({
   children,

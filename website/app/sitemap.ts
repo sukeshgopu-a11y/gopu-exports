@@ -7,6 +7,7 @@ import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
 import { PRODUCTS } from "@/lib/products";
 
 const BASE_URL = "https://gopuexports.com";
+const STATIC_LAST_MODIFIED = new Date("2026-05-26T00:00:00.000Z");
 
 type BlogPost = { slug: string; published?: boolean; createdAt?: string };
 
@@ -28,21 +29,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/shipping-policy",
   ].map((path) => ({
     url: `${BASE_URL}${path}`,
-    lastModified: new Date(),
+    lastModified: STATIC_LAST_MODIFIED,
     changeFrequency: path === "" ? "weekly" : "monthly",
     priority: path === "" ? 1 : 0.7,
   }));
 
   const resourceRoutes: MetadataRoute.Sitemap = EXPORT_OPERATION_PAGES.map((page) => ({
     url: `${BASE_URL}/resources/${page.slug}`,
-    lastModified: new Date(),
+    lastModified: STATIC_LAST_MODIFIED,
     changeFrequency: "monthly",
     priority: 0.65,
   }));
 
   const categoryRoutes: MetadataRoute.Sitemap = CATEGORY_LANDING_PAGES.map((page) => ({
     url: `${BASE_URL}/export/${page.slug}`,
-    lastModified: new Date(),
+    lastModified: STATIC_LAST_MODIFIED,
     changeFrequency: "monthly",
     priority: 0.75,
   }));
@@ -62,11 +63,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const productSource = products.length > 0
     ? products
-    : PRODUCTS.map((product) => ({ slug: product.slug, updated_at: new Date().toISOString() }));
+    : PRODUCTS.map((product) => ({ slug: product.slug, updated_at: STATIC_LAST_MODIFIED.toISOString() }));
 
   const productRoutes: MetadataRoute.Sitemap = productSource.map((product) => ({
     url: `${BASE_URL}/products/${product.slug}`,
-    lastModified: product.updated_at ? new Date(product.updated_at) : new Date(),
+    lastModified: product.updated_at ? new Date(product.updated_at) : STATIC_LAST_MODIFIED,
     changeFrequency: "weekly",
     priority: 0.8,
   }));
@@ -88,7 +89,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((post) => post.published)
     .map((post) => ({
       url: `${BASE_URL}/blog/${post.slug}`,
-      lastModified: post.createdAt ? new Date(post.createdAt) : new Date(),
+      lastModified: post.createdAt ? new Date(post.createdAt) : STATIC_LAST_MODIFIED,
       changeFrequency: "monthly",
       priority: 0.6,
     }));

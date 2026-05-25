@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "About Us",
   description:
     "Learn about GOPU Exports, company verification details, founder message, sourcing philosophy, export process, quality control, and documentation support.",
+  alternates: { canonical: "/about" },
 };
 
 const VALUES = [

@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Export Markets",
   description:
     "GOPU Exports supports international buyer enquiries for Indian agricultural commodities with practical product, documentation, and shipment planning.",
+  alternates: { canonical: "/markets" },
 };
 
 const markets = [
