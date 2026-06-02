@@ -44,10 +44,11 @@ canvas {
     linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, 0.08) 42%, transparent 58%);
   background-size: 100% 100%, 100% 100%, 220% 100%;
   animation: hero-ambient-sweep 12s ease-in-out infinite alternate;
+  animation-delay: 4s;
 }
 
 .hero-copy {
-  animation: hero-copy-in 780ms ease-out both;
+  animation: none;
 }
 
 .hero-cta {
@@ -71,6 +72,7 @@ canvas {
 .hero-float-card {
   --hero-card-x: 0px;
   animation: hero-card-float 4.8s ease-in-out infinite, hero-card-glow 3.2s ease-in-out infinite alternate;
+  animation-delay: 4s, 4s;
 }
 
 .hero-float-card-offset {
@@ -79,6 +81,7 @@ canvas {
 
 .hero-motion-beam {
   animation: hero-motion-beam 5.5s ease-in-out infinite;
+  animation-delay: 4s;
   background:
     radial-gradient(circle at 30% 25%, rgba(103, 201, 216, 0.24), transparent 34%),
     linear-gradient(135deg, transparent 10%, rgba(158, 231, 239, 0.16) 45%, transparent 72%);
@@ -88,6 +91,7 @@ canvas {
 
 .hero-process-line::after {
   animation: hero-process-scan 2.2s ease-in-out infinite;
+  animation-delay: 4s;
   background: linear-gradient(180deg, transparent, #fbbf24, #9ee7ef, transparent);
   content: "";
   height: 96px;
@@ -99,14 +103,17 @@ canvas {
 
 .hero-process-dot {
   animation: hero-dot-pulse 1.8s ease-in-out infinite;
+  animation-delay: 4s;
 }
 
 .hero-scroll-cue span span {
   animation: hero-scroll-dot 1.55s ease-in-out infinite;
+  animation-delay: 4s;
 }
 
 .hero-scroll-cue > span {
   animation: hero-scroll-shell 1.8s ease-in-out infinite;
+  animation-delay: 4s;
 }
 
 @keyframes featured-products-scroll {
