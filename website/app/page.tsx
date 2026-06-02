@@ -140,6 +140,7 @@ export default async function HomePage() {
               <div
                 key={item}
                 className={`hero-float-card relative ml-8 rounded-2xl border border-cyan-100/25 bg-[#071624]/70 px-5 py-4 text-white shadow-2xl backdrop-blur-md ${index % 2 === 1 ? "hero-float-card-offset" : ""}`}
+                style={{ animationDelay: `${index * 0.18}s` }}
               >
                 <span className="hero-process-dot absolute -left-[33px] top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border border-[#9EE7EF] bg-[#0E7490] shadow-lg shadow-cyan-300/30" />
                 <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#9EE7EF]">{item}</p>
