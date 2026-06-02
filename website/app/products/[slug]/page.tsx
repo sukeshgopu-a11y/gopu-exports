@@ -1,15 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ArrowRight, CheckCircle2, ClipboardCheck, FileText, PackageCheck, Ship } from "lucide-react";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
-import { getProductBySlug } from "@/lib/products";
+import { getProductBySlug, PRODUCTS } from "@/lib/products";
 import { formatCommercialMoq } from "@/lib/moq";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 300;
 
 type Spec = { label: string; value: string };
 type Product = {
@@ -99,7 +99,7 @@ function SpecTable({ title, rows }: { title: string; rows: Spec[] }) {
   );
 }
 
-async function getProduct(slug: string): Promise<Product | null> {
+const getProduct = cache(async (slug: string): Promise<Product | null> => {
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("products")
@@ -112,9 +112,9 @@ async function getProduct(slug: string): Promise<Product | null> {
     return fallback ? ({ ...fallback, _id: fallback.slug } as Product) : null;
   }
   return productToApi(data) as Product;
-}
+});
 
-async function getRelated(slugs: string[]): Promise<Product[]> {
+const getRelated = cache(async (slugs: string[]): Promise<Product[]> => {
   if (!slugs.length) return [];
   const supabase = createPublicClient();
   const { data, error } = await supabase
@@ -125,6 +125,23 @@ async function getRelated(slugs: string[]): Promise<Product[]> {
     .returns<ProductRow[]>();
   if (error) return [];
   return (data ?? []).map(productToApi) as Product[];
+});
+
+export async function generateStaticParams() {
+  const supabase = createPublicClient();
+  const { data } = await supabase
+    .from("products")
+    .select("slug")
+    .eq("is_active", true)
+    .returns<Array<{ slug: string }>>();
+
+  const slugs = new Set<string>();
+  PRODUCTS.forEach((product) => slugs.add(product.slug));
+  (data ?? []).forEach((product) => {
+    if (product.slug) slugs.add(product.slug);
+  });
+
+  return Array.from(slugs).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -239,7 +256,7 @@ export default async function ProductDetailsPage({ params }: Props) {
 
             <div className="relative min-h-[360px] overflow-hidden bg-[#E6F4F7] lg:min-h-full">
               {product.image ? (
-                <Image src={product.image} alt={`${product.title} product image`} fill priority sizes="(max-width: 1024px) 100vw, 520px" className="object-cover" />
+                <Image src={product.image} alt={`${product.title} product image`} fill preload sizes="(max-width: 1024px) 100vw, 520px" className="object-cover" />
               ) : (
                 <div className="flex h-full min-h-[360px] items-center justify-center text-sm font-semibold text-[#64748B]">
                   Product image will appear after dashboard upload.

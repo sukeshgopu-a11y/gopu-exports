@@ -5,8 +5,7 @@ import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
 import { formatCommercialMoq } from "@/lib/moq";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -84,8 +83,9 @@ export default async function HomePage() {
             src="/images/hero-bg.webp"
             alt="Global Export Logistics"
             fill
-            priority
+            preload
             sizes="100vw"
+            quality={68}
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-[#071624]/80 via-[#08182F]/60 to-[#0E7490]/30" />

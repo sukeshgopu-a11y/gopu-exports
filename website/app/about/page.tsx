@@ -68,8 +68,9 @@ export default function AboutPage() {
             src="/images/hero-bg.webp"
             alt="GOPU Exports Operations"
             fill
-            priority
+            preload
             sizes="100vw"
+            quality={68}
             className="object-cover opacity-20"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-[#071624]/90 to-[#0E7490]/30" />

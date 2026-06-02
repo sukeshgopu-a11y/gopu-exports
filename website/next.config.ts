@@ -62,6 +62,9 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 2678400,
+    qualities: [58, 62, 68, 75],
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "fqepkwnjdlmauskofafd.supabase.co" },

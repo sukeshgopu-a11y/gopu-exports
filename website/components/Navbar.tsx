@@ -32,13 +32,6 @@ function WhatsAppIcon() {
 export default function Navbar() {
   const pathname = usePathname() || "/";
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
@@ -50,7 +43,7 @@ export default function Navbar() {
   const isActive = (href: string) => href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className={`sticky top-0 z-50 border-b border-[#D9E2EC] bg-white/95 backdrop-blur transition ${scrolled ? "shadow-lg shadow-slate-900/8" : ""}`}>
+    <header className="sticky top-0 z-50 border-b border-[#D9E2EC] bg-white/95 shadow-sm backdrop-blur">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-[#0E7490] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white">
         Skip to main content
       </a>

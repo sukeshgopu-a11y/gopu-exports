@@ -77,7 +77,6 @@ export default async function GalleryPage() {
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition duration-500 group-hover:scale-105"
-                    unoptimized
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/60 to-transparent" />
                   <div className="absolute bottom-0 left-0 p-5">
