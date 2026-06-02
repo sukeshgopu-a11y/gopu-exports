@@ -1,13 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
 import { COMPANY } from "@/lib/company";
 
 const LABELS = [
   ...COMPANY.verifiedIdentifiers.map((item) => `${item.label} verified`),
   ...COMPANY.pendingCertifications.map((item) => `${item.label} on request`),
 ];
+
+function ShieldCheckIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z" />
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  );
+}
 
 export default function PublicCertificationBadges({
   variant = "dark",
@@ -28,7 +36,7 @@ export default function PublicCertificationBadges({
             key={label}
             className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold tracking-wide text-slate-300 transition hover:border-amber-400/30 hover:text-amber-300"
           >
-            <ShieldCheck className="h-2.5 w-2.5 text-amber-400" />
+            <ShieldCheckIcon className="h-2.5 w-2.5 text-amber-400" />
             {label}
           </span>
         ))}
@@ -52,7 +60,7 @@ export default function PublicCertificationBadges({
             {label}
           </div>
         ))}
-        <Link href="/certifications" className="text-[12px] font-bold text-[#0E7490] transition hover:text-[#0A5A70]">
+        <Link href="/certifications" prefetch={false} className="text-[12px] font-bold text-[#0E7490] transition hover:text-[#0A5A70]">
           SEE ALL →
         </Link>
       </div>

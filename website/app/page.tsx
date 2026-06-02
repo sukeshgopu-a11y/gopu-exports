@@ -116,12 +116,14 @@ export default async function HomePage() {
             <div className="mt-6 flex flex-col gap-3 min-[420px]:flex-row sm:mt-8 sm:flex-wrap sm:gap-4">
               <Link
                 href="/products"
+                prefetch={false}
                 className="hero-cta rounded-lg bg-[#0E7490] px-6 py-3.5 text-center text-[12px] font-bold tracking-wide text-white shadow-lg transition hover:bg-[#0A5A70] hover:shadow-xl sm:px-8 sm:py-4 sm:text-[13px]"
               >
                 EXPLORE PRODUCTS →
               </Link>
               <Link
                 href="/contact"
+                prefetch={false}
                 className="hero-cta rounded-lg border border-white/25 bg-white/10 px-6 py-3.5 text-center text-[12px] font-bold tracking-wide text-white backdrop-blur-sm transition hover:bg-white/20 sm:px-8 sm:py-4 sm:text-[13px]"
               >
                 GET A QUOTE →
@@ -168,6 +170,7 @@ export default async function HomePage() {
             </div>
             <Link
               href="/products"
+              prefetch={false}
               className="hidden text-sm font-bold text-[#0E7490] transition hover:text-[#0A5A70] sm:block"
             >
               VIEW ALL PRODUCTS →
@@ -186,6 +189,7 @@ export default async function HomePage() {
               <Link
                 key={`${product.slug}-${index}`}
                 href={`/products/${product.slug}`}
+                prefetch={false}
                 className="group w-[270px] flex-none overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:w-[300px]"
               >
                 <div className="relative h-52 overflow-hidden">
@@ -230,6 +234,7 @@ export default async function HomePage() {
           <div className="mt-8 text-center sm:hidden">
             <Link
               href="/products"
+              prefetch={false}
               className="inline-block rounded-lg border border-[#0E7490] px-6 py-3 text-sm font-bold text-[#0E7490]"
             >
               VIEW ALL PRODUCTS →
@@ -276,12 +281,14 @@ export default async function HomePage() {
           <div className="mt-12 flex flex-wrap justify-center gap-4">
             <Link
               href="/certifications"
+              prefetch={false}
               className="rounded-lg border border-white/20 px-7 py-3.5 text-[13px] font-bold tracking-wide text-white transition hover:bg-white/10"
             >
               VIEW CERTIFICATIONS →
             </Link>
             <Link
               href="/about"
+              prefetch={false}
               className="rounded-lg bg-[#0E7490] px-7 py-3.5 text-[13px] font-bold tracking-wide text-white transition hover:bg-[#0A5A70]"
             >
               ABOUT GOPU EXPORTS →
@@ -343,6 +350,7 @@ export default async function HomePage() {
 
                 <Link
                   href="/company-verification"
+                  prefetch={false}
                   className="mt-8 inline-flex items-center gap-2 text-[13px] font-bold text-[#0E7490] transition hover:text-[#0A5A70]"
                 >
                   VIEW COMPANY VERIFICATION →
@@ -385,6 +393,7 @@ export default async function HomePage() {
               <div className="flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
                 <Link
                   href="/contact"
+                  prefetch={false}
                   className="rounded-lg bg-[#0E7490] px-8 py-4 text-center text-[13px] font-bold tracking-wide text-white shadow-lg transition hover:bg-[#0A5A70] hover:shadow-xl"
                 >
                   GET A QUOTE →

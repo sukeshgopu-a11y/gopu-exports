@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Facebook, Instagram, Linkedin, Mail, Phone, ShieldCheck } from "lucide-react";
 import BrandLogo from "./BrandLogo";
 import PublicCertificationBadges from "./PublicCertificationBadges";
 import { COMPANY } from "@/lib/company";
+
+type IconProps = { size?: number; className?: string };
+type IconComponent = (props: IconProps) => React.ReactElement;
 
 const NAVIGATION = [
   ["Home", "/"],
@@ -38,14 +40,54 @@ const POLICY_LINKS = [
 ];
 
 const SOCIAL_LINKS = [
-  { label: "LinkedIn", href: COMPANY.social.linkedin, icon: Linkedin },
-  { label: "Facebook", href: COMPANY.social.facebook, icon: Facebook },
-  { label: "Instagram", href: COMPANY.social.instagram, icon: Instagram },
+  { label: "LinkedIn", href: COMPANY.social.linkedin, icon: LinkedinIcon },
+  { label: "Facebook", href: COMPANY.social.facebook, icon: FacebookIcon },
+  { label: "Instagram", href: COMPANY.social.instagram, icon: InstagramIcon },
 ].filter((item) => Boolean(item.href));
+
+function SvgIcon({ size = 18, className = "", children }: IconProps & { children: React.ReactNode }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      {children}
+    </svg>
+  );
+}
+
+function MailIcon(props: IconProps) {
+  return <SvgIcon {...props}><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-10 6L2 7" /></SvgIcon>;
+}
+
+function PhoneIcon(props: IconProps) {
+  return <SvgIcon {...props}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.32 1.77.59 2.61a2 2 0 0 1-.45 2.11L8 9.69a16 16 0 0 0 6 6l1.25-1.25a2 2 0 0 1 2.11-.45c.84.27 1.72.47 2.61.59A2 2 0 0 1 22 16.92Z" /></SvgIcon>;
+}
+
+function ShieldCheckIcon(props: IconProps) {
+  return <SvgIcon {...props}><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z" /><path d="m9 12 2 2 4-4" /></SvgIcon>;
+}
+
+function FacebookIcon({ size = 18, className = "" }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  );
+}
+
+function InstagramIcon(props: IconProps) {
+  return <SvgIcon {...props}><rect width="20" height="20" x="2" y="2" rx="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37Z" /><path d="M17.5 6.5h.01" /></SvgIcon>;
+}
+
+function LinkedinIcon({ size = 18, className = "" }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5ZM.5 8h4v15h-4V8Zm7.5 0h3.8v2.05h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V23h-4v-7.9c0-1.88-.03-4.3-2.62-4.3-2.63 0-3.03 2.05-3.03 4.17V23h-4V8Z" />
+    </svg>
+  );
+}
 
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link href={href} className="text-[13px] text-slate-400 transition hover:text-amber-300">
+    <Link href={href} prefetch={false} className="text-[13px] text-slate-400 transition hover:text-amber-300">
       {children}
     </Link>
   );
@@ -65,7 +107,7 @@ export default function Footer() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(14,116,144,0.22),transparent_34%),linear-gradient(135deg,#060E18,#0a1628_48%,#060E18)]" aria-hidden="true" />
       <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[1.2fr_0.8fr_0.9fr_1fr]">
         <div>
-          <Link href="/" aria-label="GOPU Exports Home" className="inline-flex">
+          <Link href="/" prefetch={false} aria-label="GOPU Exports Home" className="inline-flex">
             <BrandLogo variant="light" className="h-14 w-auto" />
           </Link>
           <p className="mt-5 text-[13px] leading-6 text-slate-400">
@@ -110,19 +152,19 @@ export default function Footer() {
               <p className="text-xs text-slate-400">{COMPANY.contactTitle}</p>
             </div>
             <a href={`mailto:${COMPANY.email}`} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300 transition hover:border-amber-400/40">
-              <Mail size={17} className="text-amber-300" />
+              <MailIcon size={17} className="text-amber-300" />
               {COMPANY.email}
             </a>
             <a href={COMPANY.phoneHref} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300 transition hover:border-amber-400/40">
-              <Phone size={17} className="text-amber-300" />
+              <PhoneIcon size={17} className="text-amber-300" />
               {COMPANY.phone}
             </a>
-            <Link href="/company-verification" className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300 transition hover:border-amber-400/40">
-              <ShieldCheck size={17} className="text-amber-300" />
+            <Link href="/company-verification" prefetch={false} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300 transition hover:border-amber-400/40">
+              <ShieldCheckIcon size={17} className="text-amber-300" />
               Request verification documents
             </Link>
           </div>
-          <Link href="/contact" className="mt-5 inline-flex w-full justify-center rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 px-5 py-3 text-sm font-bold text-slate-900 transition hover:from-amber-300 hover:to-amber-400">
+          <Link href="/contact" prefetch={false} className="mt-5 inline-flex w-full justify-center rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 px-5 py-3 text-sm font-bold text-slate-900 transition hover:from-amber-300 hover:to-amber-400">
             Send Export Enquiry
           </Link>
           <div className="mt-5">
@@ -131,7 +173,7 @@ export default function Footer() {
             </p>
             {SOCIAL_LINKS.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
-                {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
+                {SOCIAL_LINKS.map(({ label, href, icon: Icon }: { label: string; href: string; icon: IconComponent }) => (
                   <a
                     key={label}
                     href={href}
