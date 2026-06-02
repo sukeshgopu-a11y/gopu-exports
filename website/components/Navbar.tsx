@@ -97,11 +97,11 @@ export default function Navbar() {
       <div className="border-b border-white/10 bg-[#071624]">
         <div className="mx-auto flex max-w-[1450px] flex-col gap-2 px-4 py-2 text-[11px] font-semibold tracking-[0.02em] text-white/85 min-[560px]:flex-row min-[560px]:items-center min-[560px]:justify-between sm:px-6">
           <div className="flex min-w-0 flex-col gap-1 min-[420px]:flex-row min-[420px]:items-center min-[420px]:gap-4">
-            <a href={`mailto:${COMPANY.email}`} className="inline-flex min-w-0 items-center gap-1.5 transition hover:text-[#67C9D8]">
+            <a href={`mailto:${COMPANY.email}`} className="inline-flex min-h-6 min-w-0 items-center gap-1.5 transition hover:text-[#67C9D8]">
               <MailIcon size={13} />
               <span className="truncate">{COMPANY.email}</span>
             </a>
-            <a href={COMPANY.phoneHref} className="inline-flex items-center gap-1.5 transition hover:text-[#67C9D8]">
+            <a href={COMPANY.phoneHref} className="inline-flex min-h-6 items-center gap-1.5 transition hover:text-[#67C9D8]">
               <PhoneIcon size={13} />
               {COMPANY.phone}
             </a>

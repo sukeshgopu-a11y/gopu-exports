@@ -83,9 +83,10 @@ export default async function HomePage() {
             src="/images/hero-bg.webp"
             alt="Global Export Logistics"
             fill
-            preload
+            fetchPriority="high"
+            loading="eager"
             sizes="100vw"
-            quality={68}
+            quality={62}
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-[#071624]/80 via-[#08182F]/60 to-[#0E7490]/30" />
@@ -198,7 +199,7 @@ export default async function HomePage() {
                       src={product.image}
                       alt={product.title}
                       fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                      sizes="(max-width: 640px) 270px, 300px"
                       quality={58}
                       className="object-cover transition duration-500 group-hover:scale-105"
                     />
@@ -218,7 +219,7 @@ export default async function HomePage() {
                     {product.tagline}
                   </p>
                   <div className="mt-4 flex items-center justify-between border-t border-[#F1F5F9] pt-3">
-                    <span className="text-[12px] font-semibold text-[#94A3B8]">
+                    <span className="text-[12px] font-semibold text-[#475569]">
                       MOQ: {formatCommercialMoq(product)}
                     </span>
                     <span className="text-[12px] font-bold text-[#0E7490]">
@@ -311,6 +312,7 @@ export default async function HomePage() {
                     alt="GOPU Exports container logistics and export coordination"
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
+                    quality={62}
                     className="object-cover"
                   />
                 </div>
@@ -371,6 +373,7 @@ export default async function HomePage() {
                 alt="Container Ship"
                 fill
                 sizes="100vw"
+                quality={62}
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-[#071624]/95 via-[#08182F]/85 to-[#0E7490]/60" />
