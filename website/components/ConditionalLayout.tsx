@@ -41,7 +41,7 @@ export default function ConditionalLayout({
   return (
     <>
       {!isDashboard && <Navbar />}
-      <div id="main-content">{children}</div>
+      <div id="main-content" className={isDashboard ? undefined : "min-h-screen"}>{children}</div>
       {!isDashboard && analyticsReady && <AnalyticsTracker />}
       {!isDashboard && <Footer />}
     </>
