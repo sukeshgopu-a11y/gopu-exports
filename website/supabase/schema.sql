@@ -209,6 +209,30 @@ create table if not exists public.site_settings (
   updated_at timestamptz not null default now()
 );
 
+-- Row-based blog CMS storage used by dashboard and public blog pages.
+create table if not exists public.blog_posts (
+  id uuid primary key default gen_random_uuid(),
+  legacy_id text unique,
+  title text not null,
+  slug text not null,
+  excerpt text not null default '',
+  content text not null default '',
+  image_url text not null default '',
+  author text not null default 'GOPU Exports',
+  tags text[] not null default '{}'::text[],
+  meta_title text not null default '',
+  meta_description text not null default '',
+  sections jsonb,
+  faqs jsonb,
+  published boolean not null default false,
+  published_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  deleted_at timestamptz,
+  constraint blog_posts_title_not_empty check (length(trim(title)) > 0),
+  constraint blog_posts_slug_not_empty check (length(trim(slug)) > 0)
+);
+
 -- Privacy-friendly visitor event log for opt-in analytics in the admin dashboard.
 create table if not exists public.visitor_events (
   id uuid primary key default gen_random_uuid(),
@@ -255,6 +279,11 @@ create trigger set_site_settings_updated_at
 before update on public.site_settings
 for each row execute function public.set_updated_at();
 
+drop trigger if exists set_blog_posts_updated_at on public.blog_posts;
+create trigger set_blog_posts_updated_at
+before update on public.blog_posts
+for each row execute function public.set_updated_at();
+
 create index if not exists products_slug_idx on public.products (slug);
 create index if not exists products_category_idx on public.products (category);
 create index if not exists products_active_featured_idx on public.products (is_active, is_featured);
@@ -275,6 +304,9 @@ create index if not exists quotes_delivery_token_idx on public.quotes (delivery_
 create index if not exists certifications_active_order_idx on public.certifications (is_active, sort_order);
 create index if not exists gallery_images_active_order_idx on public.gallery_images (is_active, sort_order, created_at desc);
 create index if not exists site_settings_key_idx on public.site_settings (key);
+create unique index if not exists blog_posts_slug_active_idx on public.blog_posts (slug) where deleted_at is null;
+create index if not exists blog_posts_public_idx on public.blog_posts (published, published_at desc, created_at desc) where deleted_at is null;
+create index if not exists blog_posts_deleted_at_idx on public.blog_posts (deleted_at) where deleted_at is not null;
 create index if not exists visitor_events_created_at_idx on public.visitor_events (created_at desc);
 create index if not exists visitor_events_type_created_at_idx on public.visitor_events (event_type, created_at desc);
 create index if not exists visitor_events_session_idx on public.visitor_events (session_id) where session_id is not null;
@@ -287,12 +319,17 @@ alter table public.certifications enable row level security;
 alter table public.gallery_images enable row level security;
 alter table public.admin_users enable row level security;
 alter table public.site_settings enable row level security;
+alter table public.blog_posts enable row level security;
 alter table public.visitor_events enable row level security;
 
 grant usage on schema public to anon, authenticated;
 grant select on public.products, public.certifications, public.gallery_images, public.site_settings to anon, authenticated;
+grant select on public.blog_posts to anon, authenticated;
 grant insert on public.inquiries, public.quotes to anon, authenticated;
 grant select, insert, update, delete on public.products, public.inquiries, public.quotes, public.certifications, public.gallery_images, public.site_settings to authenticated;
+grant insert, update on public.blog_posts to authenticated;
+grant select, insert, update on public.blog_posts to service_role;
+revoke delete, truncate, references, trigger on public.blog_posts from anon, authenticated, service_role;
 grant select on public.admin_users to authenticated;
 grant insert on public.visitor_events to anon, authenticated;
 grant select, delete on public.visitor_events to authenticated;
@@ -406,6 +443,37 @@ using (
 drop policy if exists "Admins can manage site settings" on public.site_settings;
 create policy "Admins can manage site settings"
 on public.site_settings for all
+to authenticated
+using (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'))
+with check (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'));
+
+drop policy if exists "Public can read published blog posts" on public.blog_posts;
+create policy "Public can read published blog posts"
+on public.blog_posts for select
+to anon, authenticated
+using (deleted_at is null and published = true);
+
+drop policy if exists "Admins can read blog posts" on public.blog_posts;
+create policy "Admins can read blog posts"
+on public.blog_posts for select
+to authenticated
+using (
+  deleted_at is null
+  and exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin')
+);
+
+drop policy if exists "Admins can create blog posts" on public.blog_posts;
+create policy "Admins can create blog posts"
+on public.blog_posts for insert
+to authenticated
+with check (
+  deleted_at is null
+  and exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin')
+);
+
+drop policy if exists "Admins can update blog posts" on public.blog_posts;
+create policy "Admins can update blog posts"
+on public.blog_posts for update
 to authenticated
 using (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'))
 with check (exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin'));

@@ -1,11 +1,11 @@
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import {
+  createBlogPost,
   getDashboardBlogPosts,
   getPublicBlogPosts,
   hasDuplicateSlug,
   normalizeBlogPost,
   revalidateBlogPaths,
-  saveBlogPosts,
 } from "@/lib/blogStore";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -14,10 +14,16 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const blogs =
-      searchParams.get("published") === "true"
-        ? await getPublicBlogPosts()
-        : await getDashboardBlogPosts();
+    const blogs = searchParams.get("published") === "true"
+      ? await getPublicBlogPosts()
+      : await (async () => {
+          const supabase = await requireAdminClient();
+          if (!supabase) return null;
+          return getDashboardBlogPosts(supabase);
+        })();
+
+    if (!blogs) return unauthorized();
+
     const res = NextResponse.json(blogs);
     res.headers.set("Cache-Control", "no-store");
     return res;
@@ -44,19 +50,24 @@ export async function POST(req: NextRequest) {
     const now = new Date().toISOString();
     const blog = normalizeBlogPost({
       ...(body as Record<string, unknown>),
-      _id: crypto.randomUUID(),
       createdAt: now,
       updatedAt: now,
     });
-    const blogs = await getDashboardBlogPosts();
 
-    if (hasDuplicateSlug(blogs, blog.slug)) {
+    console.info("Blog create request", { slug: blog.slug, published: blog.published });
+
+    if (await hasDuplicateSlug(supabase, blog.slug)) {
       return NextResponse.json({ error: "A blog post with this slug already exists." }, { status: 409 });
     }
 
-    await saveBlogPosts(supabase, [blog, ...blogs]);
-    revalidateBlogPaths(blog.slug);
-    return NextResponse.json(blog, { status: 201 });
+    const created = await createBlogPost(supabase, {
+      ...(body as Record<string, unknown>),
+      createdAt: now,
+      updatedAt: now,
+    });
+    console.info("Blog created", { id: created._id, slug: created.slug, published: created.published });
+    revalidateBlogPaths(created.slug);
+    return NextResponse.json(created, { status: 201 });
   } catch (error) {
     console.error("Blog create failed", error);
     return NextResponse.json({ error: "Unable to create blog post." }, { status: 500 });

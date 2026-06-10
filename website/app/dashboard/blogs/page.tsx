@@ -77,9 +77,12 @@ export default function BlogsPage() {
     setLoading(true);
     setError("");
     try {
+      console.info("[dashboard/blogs] loading blog posts");
       const data = await dashboardFetch<Blog[]>("/api/blogs");
+      console.info("[dashboard/blogs] loaded blog posts", { count: Array.isArray(data) ? data.length : 0 });
       setBlogs(Array.isArray(data) ? data : []);
     } catch (err) {
+      console.error("[dashboard/blogs] load failed", err);
       if (!redirectIfAuthError(err)) {
         setError(getErrorMessage(err, "Blog posts could not be loaded."));
       }
@@ -154,24 +157,44 @@ export default function BlogsPage() {
       };
 
       if (editing) {
+        console.info("[dashboard/blogs] updating blog post", {
+          id: editing._id,
+          slug: payload.slug,
+          published: payload.published,
+        });
         const updated = await dashboardFetch<Blog>(`/api/blogs/${editing._id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
+        console.info("[dashboard/blogs] blog post updated", {
+          id: updated._id,
+          slug: updated.slug,
+          published: updated.published,
+        });
         setBlogs((prev) => prev.map((b) => (b._id === editing._id ? updated : b)));
         toast.success(updated.published ? "Blog post updated and visible." : "Blog post updated as draft.");
       } else {
+        console.info("[dashboard/blogs] creating blog post", {
+          slug: payload.slug,
+          published: payload.published,
+        });
         const created = await dashboardFetch<Blog>("/api/blogs", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
+        });
+        console.info("[dashboard/blogs] blog post created", {
+          id: created._id,
+          slug: created.slug,
+          published: created.published,
         });
         setBlogs((prev) => [created, ...prev]);
         toast.success(created.published ? "Blog post published." : "Blog draft created.");
       }
       setShowForm(false);
     } catch (err) {
+      console.error("[dashboard/blogs] save failed", err);
       if (!redirectIfAuthError(err)) {
         toast.error(getErrorMessage(err, "Blog post could not be saved."));
       }
@@ -182,14 +205,25 @@ export default function BlogsPage() {
 
   const togglePublish = async (b: Blog) => {
     try {
+      console.info("[dashboard/blogs] updating publish status", {
+        id: b._id,
+        slug: b.slug,
+        published: !b.published,
+      });
       const updated = await dashboardFetch<Blog>(`/api/blogs/${b._id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ published: !b.published }),
       });
+      console.info("[dashboard/blogs] publish status updated", {
+        id: updated._id,
+        slug: updated.slug,
+        published: updated.published,
+      });
       setBlogs((prev) => prev.map((x) => (x._id === b._id ? updated : x)));
       toast.success(updated.published ? "Blog post published." : "Blog post moved to draft.");
     } catch (err) {
+      console.error("[dashboard/blogs] publish status update failed", err);
       if (!redirectIfAuthError(err)) {
         toast.error(getErrorMessage(err, "Publish status could not be updated."));
       }
@@ -197,14 +231,17 @@ export default function BlogsPage() {
   };
 
   const remove = async (id: string) => {
-    if (!confirm("Delete this blog post?")) return;
+    if (!confirm("Archive this blog post? It will be hidden without being permanently deleted.")) return;
     try {
+      console.info("[dashboard/blogs] archiving blog post", { id });
       await dashboardFetch<{ success: boolean }>(`/api/blogs/${id}`, { method: "DELETE" });
+      console.info("[dashboard/blogs] blog post archived", { id });
       setBlogs((prev) => prev.filter((b) => b._id !== id));
-      toast.success("Blog post deleted.");
+      toast.success("Blog post archived.");
     } catch (err) {
+      console.error("[dashboard/blogs] archive failed", err);
       if (!redirectIfAuthError(err)) {
-        toast.error(getErrorMessage(err, "Blog post could not be deleted."));
+        toast.error(getErrorMessage(err, "Blog post could not be archived."));
       }
     }
   };
