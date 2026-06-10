@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2, FileText, ShieldCheck } from "lucide-react";
 import { COMPANY } from "@/lib/company";
+import { createPublicClient } from "@/src/lib/supabase/public";
+import { createAdminClient } from "@/src/lib/supabase/admin";
+import { certificationToApi, type CertificationRow } from "@/src/lib/supabase/data";
 
 export const revalidate = 60;
 
@@ -12,7 +16,57 @@ export const metadata: Metadata = {
   alternates: { canonical: "/certifications" },
 };
 
-export default function CertificationsPage() {
+type PublicCertification = {
+  id: string;
+  name: string;
+  issuer: string;
+  logo: string;
+  description: string;
+};
+
+function fallbackCertifications(): PublicCertification[] {
+  return COMPANY.pendingCertifications.map((item) => ({
+    id: item.label,
+    name: item.label,
+    issuer: item.value,
+    logo: "",
+    description: item.status,
+  }));
+}
+
+async function getCertifications(): Promise<PublicCertification[]> {
+  try {
+    const supabase = process.env.SUPABASE_SERVICE_ROLE_KEY ? createAdminClient() : createPublicClient();
+    const { data, error } = await supabase
+      .from("certifications")
+      .select("*")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .order("name", { ascending: true })
+      .returns<CertificationRow[]>();
+
+    if (error) return fallbackCertifications();
+
+    const certifications = (data ?? []).map((row) => {
+      const item = certificationToApi(row);
+      return {
+        id: item.id,
+        name: item.name,
+        issuer: item.issuer,
+        logo: item.logo,
+        description: item.description,
+      };
+    });
+
+    return certifications.length > 0 ? certifications : fallbackCertifications();
+  } catch {
+    return fallbackCertifications();
+  }
+}
+
+export default async function CertificationsPage() {
+  const certifications = await getCertifications();
+
   return (
     <main className="bg-[#F5F7FA] text-[#0F172A]">
       <section className="relative overflow-hidden bg-[#071624]">
@@ -64,14 +118,27 @@ export default function CertificationsPage() {
               </div>
             </div>
             <div className="mt-7 grid gap-3">
-              {COMPANY.pendingCertifications.map((item) => (
-                <div key={item.label} className="flex items-center justify-between gap-4 rounded-2xl border border-[#D9E2EC] bg-[#F8FAFC] p-4">
-                  <div>
-                    <p className="text-sm font-black text-[#0F172A]">{item.label}</p>
-                    <p className="mt-1 text-xs text-[#64748B]">{item.status}</p>
+              {certifications.map((item) => (
+                <div key={item.id} className="flex items-center justify-between gap-4 rounded-2xl border border-[#D9E2EC] bg-[#F8FAFC] p-4">
+                  <div className="flex min-w-0 items-center gap-3">
+                    {item.logo ? (
+                      <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-[#D9E2EC] bg-white">
+                        <Image
+                          src={item.logo}
+                          alt={`${item.name} logo`}
+                          fill
+                          sizes="48px"
+                          className="object-contain p-2"
+                        />
+                      </div>
+                    ) : null}
+                    <div className="min-w-0">
+                      <p className="text-sm font-black text-[#0F172A]">{item.name}</p>
+                      <p className="mt-1 text-xs leading-5 text-[#64748B]">{item.description}</p>
+                    </div>
                   </div>
                   <span className="rounded-full bg-[#E6F4F7] px-3 py-1.5 text-[11px] font-bold text-[#0E7490]">
-                    {item.value}
+                    {item.issuer || "Available"}
                   </span>
                 </div>
               ))}
