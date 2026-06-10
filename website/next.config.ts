@@ -6,6 +6,12 @@ const nextConfig: NextConfig = {
     const localePattern = "/:locale(ar|zh|es|fr|de|pt|ru|ja|ko|hi|te|tr|it|vi|th|id)";
     return [
       {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.gopuexports.com" }],
+        destination: "https://gopuexports.com/:path*",
+        permanent: true,
+      },
+      {
         source: localePattern,
         destination: "/",
         permanent: true,

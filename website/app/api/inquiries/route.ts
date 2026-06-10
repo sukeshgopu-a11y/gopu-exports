@@ -1,5 +1,6 @@
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
+import { createAdminClient } from "@/src/lib/supabase/admin";
 import { inquiryToApi, type InquiryRow } from "@/src/lib/supabase/data";
 import { getLeadEmailConfigurationError, sendLeadEmails } from "@/lib/leadEmail";
 import { updateLeadEmailStatus } from "@/lib/leadStatus";
@@ -8,6 +9,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 
 export const dynamic = "force-dynamic";
+
+function getLeadWriteClient() {
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY) return createAdminClient();
+  return createPublicClient();
+}
 
 export async function GET(req: NextRequest) {
   const supabase = await requireAdminClient();
@@ -28,7 +34,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const supabase = createPublicClient();
+  const supabase = getLeadWriteClient();
   const prepared = await prepareLeadRequest(req);
   if (!prepared.ok) {
     return NextResponse.json({ error: prepared.error }, { status: prepared.status });

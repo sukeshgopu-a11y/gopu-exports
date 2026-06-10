@@ -1,14 +1,49 @@
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
+import { createAdminClient } from "@/src/lib/supabase/admin";
 import { productBodyToRow, productToApi, type ProductRow } from "@/src/lib/supabase/data";
+import { PRODUCTS } from "@/lib/products";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
+function getServerReadClient() {
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY) return createAdminClient();
+  return createPublicClient();
+}
+
+function staticProducts(searchParams: URLSearchParams) {
+  let products = PRODUCTS.map((product) => ({
+    ...product,
+    _id: product.slug,
+    id: product.slug,
+    name: product.title,
+    active: true,
+    is_active: true,
+    is_featured: Boolean(product.featured),
+    featured: Boolean(product.featured),
+    image_url: product.image,
+    createdAt: "",
+    updatedAt: "",
+  }));
+
+  if (searchParams.get("featured") === "true") {
+    products = products.filter((product) => product.featured);
+  }
+  if (searchParams.get("category")) {
+    products = products.filter((product) => product.category === searchParams.get("category"));
+  }
+
+  const limit = Math.min(Number(searchParams.get("limit") ?? 250), 250);
+  const offset = Math.max(Number(searchParams.get("offset") ?? 0), 0);
+  return products.slice(offset, offset + limit);
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const supabase = (await requireAdminClient()) ?? createPublicClient();
+  const adminClient = await requireAdminClient();
+  const supabase = adminClient ?? getServerReadClient();
 
   let query = supabase
     .from("products")
@@ -16,7 +51,7 @@ export async function GET(req: NextRequest) {
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 
-  if (searchParams.get("active") === "true") query = query.eq("is_active", true);
+  if (!adminClient || searchParams.get("active") === "true") query = query.eq("is_active", true);
   if (searchParams.get("featured") === "true") query = query.eq("is_featured", true);
   if (searchParams.get("category")) query = query.eq("category", searchParams.get("category"));
   const limit = Math.min(Number(searchParams.get("limit") ?? 250), 250);
@@ -24,7 +59,10 @@ export async function GET(req: NextRequest) {
   query = query.range(offset, offset + limit - 1);
 
   const { data, error } = await query.returns<ProductRow[]>();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    if (adminClient) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(staticProducts(searchParams));
+  }
 
   const res = NextResponse.json((data ?? []).map(productToApi));
   res.headers.set("Cache-Control", "no-store");

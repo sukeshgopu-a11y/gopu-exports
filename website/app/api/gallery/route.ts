@@ -1,5 +1,6 @@
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
+import { createAdminClient } from "@/src/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -17,8 +18,14 @@ export type GalleryImage = {
   created_at: string;
 };
 
+function getServerReadClient() {
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY) return createAdminClient();
+  return createPublicClient();
+}
+
 export async function GET(req: NextRequest) {
-  const supabase = (await requireAdminClient()) ?? createPublicClient();
+  const adminClient = await requireAdminClient();
+  const supabase = adminClient ?? getServerReadClient();
   const { searchParams } = new URL(req.url);
 
   let query = supabase
@@ -27,11 +34,14 @@ export async function GET(req: NextRequest) {
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 
-  if (searchParams.get("active") === "true") query = query.eq("is_active", true);
+  if (!adminClient || searchParams.get("active") === "true") query = query.eq("is_active", true);
   if (searchParams.get("limit")) query = query.limit(Math.min(Number(searchParams.get("limit")), 250));
 
   const { data, error } = await query.returns<GalleryImage[]>();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    if (adminClient) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json([]);
+  }
   const res = NextResponse.json(data ?? []);
   res.headers.set("Cache-Control", "no-store");
   return res;
