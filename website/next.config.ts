@@ -20,6 +20,31 @@ const nextConfig: NextConfig = {
         destination: "/contact",
         permanent: true,
       },
+      {
+        source: "/export-markets",
+        destination: "/markets",
+        permanent: true,
+      },
+      {
+        source: "/quality-certifications",
+        destination: "/certifications",
+        permanent: true,
+      },
+      {
+        source: "/blogs",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
+        source: "/request-quote",
+        destination: "/contact",
+        permanent: true,
+      },
+      {
+        source: "/quote",
+        destination: "/contact",
+        permanent: true,
+      },
     ];
   },
   async headers() {

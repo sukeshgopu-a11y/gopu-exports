@@ -7,7 +7,7 @@ import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
 import { PRODUCTS } from "@/lib/products";
 
 const BASE_URL = "https://gopuexports.com";
-const STATIC_LAST_MODIFIED = new Date("2026-05-26T00:00:00.000Z");
+const STATIC_LAST_MODIFIED = new Date("2026-06-10T00:00:00.000Z");
 
 type BlogPost = { slug: string; published?: boolean; createdAt?: string };
 
