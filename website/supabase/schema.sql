@@ -401,7 +401,6 @@ create policy "Public can read published site settings"
 on public.site_settings for select
 using (
   key in ('blogs', 'categories', 'contact', 'company', 'social', 'founder')
-  or exists (select 1 from public.admin_users where id = (select auth.uid()) and role = 'admin')
 );
 
 drop policy if exists "Admins can manage site settings" on public.site_settings;

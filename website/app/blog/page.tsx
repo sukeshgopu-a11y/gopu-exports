@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { createPublicClient } from "@/src/lib/supabase/public";
-import { DEFAULT_BLOGS } from "@/lib/blogs";
+import {
+  DEFAULT_BLOG_IMAGE,
+  getPublicBlogPosts,
+} from "@/lib/blogStore";
 
-export const revalidate = 60;
+export const revalidate = 30;
 
 export const metadata: Metadata = {
   title: "Export Insights",
@@ -13,36 +15,17 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
 };
 
-type BlogPost = {
-  _id: string;
-  title: string;
-  slug: string;
-  excerpt?: string;
-  image?: string;
-  author?: string;
-  published?: boolean;
-  createdAt: string;
-};
-
 async function getPosts() {
-  const supabase = createPublicClient();
-  const { data } = await supabase
-    .from("site_settings")
-    .select("value")
-    .eq("key", "blogs")
-    .maybeSingle();
-
-  const posts = Array.isArray(data?.value) ? (data.value as BlogPost[]) : [];
-  const bySlug = new Map(DEFAULT_BLOGS.map((post) => [post.slug, post as BlogPost]));
-  posts.forEach((post) => bySlug.set(post.slug, post));
-  const source = Array.from(bySlug.values());
-  return source
-    .filter((post) => post.published)
-    .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+  try {
+    return { posts: await getPublicBlogPosts(), error: "" };
+  } catch (error) {
+    console.error("Public blog list failed", error);
+    return { posts: [], error: "Blog posts are temporarily unavailable. Please try again shortly." };
+  }
 }
 
 export default async function BlogPage() {
-  const posts = await getPosts();
+  const { posts, error } = await getPosts();
 
   return (
     <main className="min-h-screen bg-[#F5F7FA] text-[#0F172A]">
@@ -62,7 +45,12 @@ export default async function BlogPage() {
       </section>
 
       <section className="mx-auto max-w-[1450px] px-6 py-14 sm:px-8">
-        {posts.length === 0 ? (
+        {error ? (
+          <div className="rounded-2xl border border-red-200 bg-white p-10 text-center text-red-700">
+            <h2 className="text-[24px] font-black tracking-[-0.03em]">Unable to load blog posts.</h2>
+            <p className="mx-auto mt-3 max-w-lg text-[15px] leading-[1.8]">{error}</p>
+          </div>
+        ) : posts.length === 0 ? (
           <div className="rounded-2xl border border-[#D9E2EC] bg-white p-10 text-center">
             <h2 className="text-[24px] font-black tracking-[-0.03em]">No published posts yet.</h2>
             <p className="mx-auto mt-3 max-w-lg text-[15px] leading-[1.8] text-[#64748B]">
@@ -77,17 +65,15 @@ export default async function BlogPage() {
                 href={`/blog/${post.slug}`}
                 className="group overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
               >
-                {post.image && (
-                  <div className="relative h-56 overflow-hidden">
-                    <Image
-                      src={post.image}
-                      alt={post.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-cover transition duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                )}
+                <div className="relative h-56 overflow-hidden">
+                  <Image
+                    src={post.image || DEFAULT_BLOG_IMAGE}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition duration-500 group-hover:scale-105"
+                  />
+                </div>
                 <div className="p-6">
                   <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#0E7490]">
                     {post.author || "GOPU Exports"}

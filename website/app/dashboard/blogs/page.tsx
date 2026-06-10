@@ -1,7 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, X, Eye, EyeOff, Upload } from "lucide-react";
+import { InlineError } from "@/components/dashboard/LoadingStates";
+import { useToast } from "@/components/dashboard/ToastProvider";
+import { dashboardFetch, getErrorMessage, redirectIfAuthError } from "@/lib/dashboardApi";
 
 type Blog = {
   _id: string;
@@ -67,24 +70,30 @@ export default function BlogsPage() {
   const [editing, setEditing] = useState<Blog | null>(null);
   const [form, setForm] = useState<BlogForm>(EMPTY);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const toast = useToast();
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
+    setError("");
     try {
-      const res = await fetch("/api/blogs");
-      const data = await res.json();
+      const data = await dashboardFetch<Blog[]>("/api/blogs");
       setBlogs(Array.isArray(data) ? data : []);
+    } catch (err) {
+      if (!redirectIfAuthError(err)) {
+        setError(getErrorMessage(err, "Blog posts could not be loaded."));
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const id = window.setTimeout(() => {
       void load();
     }, 0);
     return () => window.clearTimeout(id);
-  }, []);
+  }, [load]);
 
   const openNew = () => {
     setEditing(null);
@@ -114,13 +123,22 @@ export default function BlogsPage() {
       setForm((f) => ({ ...f, [key]: e.target.value }));
 
   const uploadImage = async (file: File) => {
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("bucket", "blogs");
-    const res = await fetch("/api/upload", { method: "POST", body: fd });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error ?? "Upload failed");
-    setForm((f) => ({ ...f, image: data.url }));
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("bucket", "blogs");
+      const data = await dashboardFetch<{ url: string }>("/api/upload", {
+        method: "POST",
+        body: fd,
+        timeoutMs: 30000,
+      });
+      setForm((f) => ({ ...f, image: data.url }));
+      toast.success("Featured image uploaded.");
+    } catch (err) {
+      if (!redirectIfAuthError(err)) {
+        toast.error(getErrorMessage(err, "Featured image upload failed."));
+      }
+    }
   };
 
   const autoSlug = (title: string) =>
@@ -136,42 +154,59 @@ export default function BlogsPage() {
       };
 
       if (editing) {
-        const res = await fetch(`/api/blogs/${editing._id}`, {
+        const updated = await dashboardFetch<Blog>(`/api/blogs/${editing._id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-        const updated = await res.json();
         setBlogs((prev) => prev.map((b) => (b._id === editing._id ? updated : b)));
+        toast.success(updated.published ? "Blog post updated and visible." : "Blog post updated as draft.");
       } else {
-        const res = await fetch("/api/blogs", {
+        const created = await dashboardFetch<Blog>("/api/blogs", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-        const created = await res.json();
         setBlogs((prev) => [created, ...prev]);
+        toast.success(created.published ? "Blog post published." : "Blog draft created.");
       }
       setShowForm(false);
+    } catch (err) {
+      if (!redirectIfAuthError(err)) {
+        toast.error(getErrorMessage(err, "Blog post could not be saved."));
+      }
     } finally {
       setSaving(false);
     }
   };
 
   const togglePublish = async (b: Blog) => {
-    const res = await fetch(`/api/blogs/${b._id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ published: !b.published }),
-    });
-    const updated = await res.json();
-    setBlogs((prev) => prev.map((x) => (x._id === b._id ? updated : x)));
+    try {
+      const updated = await dashboardFetch<Blog>(`/api/blogs/${b._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ published: !b.published }),
+      });
+      setBlogs((prev) => prev.map((x) => (x._id === b._id ? updated : x)));
+      toast.success(updated.published ? "Blog post published." : "Blog post moved to draft.");
+    } catch (err) {
+      if (!redirectIfAuthError(err)) {
+        toast.error(getErrorMessage(err, "Publish status could not be updated."));
+      }
+    }
   };
 
   const remove = async (id: string) => {
     if (!confirm("Delete this blog post?")) return;
-    await fetch(`/api/blogs/${id}`, { method: "DELETE" });
-    setBlogs((prev) => prev.filter((b) => b._id !== id));
+    try {
+      await dashboardFetch<{ success: boolean }>(`/api/blogs/${id}`, { method: "DELETE" });
+      setBlogs((prev) => prev.filter((b) => b._id !== id));
+      toast.success("Blog post deleted.");
+    } catch (err) {
+      if (!redirectIfAuthError(err)) {
+        toast.error(getErrorMessage(err, "Blog post could not be deleted."));
+      }
+    }
   };
 
   return (
@@ -191,6 +226,8 @@ export default function BlogsPage() {
           New Post
         </button>
       </div>
+
+      {error && <div className="mb-5"><InlineError message={error} onRetry={load} /></div>}
 
       <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
         {loading ? (

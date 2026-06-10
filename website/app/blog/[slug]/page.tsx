@@ -2,49 +2,29 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { createPublicClient } from "@/src/lib/supabase/public";
-import { DEFAULT_BLOGS, type BlogFaq, type BlogSection } from "@/lib/blogs";
+import {
+  DEFAULT_BLOG_IMAGE,
+  getPublicBlogPostBySlug,
+} from "@/lib/blogStore";
 
-export const revalidate = 60;
-
-type BlogPost = {
-  _id: string;
-  title: string;
-  slug: string;
-  excerpt?: string;
-  content?: string;
-  image?: string;
-  author?: string;
-  tags?: string[];
-  sections?: BlogSection[];
-  faqs?: BlogFaq[];
-  published?: boolean;
-  metaTitle?: string;
-  metaDescription?: string;
-  createdAt: string;
-};
+export const revalidate = 30;
 
 type Props = { params: Promise<{ slug: string }> };
 
 async function getPost(slug: string) {
-  const supabase = createPublicClient();
-  const { data } = await supabase
-    .from("site_settings")
-    .select("value")
-    .eq("key", "blogs")
-    .maybeSingle();
-
-  const posts = Array.isArray(data?.value) ? (data.value as BlogPost[]) : [];
-  const bySlug = new Map(DEFAULT_BLOGS.map((post) => [post.slug, post as BlogPost]));
-  posts.forEach((post) => bySlug.set(post.slug, post));
-  const source = Array.from(bySlug.values());
-  return source.find((post) => post.slug === slug && post.published) ?? null;
+  try {
+    return { post: await getPublicBlogPostBySlug(slug), error: "" };
+  } catch (error) {
+    console.error("Public blog detail failed", error);
+    return { post: null, error: "This article is temporarily unavailable. Please try again shortly." };
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPost(slug);
-  if (!post) return { title: "Post Not Found" };
+  const { post, error } = await getPost(slug);
+  if (error) return { title: "Article Unavailable" };
+  if (!post) notFound();
 
   return {
     title: post.metaTitle || post.title,
@@ -54,14 +34,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.excerpt || "GOPU Exports article.",
-      images: post.image ? [{ url: post.image }] : undefined,
+      images: [{ url: post.image || DEFAULT_BLOG_IMAGE }],
     },
   };
 }
 
+function BlogErrorState({ message }: { message: string }) {
+  return (
+    <main className="min-h-screen bg-[#F5F7FA] px-6 py-16 text-[#0F172A] sm:px-8">
+      <div className="mx-auto max-w-3xl rounded-2xl border border-red-200 bg-white p-8 text-center text-red-700">
+        <h1 className="text-[28px] font-black tracking-[-0.03em]">Unable to load this article.</h1>
+        <p className="mt-3 text-[15px] leading-7">{message}</p>
+        <Link href="/blog" className="mt-6 inline-flex rounded-lg bg-[#0E7490] px-5 py-3 text-[13px] font-bold text-white">
+          Back to Blog
+        </Link>
+      </div>
+    </main>
+  );
+}
+
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const { post, error } = await getPost(slug);
+  if (error) return <BlogErrorState message={error} />;
   if (!post) notFound();
 
   const paragraphs = (post.content || post.excerpt || "")
@@ -82,7 +77,9 @@ export default async function BlogPostPage({ params }: Props) {
             description: post.metaDescription || post.excerpt,
             author: { "@type": "Organization", name: post.author || "GOPU Exports" },
             publisher: { "@type": "Organization", name: "GOPU Exports" },
+            image: post.image || DEFAULT_BLOG_IMAGE,
             datePublished: post.createdAt,
+            dateModified: post.updatedAt || post.createdAt,
             mainEntityOfPage: `https://gopuexports.com/blog/${post.slug}`,
             mainEntity: post.faqs?.length
               ? post.faqs.map((faq) => ({
@@ -105,11 +102,9 @@ export default async function BlogPostPage({ params }: Props) {
           {post.title}
         </h1>
         {post.excerpt && <p className="mt-5 text-[18px] leading-8 text-[#64748B]">{post.excerpt}</p>}
-        {post.image && (
-          <div className="relative mt-10 h-[420px] overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white">
-            <Image src={post.image} alt={post.title} fill sizes="100vw" className="object-cover" />
-          </div>
-        )}
+        <div className="relative mt-10 h-[420px] overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white">
+          <Image src={post.image || DEFAULT_BLOG_IMAGE} alt={post.title} fill sizes="100vw" className="object-cover" />
+        </div>
         {post.sections && post.sections.length > 0 && (
           <nav className="mt-8 rounded-2xl border border-[#D9E2EC] bg-white p-6">
             <p className="text-[12px] font-black uppercase tracking-[0.2em] text-[#0E7490]">Table of Contents</p>

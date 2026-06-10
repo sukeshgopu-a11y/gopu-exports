@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import type { ProductRow } from "@/src/lib/supabase/data";
-import { DEFAULT_BLOGS } from "@/lib/blogs";
+import { getPublicBlogPosts } from "@/lib/blogStore";
 import { CATEGORY_LANDING_PAGES } from "@/lib/categoryLandingPages";
 import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
 import { PRODUCTS } from "@/lib/products";
@@ -9,7 +9,7 @@ import { PRODUCTS } from "@/lib/products";
 const BASE_URL = "https://gopuexports.com";
 const STATIC_LAST_MODIFIED = new Date("2026-06-10T00:00:00.000Z");
 
-type BlogPost = { slug: string; published?: boolean; createdAt?: string };
+export const revalidate = 30;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -72,21 +72,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  let settings: { value: unknown } | null = null;
+  let posts: Awaited<ReturnType<typeof getPublicBlogPosts>> = [];
   try {
-    const { data } = await supabase
-      .from("site_settings")
-      .select("value")
-      .eq("key", "blogs")
-      .maybeSingle();
-    settings = data;
+    posts = await getPublicBlogPosts();
   } catch {
-    settings = null;
+    posts = [];
   }
-  const savedPosts = Array.isArray(settings?.value) ? (settings.value as BlogPost[]) : [];
-  const posts = savedPosts.length > 0 ? savedPosts : DEFAULT_BLOGS;
   const blogRoutes: MetadataRoute.Sitemap = posts
-    .filter((post) => post.published)
     .map((post) => ({
       url: `${BASE_URL}/blog/${post.slug}`,
       lastModified: post.createdAt ? new Date(post.createdAt) : STATIC_LAST_MODIFIED,
