@@ -60,6 +60,9 @@ function compactMoq(product: Product, commercialMoq: string) {
   return product.moq || commercialMoq;
 }
 
+const SPECIFICATION_DISCLAIMER =
+  "Final specifications are confirmed against the buyer-approved specification and commercial agreement before order confirmation.";
+
 function BuyerStep({ icon: Icon, title, text }: { icon: typeof ClipboardCheck; title: string; text: string }) {
   return (
     <div className="rounded-2xl border border-[#D9E2EC] bg-white p-5 shadow-sm">
@@ -274,7 +277,7 @@ export default async function ProductDetailsPage({ params }: Props) {
             <BuyerStep icon={ClipboardCheck} title="Specification Review" text="Share grade, form, packing, quantity, and destination for a practical export review." />
             <BuyerStep icon={PackageCheck} title="Packing Options" text="Discuss PP bags, jute bags, cartons, retail packs, or private-label formats where suitable." />
             <BuyerStep icon={Ship} title="Shipment Planning" text="Plan LCL or FCL availability around product category, route, and buyer timeline." />
-            <BuyerStep icon={FileText} title="Documentation Support" text="Available certificate copies and product documents can be shared with verified buyers." />
+            <BuyerStep icon={FileText} title="Documentation Support" text="Documentation availability depends on the product, destination, buyer requirements and issuing authorities." />
           </div>
 
           <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[0.9fr_1.1fr] lg:p-10">
@@ -320,6 +323,9 @@ export default async function ProductDetailsPage({ params }: Props) {
                   </ul>
                 </div>
               )}
+              <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-[13px] font-semibold leading-6 text-amber-900">
+                {SPECIFICATION_DISCLAIMER}
+              </p>
             </div>
           </div>
 
@@ -344,7 +350,7 @@ export default async function ProductDetailsPage({ params }: Props) {
                 <p><strong className="text-[#0F172A]">MOQ:</strong> {commercialMoq}</p>
                 {product.containerCapacity && <p><strong className="text-[#0F172A]">Container loading capacity:</strong> {product.containerCapacity}</p>}
                 {product.shelfLife && <p><strong className="text-[#0F172A]">Shelf life:</strong> {product.shelfLife} under suitable storage conditions.</p>}
-                <p><strong className="text-[#0F172A]">Documentation:</strong> Product specifications, packing details, and available verification documents can be shared during buyer discussions.</p>
+                <p><strong className="text-[#0F172A]">Documentation:</strong> Documentation availability depends on the product, destination, buyer requirements and issuing authorities.</p>
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link href={`/contact?product=${encodeURIComponent(product.title)}`} className="rounded-xl bg-[#0E7490] px-6 py-3 text-[13px] font-bold text-white transition hover:bg-[#0A5A70]">

@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
   const timestamp = buildTimestamp();
   const buyerMessage = stringField(body, "message", "notes");
   const leadId = randomUUID();
+  const reference = `GE-RFQ-${leadId.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
   const deliveryToken = randomUUID();
 
   const required: Record<string, string> = {
@@ -98,6 +99,7 @@ export async function POST(req: NextRequest) {
   }
 
   const storedMessage = [
+    `Reference: ${reference}`,
     buyerMessage,
     sourceUrl ? `Source URL: ${sourceUrl}` : "",
     `Timestamp: ${timestamp}`,
@@ -166,10 +168,11 @@ export async function POST(req: NextRequest) {
     product: productName,
     quantity,
     message: buyerMessage,
+    reference,
     sourceUrl,
     timestamp,
   });
   await updateLeadEmailStatus("inquiries", leadId, delivery, deliveryToken);
 
-  return NextResponse.json({ success: true }, { status: 201 });
+  return NextResponse.json({ success: true, reference }, { status: 201 });
 }

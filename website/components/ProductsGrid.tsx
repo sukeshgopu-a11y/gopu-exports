@@ -153,7 +153,7 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
       </div>
 
       <div className="mt-5 flex items-center justify-between text-sm text-[#64748B]">
-        <span><strong className="text-[#0F172A]">{filtered.length}</strong> active products</span>
+        <span><strong className="text-[#0F172A]">{filtered.length}</strong> export products</span>
         {(query || active !== "All" || featuredOnly) && (
           <button type="button" onClick={() => { setQuery(""); setActive("All"); setFeaturedOnly(false); }} className="font-bold text-[#0E7490]">
             Clear filters

@@ -60,12 +60,12 @@ export default async function CertificationsPage() {
               <FileText className="h-7 w-7 text-[#0E7490]" />
               <div>
                 <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#0E7490]">Trade & Product Documents</p>
-                <h2 className="mt-1 text-3xl font-black tracking-[-0.04em]">Published certifications</h2>
+                <h2 className="mt-1 text-3xl font-black tracking-[-0.04em]">Documentation availability</h2>
               </div>
             </div>
             <div className="mt-7 grid gap-3">
               <div className="rounded-2xl border border-[#D9E2EC] bg-[#F8FAFC] p-5 text-sm leading-7 text-[#64748B]">
-                No additional trade certification cards are published on the website at this time. Buyers can request available supporting documents during procurement discussions.
+                Relevant registrations and compliance documentation are available for buyer review. Product-specific documentation availability depends on the product, destination, buyer requirements and issuing authorities.
               </div>
             </div>
           </div>
@@ -79,11 +79,11 @@ export default async function CertificationsPage() {
                 <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#67C9D8]">Buyer Note</p>
               </div>
               <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
-                Document copies and additional license details can be shared with verified buyers during procurement discussions. NABL lab testing and SGS inspections can be coordinated on request where required by product, destination, or buyer specification. For buyer verification and export enquiries, contact {COMPANY.contactPerson}.
+                Relevant registrations and documentation are available for buyer review. NABL lab testing and SGS inspections can be coordinated on request where required by product, destination, or buyer specification. For buyer verification and export enquiries, contact {COMPANY.contactPerson}.
               </p>
             </div>
             <Link href="/contact?verification=true" className="shrink-0 rounded-xl bg-white px-5 py-3 text-sm font-black text-[#071624] transition hover:bg-[#F0F9FA]">
-              Request Documents
+              Request Documentation
             </Link>
           </div>
         </div>

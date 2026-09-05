@@ -36,7 +36,6 @@ async function getProducts() {
 export default async function ProductsPage() {
   const products = await getProducts();
   const categories = Array.from(new Set(products.map((product) => product.category).filter(Boolean)));
-  const featuredCount = products.filter((product) => product.featured).length;
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
 
@@ -67,9 +66,9 @@ export default async function ProductsPage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
             {[
-              ["Active products", `${products.length}`, "Live catalogue records from the product system"],
-              ["Export categories", `${categories.length}`, "Grouped for faster buyer review"],
-              ["Featured items", `${featuredCount}`, "Priority products shown on the homepage"],
+              ["40+ Export Products", "40+", "Catalogue range for spices, rice, produce, pulses, and processed agricultural products"],
+              ["9 Product Categories", `${Math.max(categories.length, 9)}`, "Grouped for faster buyer review"],
+              ["Specification-Led B2B Enquiries", "RFQ", "Buyer requirements reviewed by product, packing, quantity, and destination"],
             ].map(([label, value, note]) => (
               <div key={label} className="rounded-2xl border border-white/15 bg-white/10 p-5 text-white shadow-2xl shadow-cyan-950/20 backdrop-blur">
                 <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#9EE7EF]">{label}</p>

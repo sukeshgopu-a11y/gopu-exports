@@ -11,8 +11,11 @@ type IconComponent = (props: IconProps) => React.ReactElement;
 
 const MAIN_LINKS = [
   ["Home", "/"],
-  ["About Us", "/about"],
+  ["About", "/about"],
   ["Products", "/products"],
+  ["Export Markets", "/markets"],
+  ["Resources", "/resources"],
+  ["Insights", "/blog"],
   ["Certifications", "/certifications"],
   ["Contact", "/contact"],
 ];

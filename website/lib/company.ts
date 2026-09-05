@@ -6,9 +6,9 @@ export const COMPANY = {
   phoneHref: "tel:+919618991917",
   whatsapp: "https://wa.me/919618991917",
   founderPerson: "Bala Reddy Gopu",
-  founderTitle: "Founder / Business Contact",
-  contactPerson: "Sukesh Reddy",
-  contactTitle: "Operations Manager",
+  founderTitle: "Founder",
+  contactPerson: "Sukesh Reddy Gopu",
+  contactTitle: "Chief Executive Officer (CEO)",
   iec: "AAMCG8793P",
   cin: "U46909TS2026PTC212867",
   gst: "36AAMCG8793P1ZE",
@@ -23,7 +23,7 @@ export const COMPANY = {
   factory: {
     label: "Factory",
     address:
-      "Gopu exports, Kanchanpalle, Telangana 506244, India",
+      "Gopu Exports Factory, Kanchanpally Village, Raghunathpally Mandal, Jangaon District, Telangana - 506244, India",
   },
   australia: {
     entityName: "GOPU GROUP PTY LTD",

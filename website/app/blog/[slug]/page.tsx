@@ -46,7 +46,7 @@ function BlogErrorState({ message }: { message: string }) {
         <h1 className="text-[28px] font-black tracking-[-0.03em]">Unable to load this article.</h1>
         <p className="mt-3 text-[15px] leading-7">{message}</p>
         <Link href="/blog" className="mt-6 inline-flex rounded-lg bg-[#0E7490] px-5 py-3 text-[13px] font-bold text-white">
-          Back to Blog
+          Back to Insights
         </Link>
       </div>
     </main>

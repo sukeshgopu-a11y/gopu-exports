@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Mail, MessageCircle, Phone, Trash2 } from "lucide-react";
 
 type Quote = {
@@ -63,6 +64,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function QuoteDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const router = useRouter();
   const [id, setId] = useState("");
   const [quote, setQuote] = useState<Quote | null>(null);
   const [loading, setLoading] = useState(true);
@@ -93,7 +95,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
   const deleteQuote = async () => {
     if (!quote || !confirm("Delete this quote request?")) return;
     await fetch(`/api/quotes/${quote._id}`, { method: "DELETE" });
-    window.location.href = "/dashboard/quotes";
+    router.push("/dashboard/quotes");
   };
 
   if (loading) {

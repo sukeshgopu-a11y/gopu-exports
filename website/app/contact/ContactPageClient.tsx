@@ -5,7 +5,7 @@ import { InternationalPhoneInput, type InternationalPhoneValue } from "@/compone
 import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { COMPANY } from "@/lib/company";
 
-const INCOTERMS = ["FOB", "CIF", "CFR", "EXW", "DDP"];
+const INCOTERMS = ["EXW", "FOB", "CFR", "CIF", "Other / Discuss"];
 const OTHER = "Others";
 
 const EMPTY_FORM = {
@@ -13,9 +13,9 @@ const EMPTY_FORM = {
   company: "",
   email: "",
   phone: "",
-  phoneCountryName: "India",
-  phoneCountryCode: "IN",
-  phoneDialCode: "+91",
+  phoneCountryName: "",
+  phoneCountryCode: "",
+  phoneDialCode: "",
   localPhone: "",
   whatsappNumber: "",
   country: "",
@@ -117,7 +117,7 @@ function OfficeCard({
   title: string;
   badge?: string;
   badgeColor?: string;
-  lines: string[];
+  lines: React.ReactNode[];
   map: string;
 }) {
   return (
@@ -166,6 +166,7 @@ export default function ContactPageClient() {
   const [selectedInco, setSelectedInco] = useState("FOB");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [reference, setReference] = useState("");
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [turnstileToken, setTurnstileToken] = useState("");
@@ -275,6 +276,8 @@ export default function ContactPageClient() {
         }),
       });
       if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setReference(typeof data.reference === "string" ? data.reference : "");
         window.dispatchEvent(new CustomEvent("gopu:analytics", {
           detail: {
             eventType: "inquiry_submit",
@@ -301,6 +304,10 @@ export default function ContactPageClient() {
       setLoading(false);
     }
   };
+
+  const reviewProduct = form.product === OTHER ? form.productOther : form.product;
+  const reviewCountry = form.country === OTHER ? form.countryOther : form.country;
+  const reviewFrequency = form.frequency === OTHER ? form.frequencyOther : form.frequency;
 
   return (
     <main className="bg-[#F5F7FA] min-h-screen text-[#0F172A]">
@@ -360,7 +367,7 @@ export default function ContactPageClient() {
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3 mb-4">
-                {[["Shipping","Sea / Air"],["Packaging","OEM Ready"],["Tracking","Live Updates"],["Logistics","Worldwide"]].map(([t,v]) => (
+                {[["Requirements","Product review"],["Packaging","Private Label"],["Updates","Order & Shipment Updates"],["Logistics","International Shipment Coordination"]].map(([t,v]) => (
                   <div key={t} className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-4">
                     <div className="text-[9px] uppercase tracking-[0.16em] font-bold text-white/40">{t}</div>
                     <div className="mt-2 text-white text-[15px] font-bold">{v}</div>
@@ -427,13 +434,16 @@ export default function ContactPageClient() {
                   ✓
                 </div>
                 <h3 className="text-[22px] font-black text-[#0F172A]">
-                  Enquiry Received!
+                  RFQ Received
                 </h3>
+                {reference && (
+                  <p className="mt-2 text-sm font-black tracking-[0.12em] text-[#0E7490]">{reference}</p>
+                )}
                 <p className="mt-3 text-[#64748B] text-sm leading-7">
                   Thank you, {form.name}. Our team will review your requirement and respond with practical next steps.
                 </p>
                 <button
-                  onClick={() => { setSubmitted(false); setForm(EMPTY_FORM); setTurnstileToken(""); setTurnstileResetKey((key) => key + 1); }}
+                  onClick={() => { setSubmitted(false); setReference(""); setForm(EMPTY_FORM); setTurnstileToken(""); setTurnstileResetKey((key) => key + 1); }}
                   className="mt-6 px-6 py-3 rounded-xl bg-[#0E7490] text-white text-sm font-bold hover:bg-[#0A5A70] transition"
                 >
                   Submit Another
@@ -445,7 +455,7 @@ export default function ContactPageClient() {
                   Fill all required buyer fields so our team can respond with correct product, packing, destination, and shipment assumptions. For urgent requirements, call <a href={COMPANY.phoneHref} className="font-black underline">{COMPANY.phone}</a>.
                 </div>
 
-                <FormSection title="Buyer Details" note="Who should our export team contact?">
+                <FormSection title="Step 1 - Buyer" note="Who should our export team contact?">
                   <Field label="Full name *">
                     <Input required placeholder="Your name" value={form.name} onChange={set("name")} />
                     <FieldError message={fieldErrors.name} />
@@ -476,7 +486,7 @@ export default function ContactPageClient() {
                   </Field>
                 </FormSection>
 
-                <FormSection title="Destination & Shipment" note="Where is the cargo going and how often will you buy?">
+                <FormSection title="Step 2 - Destination" note="Where is the cargo going and how often will you buy?">
                   <Field label="Destination country *">
                     <Select value={form.country} onChange={set("country") as (e: React.ChangeEvent<HTMLSelectElement>) => void}>
                       <option value="">Select country</option>
@@ -544,7 +554,7 @@ export default function ContactPageClient() {
                   </div>
                 </FormSection>
 
-                <FormSection title="Product Requirement" note="Tell us what you need to source.">
+                <FormSection title="Step 3 - Requirement" note="Tell us what you need to source.">
                   <Field label="Product required *">
                     <Select value={form.product} onChange={set("product") as (e: React.ChangeEvent<HTMLSelectElement>) => void}>
                       <option value="">Select product</option>
@@ -581,6 +591,25 @@ export default function ContactPageClient() {
                       className="w-full rounded-xl border border-[#D9E2EC] bg-[#F8FAFC] px-4 py-3 text-sm outline-none resize-y focus:border-[#0E7490] focus:ring-2 focus:ring-[#0E7490]/10 transition"
                     />
                   </div>
+                </FormSection>
+
+                <FormSection title="Step 4 - Review" note="Confirm the enquiry summary before submission.">
+                  {[
+                    ["Product", reviewProduct || "Not selected"],
+                    ["Quantity", form.quantity || "Not entered"],
+                    ["Destination", reviewCountry || "Not selected"],
+                    ["Port / city", form.port || "Not entered"],
+                    ["Incoterm", selectedInco],
+                    ["Frequency", reviewFrequency || "Not selected"],
+                    ["Buyer", form.name || "Not entered"],
+                    ["Company", form.company || "Not entered"],
+                    ["Phone", form.phone || "Select country code and enter local number"],
+                  ].map(([label, value]) => (
+                    <div key={label} className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-3">
+                      <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#0E7490]">{label}</p>
+                      <p className="mt-1 text-sm font-semibold leading-6 text-[#0F172A]">{value}</p>
+                    </div>
+                  ))}
                 </FormSection>
 
                 {error && (
@@ -621,7 +650,10 @@ export default function ContactPageClient() {
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#E6F4F7] text-2xl text-[#0E7490]">
                   ✓
                 </div>
-                <h3 className="mt-4 text-2xl font-black tracking-[-0.03em] text-[#0F172A]">Enquiry Sent</h3>
+                <h3 className="mt-4 text-2xl font-black tracking-[-0.03em] text-[#0F172A]">RFQ Received</h3>
+                {reference && (
+                  <p className="mt-2 text-sm font-black tracking-[0.12em] text-[#0E7490]">{reference}</p>
+                )}
                 <p className="mt-3 text-sm leading-7 text-[#64748B]">
                   Thank you, {form.name}. Your enquiry has been saved and our team will review it.
                 </p>
@@ -629,7 +661,7 @@ export default function ContactPageClient() {
                   Urgent requirement? Call <a href={COMPANY.phoneHref} className="font-black underline">{COMPANY.phone}</a>.
                 </div>
                 <button
-                  onClick={() => { setSubmitted(false); setForm(EMPTY_FORM); setFieldErrors({}); setTurnstileToken(""); setTurnstileResetKey((key) => key + 1); }}
+                  onClick={() => { setSubmitted(false); setReference(""); setForm(EMPTY_FORM); setFieldErrors({}); setTurnstileToken(""); setTurnstileResetKey((key) => key + 1); }}
                   className="mt-6 w-full rounded-xl bg-[#0E7490] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#0A5A70]"
                 >
                   Submit Another Enquiry
@@ -660,7 +692,12 @@ export default function ContactPageClient() {
               title="Verification Desk"
               badge="Buyer Support"
               badgeColor="bg-[#EFF6FF] text-[#1D4ED8]"
-              lines={[`${COMPANY.contactPerson} — ${COMPANY.contactTitle}`, `For buyer verification and export enquiries, contact ${COMPANY.contactPerson}.`, "Request available verification documents", "Use official email for verification requests"]}
+              lines={[
+                <><strong className="text-[#0F172A]">{COMPANY.contactPerson}</strong> — <strong className="text-[#0F172A]">{COMPANY.contactTitle}</strong></>,
+                `For buyer verification and export enquiries, contact ${COMPANY.contactPerson}.`,
+                "Request available verification documents",
+                "Use official email for verification requests",
+              ]}
             />
             <OfficeCard
               map="https://maps.google.com/?q=NSW+2010,Australia"

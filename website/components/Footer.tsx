@@ -10,8 +10,11 @@ type IconComponent = (props: IconProps) => React.ReactElement;
 
 const NAVIGATION = [
   ["Home", "/"],
-  ["About Us", "/about"],
+  ["About", "/about"],
   ["Products", "/products"],
+  ["Export Markets", "/markets"],
+  ["Resources", "/resources"],
+  ["Insights", "/blog"],
   ["Certifications", "/certifications"],
   ["Contact", "/contact"],
 ];
@@ -24,7 +27,7 @@ const TRUST_LINKS = [
 
 const RESOURCE_LINKS = [
   ["Buyer Resources", "/resources"],
-  ["Blog", "/blog"],
+  ["Insights", "/blog"],
   ["Documentation Support", "/resources/documentation-support"],
   ["Buyer FAQ", "/resources/buyer-faq"],
   ["Export Process", "/resources/export-process"],
@@ -94,8 +97,6 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
 }
 
 export default function Footer() {
-  const year = new Date().getFullYear();
-
   return (
     <footer className="relative overflow-hidden bg-[#060E18] text-slate-300">
       <a href={`${COMPANY.whatsapp}?text=Hi%2C%20I%27m%20interested%20in%20sourcing%20from%20GOPU%20Exports.`} target="_blank" rel="noreferrer" aria-label="Chat with GOPU Exports on WhatsApp" className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl shadow-green-900/30 transition hover:scale-105">
@@ -149,7 +150,7 @@ export default function Footer() {
             <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300">
               <p className="text-xs uppercase tracking-[0.16em] text-amber-300">Responsible contact</p>
               <p className="mt-1 font-bold text-slate-100">{COMPANY.contactPerson}</p>
-              <p className="text-xs text-slate-400">{COMPANY.contactTitle}</p>
+              <p className="text-xs font-bold text-slate-300">{COMPANY.contactTitle}</p>
             </div>
             <a href={`mailto:${COMPANY.email}`} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300 transition hover:border-amber-400/40">
               <MailIcon size={17} className="text-amber-300" />
@@ -193,11 +194,10 @@ export default function Footer() {
 
       <div className="relative border-t border-white/[0.08]">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-5 text-[12px] text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-          <p>© {year} <span className="font-semibold text-slate-300">GOPU Exports</span>.</p>
+          <p>© 2026 <span className="font-semibold text-slate-300">Gopu Exports Private Limited</span>. All rights reserved.</p>
           <div className="flex flex-wrap gap-4">
             {POLICY_LINKS.map(([label, href]) => <FooterLink key={href} href={href}>{label}</FooterLink>)}
           </div>
-          <p className="text-slate-600">Website v1.0 • Production build</p>
         </div>
       </div>
     </footer>

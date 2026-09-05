@@ -46,13 +46,12 @@ function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
 
 const PRESET_CERTS = [
   "APEDA", "Spice Board of India", "FSSAI", "IEC", "GST Registered",
-  "ISO 22000", "HACCP", "ORGANIC INDIA",
+  "HACCP", "ORGANIC INDIA",
 ];
 
 const WEBSITE_CERTS: Omit<Cert, "_id">[] = [
   { name: "APEDA", issuer: "Agricultural & Processed Food Products Export Development Authority", logo: "", description: "Registration for export of agricultural and processed food products from India.", active: true, order: 1 },
   { name: "FSSAI", issuer: "Food Safety and Standards Authority of India", logo: "", description: "Food safety registration for food product handling and supply.", active: true, order: 2 },
-  { name: "ISO 22000", issuer: "Food Safety Management System", logo: "", description: "Food safety management system standard for supply chain processes.", active: true, order: 3 },
   { name: "HACCP", issuer: "Hazard Analysis & Critical Control Points", logo: "", description: "Preventive food safety approach for identifying and controlling hazards.", active: true, order: 4 },
   { name: "IEC", issuer: "Director General of Foreign Trade", logo: "", description: "Import Export Code used for Indian import and export operations.", active: true, order: 5 },
   { name: "Spice Board of India", issuer: "Spice Board of India", logo: "", description: "Registration relevant to spice export compliance and trade.", active: true, order: 6 },

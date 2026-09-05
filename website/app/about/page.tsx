@@ -10,48 +10,39 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about" },
 };
 
-const VALUES = [
-  { icon: "🏅", title: "Quality First", desc: "We keep product quality, grading, and buyer requirements central to every sourcing discussion." },
-  { icon: "🤝", title: "Integrity", desc: "We communicate clearly on pricing, quantity, timelines, and documentation requirements." },
-  { icon: "🌱", title: "Responsible Sourcing", desc: "We work with supplier networks that can support product availability, packaging, and trade requirements." },
-  { icon: "🌍", title: "Trade Readiness", desc: "Our export process is built around buyer destinations, documentation needs, and shipment coordination." },
-  { icon: "⚡", title: "Reliability", desc: "We focus on organised communication, practical timelines, and clear shipment planning." },
-  { icon: "💡", title: "Continuous Improvement", desc: "We constantly refine packaging, traceability, and logistics to meet evolving global food safety standards." },
-];
-
 const STRENGTHS = [
   {
-    icon: "🔬",
+    icon: "QC",
     title: "Quality-Focused Exports",
     desc: "Product checks and grading are coordinated around buyer specifications and export handling needs.",
   },
   {
-    icon: "🤝",
+    icon: "SN",
     title: "Reliable Supplier Network",
     desc: "Supplier relationships are managed to support consistent sourcing across agricultural categories.",
   },
   {
-    icon: "📦",
+    icon: "PK",
     title: "Export-Compliant Packaging",
     desc: "Packaging options are planned around product handling, buyer requirements, and export documentation needs.",
   },
   {
-    icon: "📋",
+    icon: "DS",
     title: "Professional Documentation Support",
     desc: "Documentation support is aligned with product type, buyer destination, and standard export requirements.",
   },
   {
-    icon: "🚢",
+    icon: "SC",
     title: "Timely Shipment Coordination",
     desc: "Orders are coordinated with attention to readiness, logistics communication, and shipment milestones.",
   },
   {
-    icon: "🎯",
+    icon: "FS",
     title: "Flexible Product Sourcing",
     desc: "The sourcing process supports standard catalogue items as well as specific buyer requirements.",
   },
   {
-    icon: "💬",
+    icon: "BC",
     title: "Buyer-Centric Communication",
     desc: "Enquiries and order discussions are handled with practical updates and clear next steps.",
   },
@@ -103,10 +94,10 @@ export default function AboutPage() {
               <p className="mt-5 text-sm leading-7 text-slate-300">
                 Our sourcing philosophy is simple: understand the buyer requirement first, confirm what can be supplied responsibly, and communicate documentation and shipment assumptions clearly before the order moves forward.
               </p>
-              <p className="mt-5 text-sm font-semibold text-white">{COMPANY.founderPerson}</p>
-              <p className="text-sm text-slate-400">{COMPANY.founderTitle}</p>
+              <p className="mt-5 text-sm font-semibold text-white">{COMPANY.contactPerson}</p>
+              <p className="text-sm font-semibold text-slate-300">{COMPANY.contactTitle}</p>
               <p className="mt-4 text-xs leading-6 text-slate-400">
-                For buyer verification and export enquiries, contact {COMPANY.contactPerson}.
+                Buyer & Business Contact for verification and export enquiries.
               </p>
             </div>
             <div id="vision" className="rounded-3xl border border-[#D9E2EC] bg-[#F8FAFC] p-8">
@@ -175,65 +166,6 @@ export default function AboutPage() {
                 <p className="mt-1 text-[13px] font-semibold text-[#374151]">Documentation Ready</p>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── MISSION / VISION / PROMISE ───────────────────────── */}
-      <section className="bg-white py-20">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-          <div className="grid gap-6 lg:grid-cols-3">
-            {/* Mission */}
-            <div className="rounded-2xl border border-[#D9E2EC] p-8">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#E6F4F7] text-2xl">🎯</div>
-              <h2 className="mt-5 text-[22px] font-black tracking-[-0.03em] text-[#0F172A]">Our Mission</h2>
-              <p className="mt-3 text-[15px] leading-[1.8] text-[#64748B]">
-                To support buyers with clear Indian agricultural product sourcing, practical
-                documentation guidance, and realistic shipment coordination.
-              </p>
-            </div>
-
-            {/* Vision */}
-            <div className="rounded-2xl bg-[#071624] p-8">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#0E7490]/20 text-2xl">🌏</div>
-              <h2 className="mt-5 text-[22px] font-black tracking-[-0.03em] text-white">Our Vision</h2>
-              <p className="mt-3 text-[15px] leading-[1.8] text-slate-400">
-                To build a verifiable agricultural export platform through consistent sourcing,
-                food safety awareness, and transparent supply-chain communication.
-              </p>
-            </div>
-
-            {/* Promise */}
-            <div className="rounded-2xl border border-[#D9E2EC] bg-[#F0F9FA] p-8">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#0E7490] text-2xl">🤝</div>
-              <h2 className="mt-5 text-[22px] font-black tracking-[-0.03em] text-[#0F172A]">Our Promise</h2>
-              <p className="mt-3 text-[15px] leading-[1.8] text-[#64748B]">
-                Every enquiry receives practical follow-up, clear documentation guidance,
-                and coordinated support from product selection through shipment planning.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── CORE VALUES ──────────────────────────────────────── */}
-      <section className="py-20">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-          <div className="mb-12 text-center">
-            <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">WHAT DRIVES US</p>
-            <h2 className="mt-3 text-[38px] font-black tracking-[-0.04em] text-[#0F172A]">Our Core Values</h2>
-          </div>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {VALUES.map((v) => (
-              <div
-                key={v.title}
-                className="rounded-2xl border border-[#D9E2EC] bg-white p-7 transition hover:border-[#0E7490]/30 hover:shadow-md"
-              >
-                <span className="text-3xl">{v.icon}</span>
-                <h3 className="mt-4 text-[17px] font-bold text-[#0F172A]">{v.title}</h3>
-                <p className="mt-2 text-[14px] leading-[1.8] text-[#64748B]">{v.desc}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>

@@ -20,7 +20,7 @@ async function getPosts() {
     return { posts: await getPublicBlogPosts(), error: "" };
   } catch (error) {
     console.error("Public blog list failed", error);
-    return { posts: [], error: "Blog posts are temporarily unavailable. Please try again shortly." };
+    return { posts: [], error: "Insights are temporarily unavailable. Please try again shortly." };
   }
 }
 
@@ -36,7 +36,7 @@ export default async function BlogPage() {
             <p className="text-[11px] font-black tracking-[0.26em] text-[#0E7490]">EXPORT INSIGHTS</p>
           </div>
           <h1 className="mt-4 text-[48px] font-black leading-none tracking-[-0.05em] text-[#0F172A] lg:text-[64px]">
-            Blog
+            Insights
           </h1>
           <p className="mt-4 max-w-2xl text-[17px] leading-[1.8] text-[#64748B]">
             Practical updates for importers sourcing Indian spices, rice, grains, and agricultural commodities.
@@ -54,7 +54,7 @@ export default async function BlogPage() {
           <div className="rounded-2xl border border-[#D9E2EC] bg-white p-10 text-center">
             <h2 className="text-[24px] font-black tracking-[-0.03em]">No published posts yet.</h2>
             <p className="mx-auto mt-3 max-w-lg text-[15px] leading-[1.8] text-[#64748B]">
-              Blog posts published from the admin dashboard will appear here.
+              Insights published from the admin dashboard will appear here.
             </p>
           </div>
         ) : (

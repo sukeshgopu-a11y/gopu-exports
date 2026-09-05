@@ -4,6 +4,7 @@ import Link from "next/link";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
 import { formatCommercialMoq } from "@/lib/moq";
+import { COMPANY } from "@/lib/company";
 
 export const revalidate = 300;
 
@@ -21,6 +22,20 @@ type FeaturedProduct = {
 };
 
 async function getFeatured(): Promise<FeaturedProduct[]> {
+  const priority = [
+    "red-chilli",
+    "turmeric-powder",
+    "coriander-seeds",
+    "basmati-rice",
+    "sona-masoori-rice",
+    "spice-powders",
+  ];
+  const orderFeatured = (items: FeaturedProduct[]) =>
+    [...items].sort((a, b) => {
+      const ai = priority.indexOf(a.slug);
+      const bi = priority.indexOf(b.slug);
+      return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+    });
   try {
     const supabase = createPublicClient();
     const { data, error } = await supabase
@@ -32,7 +47,7 @@ async function getFeatured(): Promise<FeaturedProduct[]> {
       .limit(8)
       .returns<ProductRow[]>();
     if (error) return [];
-    return (data ?? []).map(productToApi) as FeaturedProduct[];
+    return orderFeatured((data ?? []).map(productToApi) as FeaturedProduct[]);
   } catch {
     return [];
   }
@@ -98,20 +113,18 @@ export default async function HomePage() {
             <div className="flex items-center gap-4">
               <div className="h-[2px] w-14 bg-[#0E7490]" />
               <p className="text-[11px] font-black tracking-[0.26em] text-white/80">
-                INDIAN AGRICULTURAL EXPORT SOURCING
+                INDIA • GLOBAL TRADE
               </p>
             </div>
 
             <h1 className="mt-5 text-[38px] font-black leading-[0.96] tracking-[-0.04em] text-white sm:mt-6 sm:text-[48px] lg:text-[68px]">
-              Delivering Quality<br />Products To<br />
-              <span className="text-[#67C9D8]">Global Markets.</span>
+              Indian Spices, Rice &<br />Agricultural Products<br />
+              <span className="text-[#67C9D8]">for Global Markets.</span>
             </h1>
 
             <p className="mt-5 max-w-[560px] text-[15px] leading-[1.7] text-slate-300 sm:mt-7 sm:text-[17px] sm:leading-[1.8]">
-              GOPU Exports supports importers, distributors, and procurement
-              teams sourcing Indian spices, rice, and agricultural commodities
-              with specification-led communication, documentation planning,
-              and shipment coordination.
+              Specification-led sourcing, packaging, documentation and shipment
+              coordination for importers, distributors and food businesses.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 min-[420px]:flex-row sm:mt-8 sm:flex-wrap sm:gap-4">
@@ -120,14 +133,21 @@ export default async function HomePage() {
                 prefetch={false}
                 className="hero-cta rounded-lg bg-[#0E7490] px-6 py-3.5 text-center text-[12px] font-bold tracking-wide text-white shadow-lg transition hover:bg-[#0A5A70] hover:shadow-xl sm:px-8 sm:py-4 sm:text-[13px]"
               >
-                EXPLORE PRODUCTS →
+                Explore Products →
               </Link>
               <Link
                 href="/contact"
                 prefetch={false}
                 className="hero-cta rounded-lg border border-white/25 bg-white/10 px-6 py-3.5 text-center text-[12px] font-bold tracking-wide text-white backdrop-blur-sm transition hover:bg-white/20 sm:px-8 sm:py-4 sm:text-[13px]"
               >
-                GET A QUOTE →
+                Request a Quote →
+              </Link>
+              <Link
+                href="/company-verification"
+                prefetch={false}
+                className="hero-cta inline-flex items-center justify-center px-2 py-3.5 text-center text-[12px] font-bold tracking-wide text-white transition hover:text-[#67C9D8] sm:px-1 sm:py-4 sm:text-[13px]"
+              >
+                Verify GOPU Exports →
               </Link>
             </div>
 
@@ -157,16 +177,33 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <section className="border-b border-[#D9E2EC] bg-white">
+        <div className="mx-auto flex max-w-[1450px] flex-col gap-4 px-6 py-5 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#0E7490]">Corporate Verification</p>
+            <p className="mt-1 text-[16px] font-black uppercase tracking-[-0.02em] text-[#0F172A]">{COMPANY.legalName}</p>
+          </div>
+          <div className="flex flex-wrap gap-2 text-[12px] font-bold text-[#475569]">
+            {["IEC Verified", "GST Registered", "CIN Registered", "Hyderabad Head Office", "Telangana Factory"].map((item) => (
+              <span key={item} className="rounded-full border border-[#D9E2EC] bg-[#F8FAFC] px-3 py-1.5">{item}</span>
+            ))}
+          </div>
+          <Link href="/company-verification" prefetch={false} className="text-[13px] font-black text-[#0E7490] transition hover:text-[#0A5A70]">
+            View Corporate Verification →
+          </Link>
+        </div>
+      </section>
+
       {/* ── FEATURED PRODUCTS ────────────────────────────────── */}
       <section className="py-20">
         <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
           <div className="mb-10 flex items-end justify-between">
             <div>
               <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">
-                OUR PRODUCT RANGE
+                CORE EXPORT PORTFOLIO
               </p>
               <h2 className="mt-2 text-[34px] font-black tracking-[-0.04em] text-[#0F172A]">
-                Featured Products
+                Core Export Portfolio
               </h2>
             </div>
             <Link
@@ -174,7 +211,7 @@ export default async function HomePage() {
               prefetch={false}
               className="hidden text-sm font-bold text-[#0E7490] transition hover:text-[#0A5A70] sm:block"
             >
-              VIEW ALL PRODUCTS →
+              Explore Full Product Catalogue →
             </Link>
           </div>
 

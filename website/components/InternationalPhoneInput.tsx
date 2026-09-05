@@ -22,7 +22,7 @@ type Props = {
   value?: InternationalPhoneValue | null;
   onChange: (value: InternationalPhoneValue) => void;
   error?: string;
-  defaultCountry?: CountryCode;
+  defaultCountry?: CountryCode | "";
 };
 
 const COUNTRIES = getCountries();
@@ -78,16 +78,29 @@ export function InternationalPhoneInput({
   value,
   onChange,
   error,
-  defaultCountry = "IN",
+  defaultCountry = "",
 }: Props) {
-  const initialCountry = value?.country_code ?? detectDefaultCountry(defaultCountry);
-  const [country, setCountry] = useState<CountryCode>(initialCountry);
+  const initialCountry = value?.country_code || (defaultCountry ? detectDefaultCountry(defaultCountry) : undefined);
+  const [country, setCountry] = useState<CountryCode | undefined>(initialCountry);
   const [localPhone, setLocalPhone] = useState(value?.local_phone ?? "");
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const rootRef = useRef<HTMLDivElement | null>(null);
 
-  const selected = useMemo(() => buildPhoneValue(country, localPhone), [country, localPhone]);
+  const selected = useMemo(() => {
+    if (!country) {
+      return {
+        country_name: "",
+        country_code: "" as CountryCode,
+        dial_code: "",
+        local_phone: cleanLocalPhone(localPhone),
+        full_phone_e164: "",
+        whatsapp_number_e164: "",
+        is_valid: false,
+      };
+    }
+    return buildPhoneValue(country, localPhone);
+  }, [country, localPhone]);
 
   const filteredCountries = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -117,21 +130,27 @@ export function InternationalPhoneInput({
         <button
           type="button"
           onClick={() => setOpen((current) => !current)}
-          className={`flex min-h-[52px] w-[116px] shrink-0 items-center justify-center gap-2 rounded-xl border bg-white px-3 text-left text-sm font-semibold text-[#0F172A] shadow-sm outline-none transition hover:bg-[#F8FAFC] sm:w-[142px] ${error ? "border-red-300" : "border-[#D9E2EC] focus:border-[#0E7490] focus:ring-2 focus:ring-[#0E7490]/10"}`}
+          className={`flex min-h-[52px] w-[132px] shrink-0 items-center justify-center gap-2 rounded-xl border bg-white px-3 text-left text-sm font-semibold text-[#0F172A] shadow-sm outline-none transition hover:bg-[#F8FAFC] sm:w-[160px] ${error ? "border-red-300" : "border-[#D9E2EC] focus:border-[#0E7490] focus:ring-2 focus:ring-[#0E7490]/10"}`}
           aria-label="Select phone country"
         >
-          <span className="text-2xl leading-none">{countryFlag(country)}</span>
-          <span className="text-xs font-black text-[#0E7490]">+{getCountryCallingCode(country)}</span>
+          {country ? (
+            <>
+              <span className="text-2xl leading-none">{countryFlag(country)}</span>
+              <span className="text-xs font-black text-[#0E7490]">+{getCountryCallingCode(country)}</span>
+            </>
+          ) : (
+            <span className="truncate text-xs font-black text-[#0E7490]">+ Country Code</span>
+          )}
           <span className="ml-auto text-[10px] text-[#475569]">▼</span>
         </button>
         <label className={`flex min-h-[52px] min-w-0 flex-1 items-center rounded-xl border bg-[#F8FAFC] px-4 shadow-sm transition focus-within:bg-white focus-within:ring-2 focus-within:ring-[#0E7490]/10 ${error ? "border-red-300" : "border-[#D9E2EC] focus-within:border-[#0E7490]"}`}>
-          <span className="mr-2 shrink-0 text-sm font-bold text-[#0F172A]">+{getCountryCallingCode(country)}</span>
+          {country ? <span className="mr-2 shrink-0 text-sm font-bold text-[#0F172A]">+{getCountryCallingCode(country)}</span> : null}
           <input
             value={displayLocalPhone(localPhone)}
             onChange={(event) => setLocalPhone(cleanLocalPhone(event.target.value))}
             inputMode="numeric"
             autoComplete="tel-national"
-            placeholder="Local phone number"
+            placeholder={country ? "Local phone number" : "Select country code first"}
             className="min-w-0 flex-1 bg-transparent py-2.5 text-sm outline-none"
           />
         </label>

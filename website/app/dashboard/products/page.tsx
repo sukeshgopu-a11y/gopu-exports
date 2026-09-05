@@ -919,7 +919,7 @@ export default function ProductsPage() {
                 <Field label="Certifications" hint="One per line">
                   <Textarea
                     rows={2}
-                    placeholder={"APEDA\nFSSAI\nISO 22000"}
+                    placeholder={"APEDA\nFSSAI\nSpice Board"}
                     value={form.certifications}
                     onChange={set("certifications")}
                   />

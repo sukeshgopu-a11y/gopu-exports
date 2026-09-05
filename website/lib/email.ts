@@ -20,6 +20,7 @@ export type LeadEmailPayload = {
   email: string;
   phone?: string;
   phoneDetails?: PhoneDetails;
+  reference?: string;
   country?: string;
   product?: string;
   quantity?: string;
@@ -118,6 +119,7 @@ function dashboardLink(payload: LeadEmailPayload) {
 function rows(payload: LeadEmailPayload): Array<[string, string | undefined]> {
   return [
     ["Lead Type", leadLabel(payload.kind)],
+    ["Reference", payload.reference],
     ["Name", payload.name],
     ["Company", payload.company],
     ["Email", payload.email],

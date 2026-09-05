@@ -49,7 +49,7 @@ export async function dashboardFetch<T>(
         window.location.pathname.startsWith("/dashboard") &&
         window.location.pathname !== "/dashboard/login"
       ) {
-        window.location.assign(`/dashboard/login?reason=${response.status === 403 ? "admin" : "session"}`);
+        window.location.assign(new URL(`/dashboard/login?reason=${response.status === 403 ? "admin" : "session"}`, window.location.origin));
       }
       throw new DashboardApiError(message, response.status);
     }
@@ -77,7 +77,7 @@ export function redirectIfAuthError(error: unknown) {
     window.location.pathname.startsWith("/dashboard") &&
     window.location.pathname !== "/dashboard/login"
   ) {
-    window.location.assign(`/dashboard/login?reason=${error.status === 403 ? "admin" : "session"}`);
+    window.location.assign(new URL(`/dashboard/login?reason=${error.status === 403 ? "admin" : "session"}`, window.location.origin));
     return true;
   }
   return false;
