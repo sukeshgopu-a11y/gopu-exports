@@ -17,6 +17,10 @@ export const COMPANY = {
     label: "Headquarters (HQ)",
     address: "2nd Floor, Surya Arcade, Door No. 1-9-388, Kushaiguda Road, ECIL, Hyderabad – 500062, Telangana, India",
   },
+  warehouse: {
+    label: "GOPU Exports Factory & Warehouse",
+    address: "Kanchanpally Village, Raghunathpally Mandal, Jangaon District – 506244, Telangana, India",
+  },
   australia: {
     entityName: "GOPU GROUP PTY LTD",
     abn: "13 673 343 952",
