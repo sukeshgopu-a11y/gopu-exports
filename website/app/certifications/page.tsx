@@ -12,7 +12,7 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: "Certifications & Business Verification",
   description:
-    "GOPU Exports business verification and certification availability for international buyers, including IEC, CIN, GST, FSSAI, APEDA, and Spice Board registration status.",
+    "GOPU Exports business verification and active certification information for international buyers, including IEC, CIN, GST and FSSAI.",
   alternates: { canonical: "/certifications" },
 };
 
@@ -81,7 +81,7 @@ export default async function CertificationsPage() {
             <span className="text-[#67C9D8]">Business Verification.</span>
           </h1>
           <p className="mt-6 max-w-2xl text-[16px] leading-8 text-slate-300">
-            Certification details are reviewed before publication. Copies or license references can be provided to verified buyers on request.
+            Active certification details and business identifiers are published for buyer verification. Copies or license references can be provided to verified buyers on request.
           </p>
         </div>
       </section>
@@ -114,7 +114,7 @@ export default async function CertificationsPage() {
               <FileText className="h-7 w-7 text-[#0E7490]" />
               <div>
                 <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#0E7490]">Trade & Product Certifications</p>
-                <h2 className="mt-1 text-3xl font-black tracking-[-0.04em]">Current and in-progress registrations</h2>
+                <h2 className="mt-1 text-3xl font-black tracking-[-0.04em]">Active registrations</h2>
               </div>
             </div>
             <div className="mt-7 grid gap-3">
@@ -123,13 +123,7 @@ export default async function CertificationsPage() {
                   <div className="flex min-w-0 items-center gap-3">
                     {item.logo ? (
                       <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-[#D9E2EC] bg-white">
-                        <Image
-                          src={item.logo}
-                          alt={`${item.name} logo`}
-                          fill
-                          sizes="48px"
-                          className="object-contain p-2"
-                        />
+                        <Image src={item.logo} alt={`${item.name} logo`} fill sizes="48px" className="object-contain p-2" />
                       </div>
                     ) : null}
                     <div className="min-w-0">
@@ -137,9 +131,7 @@ export default async function CertificationsPage() {
                       <p className="mt-1 text-xs leading-5 text-[#64748B]">{item.description}</p>
                     </div>
                   </div>
-                  <span className="rounded-full bg-[#E6F4F7] px-3 py-1.5 text-[11px] font-bold text-[#0E7490]">
-                    {item.issuer || "Available"}
-                  </span>
+                  <span className="rounded-full bg-[#DCFCE7] px-3 py-1.5 text-[11px] font-bold text-[#166534]">Active</span>
                 </div>
               ))}
             </div>
