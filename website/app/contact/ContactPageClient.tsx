@@ -115,8 +115,8 @@ function OfficeCard({
 }: {
   flag: string;
   title: string;
-  badge: string;
-  badgeColor: string;
+  badge?: string;
+  badgeColor?: string;
   lines: string[];
   map: string;
 }) {
@@ -133,10 +133,12 @@ function OfficeCard({
         />
         <div className="relative z-10 flex items-start justify-between gap-4">
           <div>
-            <div className={`inline-flex px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.1em] ${badgeColor}`}>
-              {badge}
-            </div>
-            <div className="mt-3 text-white text-[18px] leading-none font-black tracking-[-0.5px]">
+            {badge ? (
+              <div className={`inline-flex px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.1em] ${badgeColor ?? ""}`}>
+                {badge}
+              </div>
+            ) : null}
+            <div className={`${badge ? "mt-3" : ""} text-white text-[18px] leading-none font-black tracking-[-0.5px]`}>
               {title}
             </div>
           </div>
@@ -641,18 +643,16 @@ export default function ContactPageClient() {
             <OfficeCard
               map="https://maps.google.com/?q=Surya+Arcade+Kushaiguda+Road+ECIL+Hyderabad+500062"
               flag="IN"
-              title="Hyderabad HQ"
+              title="Head Office 🇮🇳"
               badge={COMPANY.hq.label}
               badgeColor="bg-[#E6F4F7] text-[#0A5A70]"
               lines={[COMPANY.hq.address, COMPANY.landmark, COMPANY.email, COMPANY.phone]}
             />
             <OfficeCard
-              map="https://maps.google.com/?q=Kanchanpally+Village+Raghunathpally+Mandal+Jangaon+District+Telangana+506244"
+              map="https://maps.app.goo.gl/hakZVt1CE2Rg42Bm9?g_st=ic"
               flag="IN"
-              title="Jangaon Factory"
-              badge={COMPANY.factory.label}
-              badgeColor="bg-[#F0FDF4] text-[#166534]"
-              lines={[COMPANY.factory.address]}
+              title="Our Factory"
+              lines={["Gopu Exports Factory", COMPANY.factory.address]}
             />
             <OfficeCard
               map="https://maps.google.com/?q=Surya+Arcade+Kushaiguda+Road+ECIL+Hyderabad+500062"

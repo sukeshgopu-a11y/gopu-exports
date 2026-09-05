@@ -23,7 +23,7 @@ export const COMPANY = {
   factory: {
     label: "Factory",
     address:
-      "Gopu Exports Factory, Kanchanpally Village, Raghunathpally Mandal, Jangaon District, Telangana - 506244, India",
+      "P8V2+RHW Gopu exports, Kanchanpalle, Telangana 506244, India",
   },
   australia: {
     entityName: "GOPU GROUP PTY LTD",
