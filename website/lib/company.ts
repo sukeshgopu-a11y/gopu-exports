@@ -13,6 +13,10 @@ export const COMPANY = {
   cin: "U46909TS2026PTC212867",
   gst: "36AAMCG8793P1ZE",
   registeredAddress: "Warangal, Telangana, India",
+  hq: {
+    label: "Headquarters (HQ)",
+    address: "2nd Floor, Surya Arcade, Door No. 1-9-388, Kushaiguda Road, ECIL, Hyderabad – 500062, Telangana, India",
+  },
   australia: {
     entityName: "GOPU GROUP PTY LTD",
     abn: "13 673 343 952",
