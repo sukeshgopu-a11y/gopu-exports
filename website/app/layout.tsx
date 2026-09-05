@@ -74,11 +74,11 @@ export const metadata: Metadata = {
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "GOPU Exports",
+  name: COMPANY.legalName,
   url: "https://gopuexports.com",
-  logo: "https://gopuexports.com/logos/gopu-mark.svg",
-  email: "admin@gopuexports.com",
-  telephone: "+918712816876",
+  logo: "https://gopuexports.com/logos/gopu-exports-logo-new.webp",
+  email: COMPANY.email,
+  telephone: COMPANY.phone,
   taxID: COMPANY.gst,
   identifier: [
     { "@type": "PropertyValue", name: "IEC", value: COMPANY.iec },
@@ -89,7 +89,9 @@ const organizationJsonLd = {
     "Indian agricultural exports, rice, spices, fruits, vegetables, grains, and food products for global B2B buyers.",
   address: {
     "@type": "PostalAddress",
-    addressLocality: "Warangal",
+    streetAddress: "2nd Floor, Surya Arcade, Door No. 1-9-388, Kushaiguda Road, ECIL",
+    addressLocality: "Hyderabad",
+    postalCode: "500062",
     addressRegion: "Telangana",
     addressCountry: "IN",
   },
@@ -97,8 +99,8 @@ const organizationJsonLd = {
     {
       "@type": "ContactPoint",
       contactType: "sales",
-      email: "admin@gopuexports.com",
-      telephone: "+918712816876",
+      email: COMPANY.email,
+      telephone: COMPANY.phone,
       availableLanguage: ["English"],
     },
   ],
