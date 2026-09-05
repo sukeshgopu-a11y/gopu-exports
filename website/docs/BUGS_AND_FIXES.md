@@ -170,7 +170,7 @@ const monthlyData = await InquiryModel.aggregate(pipeline);
 
 **Fix — in `components/Footer.tsx` (client component):**
 ```typescript
-const [settings, setSettings] = useState({ email: "admin@gopuexports.com", phone: "+91 87128 16876" });
+const [settings, setSettings] = useState({ email: "admin@gopuexports.com", phone: "+91 9618991917" });
 
 useEffect(() => {
   fetch("/api/site-settings?key=contact")

@@ -170,18 +170,18 @@ for (const post of posts) {
     .toFile(path.join(blogDir, post.file));
 }
 
-const markSvg = await readFile(path.join(root, "public", "logos", "gopu-mark.svg"));
-const icon512 = await sharp(markSvg).resize(512, 512).png({ quality: 95 }).toBuffer();
-const apple180 = await sharp(markSvg).resize(180, 180).png({ quality: 95 }).toBuffer();
-const favicon32 = await sharp(markSvg).resize(32, 32).png({ quality: 95 }).toBuffer();
+const emblem = await readFile(path.join(root, "public", "logos", "gopu-exports-emblem.png"));
+const icon512 = await sharp(emblem).resize(512, 512).png({ quality: 95 }).toBuffer();
+const apple180 = await sharp(emblem).resize(180, 180).png({ quality: 95 }).toBuffer();
+const favicon32 = await sharp(emblem).resize(32, 32).png({ quality: 95 }).toBuffer();
 
-function icoFromPng(png) {
+function icoFromPng(png, size = 32) {
   const header = Buffer.alloc(22);
   header.writeUInt16LE(0, 0);
   header.writeUInt16LE(1, 2);
   header.writeUInt16LE(1, 4);
-  header.writeUInt8(32, 6);
-  header.writeUInt8(32, 7);
+  header.writeUInt8(size === 256 ? 0 : size, 6);
+  header.writeUInt8(size === 256 ? 0 : size, 7);
   header.writeUInt8(0, 8);
   header.writeUInt8(0, 9);
   header.writeUInt16LE(1, 10);
@@ -194,5 +194,5 @@ function icoFromPng(png) {
 for (const dir of ["app", "public"]) {
   await writeFile(path.join(root, dir, "icon.png"), icon512);
   await writeFile(path.join(root, dir, "apple-touch-icon.png"), apple180);
-  await writeFile(path.join(root, dir, "favicon.ico"), icoFromPng(favicon32));
+  await writeFile(path.join(root, dir, "favicon.ico"), icoFromPng(favicon32, 32));
 }

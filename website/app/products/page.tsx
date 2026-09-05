@@ -60,7 +60,7 @@ export default async function ProductsPage() {
               <Link href="/contact" className="rounded-xl bg-[#0E7490] px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-white shadow-lg shadow-cyan-950/30 transition hover:bg-[#0A5A70]">
                 Request Bulk Quote
               </Link>
-              <a href="https://wa.me/918712816876" target="_blank" rel="noreferrer" className="rounded-xl border border-white/20 bg-white/10 px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-white backdrop-blur transition hover:bg-white/15">
+              <a href="https://wa.me/919618991917" target="_blank" rel="noreferrer" className="rounded-xl border border-white/20 bg-white/10 px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-white backdrop-blur transition hover:bg-white/15">
                 WhatsApp Sourcing Desk
               </a>
             </div>
@@ -121,7 +121,7 @@ export default async function ProductsPage() {
               REQUEST A PRODUCT →
             </Link>
             <a
-              href="https://wa.me/918712816876"
+              href="https://wa.me/919618991917"
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-2 rounded-lg border border-[#22C55E]/50 px-8 py-4 text-[13px] font-bold text-[#16A34A] transition hover:bg-[#F0FDF4]"

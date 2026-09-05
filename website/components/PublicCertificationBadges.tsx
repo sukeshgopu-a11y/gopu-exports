@@ -5,7 +5,6 @@ import { COMPANY } from "@/lib/company";
 
 const LABELS = [
   ...COMPANY.verifiedIdentifiers.map((item) => `${item.label} verified`),
-  ...COMPANY.pendingCertifications.map((item) => `${item.label} on request`),
 ];
 
 function ShieldCheckIcon({ className = "" }: { className?: string }) {

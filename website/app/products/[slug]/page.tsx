@@ -350,7 +350,7 @@ export default async function ProductDetailsPage({ params }: Props) {
                 <Link href={`/contact?product=${encodeURIComponent(product.title)}`} className="rounded-xl bg-[#0E7490] px-6 py-3 text-[13px] font-bold text-white transition hover:bg-[#0A5A70]">
                   Request Quote
                 </Link>
-                <a href={`https://wa.me/918712816876?text=Hi%2C%20I%27m%20interested%20in%20${encodeURIComponent(product.title)}%20from%20GOPU%20Exports.`} target="_blank" rel="noreferrer" className="rounded-xl border border-[#22C55E]/50 bg-[#F0FDF4] px-6 py-3 text-[13px] font-bold text-[#16A34A] transition hover:bg-[#DCFCE7]">
+                <a href={`https://wa.me/919618991917?text=Hi%2C%20I%27m%20interested%20in%20${encodeURIComponent(product.title)}%20from%20GOPU%20Exports.`} target="_blank" rel="noreferrer" className="rounded-xl border border-[#22C55E]/50 bg-[#F0FDF4] px-6 py-3 text-[13px] font-bold text-[#16A34A] transition hover:bg-[#DCFCE7]">
                   WhatsApp Enquiry
                 </a>
               </div>

@@ -1,8 +1,8 @@
 export const COMPANY = {
   name: "GOPU Exports",
-  legalName: "GOPU Exports Private Limited",
+  legalName: "Gopu Exports Private Limited",
   email: "admin@gopuexports.com",
-  phone: "+91 96189 91917",
+  phone: "+91 9618991917",
   phoneHref: "tel:+919618991917",
   whatsapp: "https://wa.me/919618991917",
   founderPerson: "Bala Reddy Gopu",
@@ -12,14 +12,18 @@ export const COMPANY = {
   iec: "AAMCG8793P",
   cin: "U46909TS2026PTC212867",
   gst: "36AAMCG8793P1ZE",
-  registeredAddress: "2nd Floor, Surya Arcade, Door No. 1-9-388, Kushaiguda Road, ECIL, Hyderabad – 500062, Telangana, India",
+  registeredAddress:
+    "Gopu Exports Private Limited, 2nd Floor, Surya Arcade, Door No. 1-9-388, Kushaiguda Road, ECIL, Hyderabad - 500062, Telangana, India",
+  landmark: "Landmark: Above Jawed Habib, next to ICICI Home Finance.",
   hq: {
-    label: "Headquarters (HQ)",
-    address: "2nd Floor, Surya Arcade, Door No. 1-9-388, Kushaiguda Road, ECIL, Hyderabad – 500062, Telangana, India",
+    label: "HQ",
+    address:
+      "Gopu Exports Private Limited, 2nd Floor, Surya Arcade, Door No. 1-9-388, Kushaiguda Road, ECIL, Hyderabad - 500062, Telangana, India",
   },
-  warehouse: {
-    label: "GOPU Exports Factory & Warehouse",
-    address: "Kanchanpally Village, Raghunathpally Mandal, Jangaon District – 506244, Telangana, India",
+  factory: {
+    label: "Factory",
+    address:
+      "Gopu Exports Factory, Kanchanpally Village, Raghunathpally Mandal, Jangaon District, Telangana - 506244, India",
   },
   australia: {
     entityName: "GOPU GROUP PTY LTD",
@@ -34,9 +38,6 @@ export const COMPANY = {
     { label: "IEC", value: "AAMCG8793P", status: "Verified" },
     { label: "CIN", value: "U46909TS2026PTC212867", status: "Verified" },
     { label: "GST", value: "36AAMCG8793P1ZE", status: "Verified" },
-  ],
-  pendingCertifications: [
-    { label: "FSSAI", value: "Active", status: "License reference shared with verified buyers on request" },
   ],
   social: {
     linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL ?? "https://www.linkedin.com/company/gopu-exports/",

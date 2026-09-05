@@ -154,7 +154,7 @@ export const EXPORT_OPERATION_PAGES: ExportOperationPage[] = [
       { heading: "Procurement next steps", body: "Once requirements are clear, buyers can proceed with sample discussion, commercial quote, documentation mapping, and shipment planning." },
     ],
     faq: [
-      { question: "What is the fastest way to contact GOPU Exports?", answer: "Use the contact form, product enquiry CTA, email admin@gopuexports.com, or WhatsApp +91 87128 16876." },
+      { question: "What is the fastest way to contact GOPU Exports?", answer: "Use the contact form, product enquiry CTA, email admin@gopuexports.com, or WhatsApp +91 9618991917." },
       { question: "Can buyers request a product catalogue?", answer: "Yes. Buyers can request a catalogue or product shortlist through the enquiry form." },
     ],
   },

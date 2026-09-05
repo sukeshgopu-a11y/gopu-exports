@@ -82,7 +82,7 @@ export default async function ExportCategoryPage({ params }: Props) {
             <Link href="/contact" className="rounded-lg bg-[#0E7490] px-6 py-3.5 text-[13px] font-bold text-white">
               Request Quote
             </Link>
-            <a href="https://wa.me/918712816876" target="_blank" rel="noreferrer" className="rounded-lg border border-[#22C55E]/50 px-6 py-3.5 text-[13px] font-bold text-[#16A34A]">
+            <a href="https://wa.me/919618991917" target="_blank" rel="noreferrer" className="rounded-lg border border-[#22C55E]/50 px-6 py-3.5 text-[13px] font-bold text-[#16A34A]">
               WhatsApp Inquiry
             </a>
             <Link href="/products" className="rounded-lg border border-[#D9E2EC] px-6 py-3.5 text-[13px] font-bold text-[#0F172A]">

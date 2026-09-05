@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type BrandLogoProps = {
   className?: string;
   markOnly?: boolean;
@@ -9,16 +11,22 @@ export default function BrandLogo({
   className = "",
   markOnly = false,
   priority = false,
+  variant = "default",
 }: BrandLogoProps) {
+  const src = markOnly
+    ? "/logos/gopu-exports-emblem.png"
+    : variant === "light"
+      ? "/logos/gopu-exports-logo-full.webp"
+      : "/logos/gopu-exports-logo-nav.webp";
+
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src="/logos/gopu-exports-logo-new.webp"
-      alt="GOPU Exports Private Limited — India, Delivered Globally"
+    <Image
+      src={src}
+      alt={markOnly ? "GOPU Exports GE emblem" : "GOPU Exports"}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
-      width={markOnly ? 96 : 300}
-      height={markOnly ? 96 : 120}
+      width={markOnly ? 512 : variant === "light" ? 900 : 520}
+      height={markOnly ? 512 : variant === "light" ? 613 : 309}
       className={`${markOnly ? "h-14 w-14" : "h-16 w-auto"} object-contain ${className}`}
     />
   );

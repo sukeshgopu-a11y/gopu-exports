@@ -639,16 +639,24 @@ export default function ContactPageClient() {
           {/* OFFICES */}
           <div className="space-y-4">
             <OfficeCard
-              map="https://maps.google.com/?q=Hasanparthy,Warangal,Telangana,India"
+              map="https://maps.google.com/?q=Surya+Arcade+Kushaiguda+Road+ECIL+Hyderabad+500062"
               flag="IN"
-              title="India Headquarters"
-              badge="Registered Office"
+              title="Hyderabad HQ"
+              badge={COMPANY.hq.label}
               badgeColor="bg-[#E6F4F7] text-[#0A5A70]"
-              lines={[COMPANY.registeredAddress, COMPANY.email, COMPANY.phone]}
+              lines={[COMPANY.hq.address, COMPANY.landmark, COMPANY.email, COMPANY.phone]}
             />
             <OfficeCard
-              map="https://maps.google.com/?q=Warangal,Telangana,India"
-              flag="ID"
+              map="https://maps.google.com/?q=Kanchanpally+Village+Raghunathpally+Mandal+Jangaon+District+Telangana+506244"
+              flag="IN"
+              title="Jangaon Factory"
+              badge={COMPANY.factory.label}
+              badgeColor="bg-[#F0FDF4] text-[#166534]"
+              lines={[COMPANY.factory.address]}
+            />
+            <OfficeCard
+              map="https://maps.google.com/?q=Surya+Arcade+Kushaiguda+Road+ECIL+Hyderabad+500062"
+              flag="IN"
               title="Verification Desk"
               badge="Buyer Support"
               badgeColor="bg-[#EFF6FF] text-[#1D4ED8]"

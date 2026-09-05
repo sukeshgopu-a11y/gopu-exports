@@ -86,7 +86,7 @@ export default function AboutPage() {
             <span className="text-[#67C9D8]">To The World.</span>
           </h1>
           <p className="mt-6 max-w-xl text-[17px] leading-[1.8] text-slate-300">
-            GOPU Exports is a Warangal-based agricultural export company supporting
+            GOPU Exports is a Hyderabad HQ-based agricultural export company supporting
             buyer enquiries for spices, rice, fresh produce, and agricultural commodities,
             with specification-led sourcing, documentation planning, and logistics coordination.
           </p>
@@ -163,7 +163,7 @@ export default function AboutPage() {
               <div className="overflow-hidden rounded-2xl">
                 <Image
                   src="/images/hero-bg.webp"
-                  alt="GOPU Exports warehouse and operations"
+                  alt="GOPU Exports factory and operations"
                   width={700}
                   height={500}
                   className="h-[420px] w-full object-cover"
@@ -270,7 +270,7 @@ export default function AboutPage() {
 
             <div className="grid grid-cols-2 gap-4">
               {[
-                { label: "Quality Inspection", icon: "QC", desc: "Multi-point checks at source, warehouse, and pre-shipment stages." },
+                { label: "Quality Inspection", icon: "QC", desc: "Multi-point checks at source, packing, and pre-shipment stages." },
                 { label: "Documentation", icon: "DS", desc: "Phytosanitary, COO, COA, inspection, and fumigation document support." },
                 { label: "Logistics", icon: "LG", desc: "Shipment planning and coordination with logistics partners." },
                 { label: "Buyer Support", icon: "BS", desc: "Dedicated updates and responsive export communication." },

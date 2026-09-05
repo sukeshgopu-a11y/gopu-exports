@@ -205,7 +205,7 @@ We usually respond within 24-48 business hours.
 For urgent requirements, you can also reach us directly:
 
 Email: admin@gopuexports.com
-Phone / WhatsApp: +91 87128 16876
+Phone / WhatsApp: +91 9618991917
 
 Thank you again for considering GOPU Exports. We look forward to assisting you with your sourcing and export requirements.
 
@@ -223,7 +223,7 @@ function autoReplyHtml(payload: LeadEmailPayload) {
         <p>We've received your enquiry regarding <strong>${escapeHtml(autoReplyProduct(payload))}</strong> and our team will review the details shortly. If we need any additional information about quantity, destination port, packaging, or documentation requirements, we'll contact you directly.</p>
         <p>We usually respond within <strong>24-48 business hours</strong>.</p>
         <p>For urgent requirements, you can also reach us directly:</p>
-        <p><strong>Email:</strong> admin@gopuexports.com<br/><strong>Phone / WhatsApp:</strong> +91 87128 16876</p>
+        <p><strong>Email:</strong> admin@gopuexports.com<br/><strong>Phone / WhatsApp:</strong> +91 9618991917</p>
         <p>Thank you again for considering GOPU Exports. We look forward to assisting you with your sourcing and export requirements.</p>
         <p style="margin-top:24px">Regards,<br/><strong>GOPU Exports Team</strong></p>
       </div>

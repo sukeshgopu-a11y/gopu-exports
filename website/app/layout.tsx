@@ -28,11 +28,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://gopuexports.com"),
   icons: {
     icon: [
-      { url: "/favicon.ico?v=3" },
-      { url: "/icon.png?v=3", type: "image/png", sizes: "512x512" },
+      { url: "/favicon.ico?v=4" },
+      { url: "/icon.png?v=4", type: "image/png", sizes: "512x512" },
     ],
-    shortcut: [{ url: "/favicon.ico?v=3" }],
-    apple: [{ url: "/apple-touch-icon.png?v=3", sizes: "180x180", type: "image/png" }],
+    shortcut: [{ url: "/favicon.ico?v=4" }],
+    apple: [{ url: "/apple-touch-icon.png?v=4", sizes: "180x180", type: "image/png" }],
   },
   applicationName: "GOPU Exports",
   openGraph: {
@@ -76,7 +76,7 @@ const organizationJsonLd = {
   "@type": "Organization",
   name: COMPANY.legalName,
   url: "https://gopuexports.com",
-  logo: "https://gopuexports.com/logos/gopu-exports-logo-new.webp",
+  logo: "https://gopuexports.com/logos/gopu-exports-logo-full.webp",
   email: COMPANY.email,
   telephone: COMPANY.phone,
   taxID: COMPANY.gst,
@@ -89,7 +89,7 @@ const organizationJsonLd = {
     "Indian agricultural exports, rice, spices, fruits, vegetables, grains, and food products for global B2B buyers.",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "2nd Floor, Surya Arcade, Door No. 1-9-388, Kushaiguda Road, ECIL",
+    streetAddress: COMPANY.registeredAddress,
     addressLocality: "Hyderabad",
     postalCode: "500062",
     addressRegion: "Telangana",

@@ -88,7 +88,7 @@ export default function CompanyVerificationPage() {
             <div className="mt-6 grid gap-4">
               {[
                 "Confirm IEC, CIN, and GST details before formal purchase discussions.",
-                "Request available registration documents, product documents, and export documentation samples where relevant.",
+                "Request available business documents, product documents, and export documentation samples where relevant.",
                 "Share destination-country document requirements early so the team can confirm feasibility before quotation.",
                 "Use official email and phone details listed on this page for verification communication.",
               ].map((item) => (

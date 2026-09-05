@@ -30,7 +30,7 @@ const terms = [
   },
   {
     title: "Contact",
-    body: "For website, privacy, or business enquiry questions, contact admin@gopuexports.com or call +91 87128 16876.",
+    body: "For website, privacy, or business enquiry questions, contact admin@gopuexports.com or call +91 9618991917.",
   },
 ];
 

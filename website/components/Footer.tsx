@@ -108,7 +108,7 @@ export default function Footer() {
       <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[1.2fr_0.8fr_0.9fr_1fr]">
         <div>
           <Link href="/" prefetch={false} aria-label="GOPU Exports Home" className="inline-flex">
-            <BrandLogo variant="light" className="h-14 w-auto" />
+            <BrandLogo variant="light" className="h-24 w-auto max-w-[240px]" />
           </Link>
           <p className="mt-5 text-[13px] leading-6 text-slate-400">
             Professional Indian agricultural export company focused on specification-led sourcing, documentation support, and buyer-ready shipment coordination.
