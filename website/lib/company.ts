@@ -12,7 +12,7 @@ export const COMPANY = {
   iec: "AAMCG8793P",
   cin: "U46909TS2026PTC212867",
   gst: "36AAMCG8793P1ZE",
-  registeredAddress: "Warangal, Telangana, India",
+  registeredAddress: "2nd Floor, Surya Arcade, Door No. 1-9-388, Kushaiguda Road, ECIL, Hyderabad – 500062, Telangana, India",
   hq: {
     label: "Headquarters (HQ)",
     address: "2nd Floor, Surya Arcade, Door No. 1-9-388, Kushaiguda Road, ECIL, Hyderabad – 500062, Telangana, India",
