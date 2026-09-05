@@ -5,6 +5,7 @@ import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
 import { formatCommercialMoq } from "@/lib/moq";
 import { COMPANY } from "@/lib/company";
+import { cleanPublicProduct } from "@/lib/publicProductCopy";
 
 export const revalidate = 300;
 
@@ -47,7 +48,7 @@ async function getFeatured(): Promise<FeaturedProduct[]> {
       .limit(8)
       .returns<ProductRow[]>();
     if (error) return [];
-    return orderFeatured((data ?? []).map(productToApi) as FeaturedProduct[]);
+    return orderFeatured(((data ?? []).map(productToApi) as FeaturedProduct[]).map(cleanPublicProduct));
   } catch {
     return [];
   }

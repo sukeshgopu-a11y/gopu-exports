@@ -8,6 +8,7 @@ import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
 import { getProductBySlug, PRODUCTS } from "@/lib/products";
 import { formatCommercialMoq } from "@/lib/moq";
+import { cleanPublicProduct } from "@/lib/publicProductCopy";
 
 export const revalidate = 300;
 
@@ -112,9 +113,9 @@ const getProduct = cache(async (slug: string): Promise<Product | null> => {
     .maybeSingle<ProductRow>();
   if (error || !data) {
     const fallback = getProductBySlug(slug);
-    return fallback ? ({ ...fallback, _id: fallback.slug } as Product) : null;
+    return fallback ? cleanPublicProduct({ ...fallback, _id: fallback.slug } as Product) : null;
   }
-  return productToApi(data) as Product;
+  return cleanPublicProduct(productToApi(data) as Product);
 });
 
 const getRelated = cache(async (slugs: string[]): Promise<Product[]> => {
@@ -127,7 +128,7 @@ const getRelated = cache(async (slugs: string[]): Promise<Product[]> => {
     .eq("is_active", true)
     .returns<ProductRow[]>();
   if (error) return [];
-  return (data ?? []).map(productToApi) as Product[];
+  return ((data ?? []).map(productToApi) as Product[]).map(cleanPublicProduct);
 });
 
 export async function generateStaticParams() {

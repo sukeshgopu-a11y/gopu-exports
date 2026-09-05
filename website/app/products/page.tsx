@@ -4,6 +4,7 @@ import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
 import { CATEGORY_LANDING_PAGES } from "@/lib/categoryLandingPages";
 import { PRODUCTS } from "@/lib/products";
+import { cleanPublicProduct } from "@/lib/publicProductCopy";
 import Link from "next/link";
 
 export const revalidate = 300;
@@ -15,7 +16,22 @@ export const metadata: Metadata = {
   alternates: { canonical: "/products" },
 };
 
-async function getProducts() {
+type PublicProduct = {
+  _id: string;
+  slug: string;
+  title: string;
+  tagline?: string;
+  category: string;
+  image: string;
+  description?: string;
+  origin?: string;
+  moq?: string;
+  lead?: string;
+  hs?: string;
+  featured?: boolean;
+};
+
+async function getProducts(): Promise<PublicProduct[]> {
   try {
     const supabase = createPublicClient();
     const { data, error } = await supabase
@@ -25,11 +41,11 @@ async function getProducts() {
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false })
       .returns<ProductRow[]>();
-    if (error) return PRODUCTS.map((product) => ({ ...product, _id: product.slug }));
-    const products = (data ?? []).map(productToApi);
-    return products.length > 0 ? products : PRODUCTS.map((product) => ({ ...product, _id: product.slug }));
+    if (error) return PRODUCTS.map((product) => cleanPublicProduct({ ...product, _id: product.slug } as PublicProduct));
+    const products = ((data ?? []).map(productToApi) as PublicProduct[]).map(cleanPublicProduct);
+    return products.length > 0 ? products : PRODUCTS.map((product) => cleanPublicProduct({ ...product, _id: product.slug } as PublicProduct));
   } catch {
-    return PRODUCTS.map((product) => ({ ...product, _id: product.slug }));
+    return PRODUCTS.map((product) => cleanPublicProduct({ ...product, _id: product.slug } as PublicProduct));
   }
 }
 
