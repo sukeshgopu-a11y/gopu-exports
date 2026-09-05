@@ -636,23 +636,23 @@ export default function ContactPageClient() {
             </div>
           )}
 
-          {/* OFFICES */}
+          {/* LOCATIONS */}
           <div className="space-y-4">
             <OfficeCard
-              map="https://maps.google.com/?q=Hasanparthy,Warangal,Telangana,India"
+              map="https://maps.google.com/?q=Surya+Arcade+Kushaiguda+Road+ECIL+Hyderabad+500062+Telangana+India"
               flag="IN"
-              title="India Headquarters"
-              badge="Registered Office"
+              title={COMPANY.hq.label}
+              badge="Hyderabad"
               badgeColor="bg-[#E6F4F7] text-[#0A5A70]"
-              lines={[COMPANY.registeredAddress, COMPANY.email, COMPANY.phone]}
+              lines={[COMPANY.hq.address, COMPANY.email, COMPANY.phone]}
             />
             <OfficeCard
-              map="https://maps.google.com/?q=Warangal,Telangana,India"
-              flag="ID"
-              title="Verification Desk"
-              badge="Buyer Support"
-              badgeColor="bg-[#EFF6FF] text-[#1D4ED8]"
-              lines={[`${COMPANY.contactPerson} — ${COMPANY.contactTitle}`, `For buyer verification and export enquiries, contact ${COMPANY.contactPerson}.`, "Request available verification documents", "Use official email for verification requests"]}
+              map="https://maps.google.com/?q=Kanchanpally+Raghunathpally+Jangaon+506244+Telangana+India"
+              flag="IN"
+              title={COMPANY.warehouse.label}
+              badge="Factory & Warehouse"
+              badgeColor="bg-[#FFF7ED] text-[#9A3412]"
+              lines={[COMPANY.warehouse.address, COMPANY.email, COMPANY.phone]}
             />
             <OfficeCard
               map="https://maps.google.com/?q=NSW+2010,Australia"
