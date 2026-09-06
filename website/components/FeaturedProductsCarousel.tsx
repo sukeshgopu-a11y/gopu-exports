@@ -1,10 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { formatCommercialMoq } from "@/lib/moq";
+
+const AUTO_ADVANCE_MS = 3000;
+const INTERACTION_PAUSE_MS = 4500;
 
 type FeaturedProduct = {
   slug: string;
@@ -19,81 +22,159 @@ type FeaturedProductsCarouselProps = {
   products: FeaturedProduct[];
 };
 
+function wrapIndex(index: number, count: number) {
+  return ((index % count) + count) % count;
+}
+
 export default function FeaturedProductsCarousel({ products }: FeaturedProductsCarouselProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
-  const pausedRef = useRef(false);
+  const cardRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+  const scrollFrameRef = useRef<number | null>(null);
+  const dragStartXRef = useRef<number | null>(null);
+  const suppressClickUntilRef = useRef(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isInView, setIsInView] = useState(false);
+  const [interactionPauseUntil, setInteractionPauseUntil] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const productCount = products.length;
+  const safeActiveIndex = productCount === 0 ? 0 : Math.min(activeIndex, productCount - 1);
 
-  const isInViewport = useCallback((viewport: HTMLDivElement) => {
-    const bounds = viewport.getBoundingClientRect();
-    return bounds.top < window.innerHeight * 0.9 && bounds.bottom > 0;
-  }, []);
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotionPreference = () => setReducedMotion(mediaQuery.matches);
 
-  const move = useCallback((direction: 1 | -1) => {
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-
-    const card = viewport.querySelector<HTMLElement>("[data-featured-product]");
-    const gap = Number.parseFloat(window.getComputedStyle(viewport).gap) || 20;
-    const distance = card ? card.offsetWidth + gap : Math.min(Math.max(viewport.clientWidth * 0.84, 270), 360);
-    const atEnd = viewport.scrollLeft + viewport.clientWidth >= viewport.scrollWidth - 16;
-    const atStart = viewport.scrollLeft <= 16;
-
-    if (direction === 1 && atEnd) {
-      viewport.scrollTo({ left: 0, behavior: "smooth" });
-      return;
-    }
-
-    if (direction === -1 && atStart) {
-      viewport.scrollTo({ left: Math.max(0, viewport.scrollWidth - viewport.clientWidth), behavior: "smooth" });
-      return;
-    }
-
-    viewport.scrollBy({ left: distance * direction, behavior: "smooth" });
+    updateMotionPreference();
+    mediaQuery.addEventListener("change", updateMotionPreference);
+    return () => mediaQuery.removeEventListener("change", updateMotionPreference);
   }, []);
 
   useEffect(() => {
     const viewport = viewportRef.current;
-    if (!viewport || products.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
-    }
+    if (!viewport) return;
 
-    const timer = window.setInterval(() => {
-      if (!pausedRef.current && !document.hidden && isInViewport(viewport)) {
-        move(1);
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting && entry.intersectionRatio >= 0.25),
+      { threshold: [0, 0.25] },
+    );
+
+    observer.observe(viewport);
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollToProduct = useCallback((index: number, instant = false) => {
+    const viewport = viewportRef.current;
+    if (!viewport || productCount === 0) return;
+
+    const nextIndex = wrapIndex(index, productCount);
+    const card = cardRefs.current[nextIndex];
+    if (!card) return;
+
+    viewport.scrollTo({
+      left: card.offsetLeft,
+      behavior: instant || reducedMotion ? "auto" : "smooth",
+    });
+    setActiveIndex(nextIndex);
+  }, [productCount, reducedMotion]);
+
+  const pauseAutoplay = useCallback(() => {
+    setInteractionPauseUntil(Date.now() + INTERACTION_PAUSE_MS);
+  }, []);
+
+  useEffect(() => {
+    if (productCount < 2 || !isInView) return;
+
+    const remainingPause = Math.max(0, interactionPauseUntil - Date.now());
+    const timer = window.setTimeout(() => {
+      const nextIndex = wrapIndex(safeActiveIndex + 1, productCount);
+
+      if (remainingPause > 0) {
+        setInteractionPauseUntil(0);
       }
-    }, 3000);
 
-    return () => {
-      window.clearInterval(timer);
-    };
-  }, [isInViewport, move, products.length]);
+      // Boundary resets are instant so the user never sees a long reverse scroll.
+      scrollToProduct(nextIndex, safeActiveIndex === productCount - 1);
+    }, remainingPause || AUTO_ADVANCE_MS);
 
-  const pause = () => {
-    pausedRef.current = true;
+    return () => window.clearTimeout(timer);
+  }, [interactionPauseUntil, isInView, productCount, safeActiveIndex, scrollToProduct]);
+
+  useEffect(() => () => {
+    if (scrollFrameRef.current !== null) window.cancelAnimationFrame(scrollFrameRef.current);
+  }, []);
+
+  const updateActiveIndexFromScroll = useCallback(() => {
+    const viewport = viewportRef.current;
+    if (!viewport || productCount === 0) return;
+
+    if (scrollFrameRef.current !== null) window.cancelAnimationFrame(scrollFrameRef.current);
+    scrollFrameRef.current = window.requestAnimationFrame(() => {
+      const nextIndex = cardRefs.current.reduce((nearestIndex, card, index) => {
+        const nearestCard = cardRefs.current[nearestIndex];
+        if (!card || !nearestCard) return nearestIndex;
+
+        return Math.abs(card.offsetLeft - viewport.scrollLeft) < Math.abs(nearestCard.offsetLeft - viewport.scrollLeft)
+          ? index
+          : nearestIndex;
+      }, 0);
+
+      setActiveIndex((current) => current === nextIndex ? current : nextIndex);
+      scrollFrameRef.current = null;
+    });
+  }, [productCount]);
+
+  const move = useCallback((direction: 1 | -1) => {
+    if (productCount < 2) return;
+
+    const nextIndex = wrapIndex(safeActiveIndex + direction, productCount);
+    pauseAutoplay();
+    scrollToProduct(
+      nextIndex,
+      (direction === 1 && safeActiveIndex === productCount - 1) || (direction === -1 && safeActiveIndex === 0),
+    );
+  }, [pauseAutoplay, productCount, safeActiveIndex, scrollToProduct]);
+
+  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    dragStartXRef.current = event.clientX;
+    pauseAutoplay();
   };
 
-  const resume = () => {
-    pausedRef.current = false;
+  const handlePointerEnd = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (dragStartXRef.current !== null && Math.abs(event.clientX - dragStartXRef.current) > 12) {
+      suppressClickUntilRef.current = Date.now() + 350;
+    }
+    dragStartXRef.current = null;
+    pauseAutoplay();
   };
+
+  const handleCardClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (Date.now() < suppressClickUntilRef.current) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  };
+
+  if (productCount === 0) return null;
 
   return (
-    <div className="relative -mx-6 px-6 pb-3 sm:mx-0 sm:px-0">
+    <section data-featured-carousel data-active-index={safeActiveIndex} className="relative -mx-6 px-6 pb-3 sm:mx-0 sm:px-0" aria-roledescription="carousel" aria-label="Core export portfolio">
       <div
         ref={viewportRef}
-        className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        onMouseEnter={pause}
-        onMouseLeave={resume}
-        onFocusCapture={pause}
-        onBlurCapture={resume}
-        onTouchCancel={resume}
+        data-carousel-viewport
+        className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:none] motion-reduce:scroll-auto [&::-webkit-scrollbar]:hidden"
+        onScroll={updateActiveIndexFromScroll}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerEnd}
+        onPointerCancel={handlePointerEnd}
       >
-        {products.map((product) => (
+        {products.map((product, index) => (
           <Link
             key={product.slug}
+            ref={(element) => { cardRefs.current[index] = element; }}
             data-featured-product
             href={`/products/${product.slug}`}
             prefetch={false}
-            className="group w-[270px] flex-none snap-start overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:w-[300px]"
+            onClickCapture={handleCardClick}
+            className="group w-[270px] flex-none snap-start snap-always overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:w-[300px]"
           >
             <div className="relative h-52 overflow-hidden">
               {product.image ? (
@@ -125,30 +206,46 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
         ))}
       </div>
 
-      {products.length > 1 && (
-        <div className="pointer-events-none absolute inset-y-0 left-0 right-0 flex items-center justify-between px-1 sm:px-2">
-          <button
-            type="button"
-            aria-label="Show previous featured product"
-            onClick={() => move(-1)}
-            onMouseEnter={pause}
-            onMouseLeave={resume}
-            className="pointer-events-auto grid h-10 w-10 place-items-center rounded-full border border-[#CBD5E1] bg-white/95 text-[#0F172A] shadow-md transition hover:border-[#0E7490] hover:text-[#0E7490] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0E7490] sm:h-11 sm:w-11"
-          >
-            <ChevronLeft aria-hidden="true" className="h-5 w-5" />
-          </button>
-          <button
-            type="button"
-            aria-label="Show next featured product"
-            onClick={() => move(1)}
-            onMouseEnter={pause}
-            onMouseLeave={resume}
-            className="pointer-events-auto grid h-10 w-10 place-items-center rounded-full border border-[#CBD5E1] bg-white/95 text-[#0F172A] shadow-md transition hover:border-[#0E7490] hover:text-[#0E7490] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0E7490] sm:h-11 sm:w-11"
-          >
-            <ChevronRight aria-hidden="true" className="h-5 w-5" />
-          </button>
-        </div>
+      {productCount > 1 && (
+        <>
+          <div className="pointer-events-none absolute inset-x-0 top-1/2 z-20 flex -translate-y-1/2 items-center justify-between px-1 sm:px-2">
+            <button
+              type="button"
+              aria-label="Show previous featured product"
+              onClick={() => move(-1)}
+              className="pointer-events-auto grid h-11 w-11 place-items-center rounded-full border border-[#CBD5E1] bg-white/95 text-[#0F172A] shadow-md transition hover:border-[#0E7490] hover:text-[#0E7490] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0E7490]"
+            >
+              <ChevronLeft aria-hidden="true" className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              aria-label="Show next featured product"
+              onClick={() => move(1)}
+              className="pointer-events-auto grid h-11 w-11 place-items-center rounded-full border border-[#CBD5E1] bg-white/95 text-[#0F172A] shadow-md transition hover:border-[#0E7490] hover:text-[#0E7490] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0E7490]"
+            >
+              <ChevronRight aria-hidden="true" className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="mt-1 flex justify-center gap-1.5 sm:hidden" aria-label={`Showing product ${safeActiveIndex + 1} of ${productCount}`}>
+            {products.map((product, index) => (
+              <button
+                key={product.slug}
+                type="button"
+                aria-label={`Show ${product.title}`}
+                aria-current={index === safeActiveIndex ? "true" : undefined}
+                onClick={() => {
+                  pauseAutoplay();
+                  scrollToProduct(index);
+                }}
+                className="grid h-8 w-5 place-items-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0E7490]"
+              >
+                <span className={`h-1.5 rounded-full transition-all ${index === safeActiveIndex ? "w-4 bg-[#0E7490]" : "w-1.5 bg-[#CBD5E1]"}`} />
+              </button>
+            ))}
+          </div>
+        </>
       )}
-    </div>
+    </section>
   );
 }
