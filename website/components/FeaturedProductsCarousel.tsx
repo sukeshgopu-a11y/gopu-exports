@@ -173,7 +173,7 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
   if (productCount === 0) return null;
 
   return (
-    <section data-featured-carousel data-active-index={safeActiveIndex} className="relative -mx-6 px-6 pb-3 sm:mx-0 sm:px-0" aria-roledescription="carousel" aria-label="Core export portfolio">
+    <section data-featured-carousel data-carousel-engine="index-loop-v2" data-active-index={safeActiveIndex} className="relative -mx-6 px-6 pb-3 sm:mx-0 sm:px-0" aria-roledescription="carousel" aria-label="Core export portfolio">
       <div
         ref={viewportRef}
         data-carousel-viewport
