@@ -32,6 +32,7 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
   const scrollFrameRef = useRef<number | null>(null);
   const autoplayTimerRef = useRef<number | null>(null);
   const autoplayScheduleIdRef = useRef(0);
+  const programmaticTargetIndexRef = useRef<number | null>(null);
   const dragStartXRef = useRef<number | null>(null);
   const suppressClickUntilRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -71,6 +72,7 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
     const card = cardRefs.current[nextIndex];
     if (!card) return;
 
+    programmaticTargetIndexRef.current = nextIndex;
     viewport.scrollTo({
       left: card.offsetLeft,
       behavior: instant || reducedMotion ? "auto" : "smooth",
@@ -125,6 +127,16 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
 
     if (scrollFrameRef.current !== null) window.cancelAnimationFrame(scrollFrameRef.current);
     scrollFrameRef.current = window.requestAnimationFrame(() => {
+      const programmaticTargetIndex = programmaticTargetIndexRef.current;
+      if (programmaticTargetIndex !== null) {
+        const targetCard = cardRefs.current[programmaticTargetIndex];
+        if (targetCard && Math.abs(targetCard.offsetLeft - viewport.scrollLeft) < 2) {
+          programmaticTargetIndexRef.current = null;
+        }
+        scrollFrameRef.current = null;
+        return;
+      }
+
       const nextIndex = cardRefs.current.reduce((nearestIndex, card, index) => {
         const nearestCard = cardRefs.current[nearestIndex];
         if (!card || !nearestCard) return nearestIndex;
@@ -151,6 +163,7 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
   }, [pauseAutoplay, productCount, safeActiveIndex, scrollToProduct]);
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    programmaticTargetIndexRef.current = null;
     dragStartXRef.current = event.clientX;
     pauseAutoplay();
   };
@@ -173,7 +186,7 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
   if (productCount === 0) return null;
 
   return (
-    <section data-featured-carousel data-carousel-engine="index-loop-v2" data-active-index={safeActiveIndex} className="relative -mx-6 px-6 pb-3 sm:mx-0 sm:px-0" aria-roledescription="carousel" aria-label="Core export portfolio">
+    <section data-featured-carousel data-carousel-engine="index-loop-v3" data-active-index={safeActiveIndex} className="relative -mx-6 px-6 pb-3 sm:mx-0 sm:px-0" aria-roledescription="carousel" aria-label="Core export portfolio">
       <div
         ref={viewportRef}
         data-carousel-viewport
