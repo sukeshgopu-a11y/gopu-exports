@@ -86,7 +86,7 @@ function LinkedinIcon({ size = 18, className = "" }: IconProps) {
 
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link href={href} prefetch={false} className="text-[13px] text-slate-400 transition hover:text-amber-300">
+    <Link href={href} prefetch={false} className="text-[13px] text-[#D7E1DD] transition hover:text-[var(--brand-accent)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--brand-accent)]">
       {children}
     </Link>
   );
@@ -94,9 +94,9 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
 
 function AddressBlock({ title, lines }: { title: string; lines: string[] }) {
   return (
-    <div className="rounded-md border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-[11px] font-black uppercase tracking-[0.2em] text-amber-300">{title}</p>
-      <address className="mt-3 not-italic text-[13px] leading-6 text-slate-300">
+    <div className="border-t border-[var(--brand-gold-separator)] pt-3">
+      <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--brand-accent)]">{title}</p>
+      <address className="mt-3 break-words not-italic text-[13px] leading-6 text-[var(--brand-text-muted)]">
         {lines.map((line) => <span key={line} className="block">{line}</span>)}
       </address>
     </div>
@@ -108,31 +108,31 @@ export default function Footer() {
   const factoryLines = COMPANY.factory.address.split(", ");
 
   return (
-    <footer className="relative overflow-hidden bg-[#061E14] text-slate-300">
-      <a href={`${COMPANY.whatsapp}?text=Hi%2C%20I%27m%20interested%20in%20sourcing%20from%20GOPU%20Exports.`} target="_blank" rel="noreferrer" aria-label="Chat with GOPU Exports on WhatsApp" className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl shadow-green-900/30 transition hover:scale-105">
+    <footer className="relative overflow-hidden bg-[var(--brand-footer)] text-[var(--brand-text-muted)]">
+      <a href={`${COMPANY.whatsapp}?text=Hi%2C%20I%27m%20interested%20in%20sourcing%20from%20GOPU%20Exports.`} target="_blank" rel="noreferrer" aria-label="Chat with GOPU Exports on WhatsApp" className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-[var(--brand-gold-separator)] bg-[var(--brand-header)] text-[var(--brand-text-light)] shadow-xl shadow-black/25 transition hover:scale-105 hover:text-[var(--brand-accent)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--brand-accent)] sm:bottom-6 sm:right-6">
         <svg width="27" height="27" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.051 21.785h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884M20.464 3.488A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
         </svg>
       </a>
 
-      <div className="absolute inset-0 bg-[linear-gradient(135deg,#061E14,#082A1C_48%,#061E14)]" aria-hidden="true" />
-      <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[1.15fr_0.75fr_0.75fr_0.9fr_1.2fr]">
+      <div className="absolute inset-x-0 top-0 h-px bg-[var(--brand-gold-separator)]" aria-hidden="true" />
+      <div className="relative mx-auto grid max-w-[1450px] gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[1.2fr_0.65fr_0.65fr_0.75fr_1.15fr_1.1fr]">
         <div>
           <Link
             href="/"
             prefetch={false}
             aria-label="GOPU Exports Home"
-            className="inline-flex max-w-[245px] rounded-md border border-amber-200/20 bg-[#FFF9EF] px-4 py-3 shadow-sm"
+            className="inline-flex max-w-[210px] rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand-accent)]"
           >
-            <BrandLogo variant="light" className="h-auto w-[210px]" />
+            <BrandLogo variant="light" className="h-auto w-[190px]" />
           </Link>
-          <p className="mt-5 text-[13px] leading-6 text-slate-400">
+          <p className="mt-5 text-[13px] leading-6 text-[var(--brand-text-muted)]">
             Professional Indian agricultural export company focused on specification-led sourcing, documentation support, and buyer-ready shipment coordination.
           </p>
-          <div className="mt-5 grid gap-2 text-[12px] text-slate-400">
-            <span>IEC: <strong className="text-slate-200">{COMPANY.iec}</strong></span>
-            <span>CIN: <strong className="text-slate-200">{COMPANY.cin}</strong></span>
-            <span>GST: <strong className="text-slate-200">{COMPANY.gst}</strong></span>
+          <div className="mt-5 grid gap-2 text-[12px] text-[var(--brand-text-muted)]">
+            <span>IEC: <strong className="text-[var(--brand-text-light)]">{COMPANY.iec}</strong></span>
+            <span>CIN: <strong className="text-[var(--brand-text-light)]">{COMPANY.cin}</strong></span>
+            <span>GST: <strong className="text-[var(--brand-text-light)]">{COMPANY.gst}</strong></span>
           </div>
           <div className="mt-5">
             <PublicCertificationBadges variant="footer" limit={5} />
@@ -140,21 +140,21 @@ export default function Footer() {
         </div>
 
         <nav aria-label="Footer navigation">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Company</h3>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-[var(--brand-text-light)]">Company</h3>
           <ul className="mt-5 grid gap-3">
             {NAVIGATION.map(([label, href]) => <li key={href}><FooterLink href={href}>{label}</FooterLink></li>)}
           </ul>
         </nav>
 
         <nav aria-label="Footer product links">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Products</h3>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-[var(--brand-text-light)]">Products</h3>
           <ul className="mt-5 grid gap-3">
             {PRODUCT_LINKS.map(([label, href]) => <li key={href}><FooterLink href={href}>{label}</FooterLink></li>)}
           </ul>
         </nav>
 
         <nav aria-label="Footer buyer links">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Buyers</h3>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-[var(--brand-text-light)]">Buyers</h3>
           <ul className="mt-5 grid gap-3">
             {RESOURCE_LINKS.map(([label, href]) => <li key={href}><FooterLink href={href}>{label}</FooterLink></li>)}
           </ul>
@@ -166,31 +166,31 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Contact Us</h3>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-[var(--brand-text-light)]">Contact Us</h3>
           <div className="mt-5 grid gap-3 text-[13px]">
-            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300">
-              <p className="text-xs uppercase tracking-[0.16em] text-amber-300">Responsible contact</p>
-              <p className="mt-1 font-bold text-slate-100">{COMPANY.contactPerson}</p>
-              <p className="text-xs font-bold text-slate-300">{COMPANY.contactTitle}</p>
+            <div className="border-l-2 border-[var(--brand-accent)] bg-white/[0.03] px-3 py-3 text-[var(--brand-text-muted)]">
+              <p className="text-xs uppercase tracking-[0.16em] text-[var(--brand-accent)]">Responsible contact</p>
+              <p className="mt-1 font-bold text-[var(--brand-text-light)]">{COMPANY.contactPerson}</p>
+              <p className="text-xs font-bold text-[var(--brand-text-muted)]">{COMPANY.contactTitle}</p>
             </div>
-            <a href={`mailto:${COMPANY.email}`} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300 transition hover:border-amber-400/40">
-              <MailIcon size={17} className="text-amber-300" />
+            <a href={`mailto:${COMPANY.email}`} className="flex items-center gap-3 break-all border-b border-[var(--brand-border)] px-1 py-3 text-[var(--brand-text-muted)] transition hover:border-[var(--brand-gold-separator)] hover:text-[var(--brand-accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-accent)]">
+              <MailIcon size={17} className="shrink-0 text-[var(--brand-accent)]" />
               {COMPANY.email}
             </a>
-            <a href={COMPANY.phoneHref} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300 transition hover:border-amber-400/40">
-              <PhoneIcon size={17} className="text-amber-300" />
+            <a href={COMPANY.phoneHref} className="flex items-center gap-3 border-b border-[var(--brand-border)] px-1 py-3 text-[var(--brand-text-muted)] transition hover:border-[var(--brand-gold-separator)] hover:text-[var(--brand-accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-accent)]">
+              <PhoneIcon size={17} className="shrink-0 text-[var(--brand-accent)]" />
               {COMPANY.phone}
             </a>
-            <Link href="/company-verification" prefetch={false} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300 transition hover:border-amber-400/40">
-              <ShieldCheckIcon size={17} className="text-amber-300" />
+            <Link href="/company-verification" prefetch={false} className="flex items-center gap-3 border-b border-[var(--brand-border)] px-1 py-3 text-[var(--brand-text-muted)] transition hover:border-[var(--brand-gold-separator)] hover:text-[var(--brand-accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-accent)]">
+              <ShieldCheckIcon size={17} className="shrink-0 text-[var(--brand-accent)]" />
               Request verification documents
             </Link>
           </div>
-          <Link href="/contact" prefetch={false} className="mt-5 inline-flex w-full justify-center rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 px-5 py-3 text-sm font-bold text-slate-900 transition hover:from-amber-300 hover:to-amber-400">
+          <Link href="/contact" prefetch={false} className="mt-5 inline-flex w-full justify-center rounded-md bg-[var(--brand-accent)] px-5 py-3 text-sm font-bold text-[var(--brand-header)] transition hover:bg-[var(--brand-accent-hover)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--brand-text-light)]">
             Send Export Enquiry
           </Link>
           <div className="mt-5">
-            <p className="text-[12px] leading-5 text-slate-400">
+            <p className="text-[12px] leading-5 text-[var(--brand-text-muted)]">
               Follow GOPU Exports for product updates, sourcing notes, and export documentation insights.
             </p>
             {SOCIAL_LINKS.length > 0 && (
@@ -202,7 +202,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={label}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-300 transition hover:border-amber-400/40 hover:text-amber-300"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[var(--brand-border)] text-[var(--brand-text-muted)] transition hover:border-[var(--brand-gold-separator)] hover:text-[var(--brand-accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-accent)]"
                   >
                     <Icon size={16} />
                   </a>
@@ -213,9 +213,9 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="relative border-t border-white/[0.08]">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-5 text-[12px] text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-          <p>© 2026 <span className="font-semibold text-slate-300">Gopu Exports Private Limited</span>. All rights reserved.</p>
+      <div className="relative border-t border-[var(--brand-border)] bg-[var(--brand-footer-bottom)]">
+        <div className="mx-auto flex max-w-[1450px] flex-col gap-3 px-5 py-5 text-[12px] text-[var(--brand-text-muted)] sm:flex-row sm:items-center sm:justify-between sm:px-8">
+          <p>© 2026 <span className="font-semibold text-[var(--brand-text-light)]">Gopu Exports Private Limited</span>. All rights reserved.</p>
           <div className="flex flex-wrap gap-4">
             {POLICY_LINKS.map(([label, href]) => <FooterLink key={href} href={href}>{label}</FooterLink>)}
           </div>

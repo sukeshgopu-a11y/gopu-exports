@@ -16,11 +16,11 @@ export default function ConditionalLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isDashboard = pathname?.startsWith("/dashboard");
+  const isPrivateArea = pathname?.startsWith("/dashboard") || pathname?.startsWith("/admin");
   const [analyticsReady, setAnalyticsReady] = useState(false);
 
   useEffect(() => {
-    if (isDashboard) return;
+    if (isPrivateArea) return;
 
     const windowWithIdle = window as Window & {
       requestIdleCallback?: (callback: () => void, options?: { timeout?: number }) => number;
@@ -36,19 +36,19 @@ export default function ConditionalLayout({
 
     const timeoutId = window.setTimeout(() => setAnalyticsReady(true), 1800);
     return () => window.clearTimeout(timeoutId);
-  }, [isDashboard]);
+  }, [isPrivateArea]);
 
   return (
     <>
-      {!isDashboard && <Navbar />}
+      {!isPrivateArea && <Navbar />}
       <div
         id="main-content"
-        className={isDashboard ? undefined : "min-h-screen min-h-[100svh] overflow-x-clip"}
+        className={isPrivateArea ? undefined : "min-h-screen min-h-[100svh] overflow-x-clip"}
       >
         {children}
       </div>
-      {!isDashboard && analyticsReady && <AnalyticsTracker />}
-      {!isDashboard && <Footer />}
+      {!isPrivateArea && analyticsReady && <AnalyticsTracker />}
+      {!isPrivateArea && <Footer />}
     </>
   );
 }

@@ -33,9 +33,9 @@ export default function PublicCertificationBadges({
         {labels.map((label) => (
           <span
             key={label}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold tracking-wide text-slate-300 transition hover:border-amber-400/30 hover:text-amber-300"
+            className="inline-flex items-center gap-1.5 rounded-md border border-[var(--brand-border)] px-2.5 py-1 text-[10px] font-bold tracking-wide text-[var(--brand-text-muted)] transition hover:border-[var(--brand-gold-separator)] hover:text-[var(--brand-accent)]"
           >
-            <ShieldCheckIcon className="h-2.5 w-2.5 text-amber-400" />
+            <ShieldCheckIcon className="h-2.5 w-2.5 text-[var(--brand-accent)]" />
             {label}
           </span>
         ))}
