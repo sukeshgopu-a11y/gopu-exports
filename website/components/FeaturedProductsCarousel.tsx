@@ -61,7 +61,7 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
       if (!pausedRef.current && !document.hidden && isInViewport(viewport)) {
         move(1);
       }
-    }, 4200);
+    }, 3000);
 
     return () => {
       window.clearInterval(timer);
@@ -85,8 +85,7 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
         onMouseLeave={resume}
         onFocusCapture={pause}
         onBlurCapture={resume}
-        onTouchStart={pause}
-        onTouchEnd={resume}
+        onTouchCancel={resume}
       >
         {products.map((product) => (
           <Link
