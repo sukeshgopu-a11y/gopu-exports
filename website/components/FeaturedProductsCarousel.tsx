@@ -22,13 +22,19 @@ type FeaturedProductsCarouselProps = {
 export default function FeaturedProductsCarousel({ products }: FeaturedProductsCarouselProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const pausedRef = useRef(false);
-  const visibleRef = useRef(false);
+
+  const isInViewport = useCallback((viewport: HTMLDivElement) => {
+    const bounds = viewport.getBoundingClientRect();
+    return bounds.top < window.innerHeight * 0.9 && bounds.bottom > 0;
+  }, []);
 
   const move = useCallback((direction: 1 | -1) => {
     const viewport = viewportRef.current;
     if (!viewport) return;
 
-    const distance = Math.min(Math.max(viewport.clientWidth * 0.84, 270), 360);
+    const card = viewport.querySelector<HTMLElement>("[data-featured-product]");
+    const gap = Number.parseFloat(window.getComputedStyle(viewport).gap) || 20;
+    const distance = card ? card.offsetWidth + gap : Math.min(Math.max(viewport.clientWidth * 0.84, 270), 360);
     const atEnd = viewport.scrollLeft + viewport.clientWidth >= viewport.scrollWidth - 16;
     const atStart = viewport.scrollLeft <= 16;
 
@@ -51,25 +57,16 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
       return;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        visibleRef.current = entry.isIntersecting;
-      },
-      { threshold: 0.2 },
-    );
-    observer.observe(viewport);
-
     const timer = window.setInterval(() => {
-      if (!pausedRef.current && visibleRef.current && !document.hidden) {
+      if (!pausedRef.current && !document.hidden && isInViewport(viewport)) {
         move(1);
       }
-    }, 4800);
+    }, 4200);
 
     return () => {
-      observer.disconnect();
       window.clearInterval(timer);
     };
-  }, [move, products.length]);
+  }, [isInViewport, move, products.length]);
 
   const pause = () => {
     pausedRef.current = true;
@@ -94,6 +91,7 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
         {products.map((product) => (
           <Link
             key={product.slug}
+            data-featured-product
             href={`/products/${product.slug}`}
             prefetch={false}
             className="group w-[270px] flex-none snap-start overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:w-[300px]"

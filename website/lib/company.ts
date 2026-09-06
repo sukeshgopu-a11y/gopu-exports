@@ -7,7 +7,7 @@ export const COMPANY = {
   whatsapp: "https://wa.me/919618991917",
   founderPerson: "Bala Reddy Gopu",
   founderTitle: "Founder",
-  contactPerson: "Sukesh Reddy Gopu",
+  contactPerson: "Sukesh Reddy",
   contactTitle: "Chief Executive Officer (CEO)",
   iec: "AAMCG8793P",
   cin: "U46909TS2026PTC212867",
