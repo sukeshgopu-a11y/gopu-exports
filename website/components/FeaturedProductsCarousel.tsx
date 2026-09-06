@@ -30,6 +30,9 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
   const viewportRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Array<HTMLAnchorElement | null>>([]);
   const scrollFrameRef = useRef<number | null>(null);
+  const autoplayTimerRef = useRef<number | null>(null);
+  const autoplayScheduleIdRef = useRef(0);
+  const lastAutoplayAdvanceRef = useRef(0);
   const dragStartXRef = useRef<number | null>(null);
   const suppressClickUntilRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -81,11 +84,23 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
   }, []);
 
   useEffect(() => {
+    if (autoplayTimerRef.current !== null) {
+      window.clearTimeout(autoplayTimerRef.current);
+      autoplayTimerRef.current = null;
+    }
+
     if (productCount < 2 || !isInView) return;
 
     const remainingPause = Math.max(0, interactionPauseUntil - Date.now());
+    const scheduleId = ++autoplayScheduleIdRef.current;
     const timer = window.setTimeout(() => {
+      if (scheduleId !== autoplayScheduleIdRef.current) return;
+
+      const now = Date.now();
+      if (remainingPause === 0 && now - lastAutoplayAdvanceRef.current < AUTO_ADVANCE_MS - 100) return;
+
       const nextIndex = wrapIndex(safeActiveIndex + 1, productCount);
+      lastAutoplayAdvanceRef.current = now;
 
       if (remainingPause > 0) {
         setInteractionPauseUntil(0);
@@ -94,12 +109,19 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
       // Boundary resets are instant so the user never sees a long reverse scroll.
       scrollToProduct(nextIndex, safeActiveIndex === productCount - 1);
     }, remainingPause || AUTO_ADVANCE_MS);
+    autoplayTimerRef.current = timer;
 
-    return () => window.clearTimeout(timer);
+    return () => {
+      if (autoplayTimerRef.current === timer) {
+        window.clearTimeout(timer);
+        autoplayTimerRef.current = null;
+      }
+    };
   }, [interactionPauseUntil, isInView, productCount, safeActiveIndex, scrollToProduct]);
 
   useEffect(() => () => {
     if (scrollFrameRef.current !== null) window.cancelAnimationFrame(scrollFrameRef.current);
+    if (autoplayTimerRef.current !== null) window.clearTimeout(autoplayTimerRef.current);
   }, []);
 
   const updateActiveIndexFromScroll = useCallback(() => {
