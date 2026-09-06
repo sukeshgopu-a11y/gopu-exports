@@ -30,7 +30,8 @@ canvas {
 }
 
 .featured-products-track {
-  animation: featured-products-scroll 34s linear infinite;
+  animation: featured-products-scroll 42s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 .featured-products-track:hover {
@@ -114,7 +115,7 @@ canvas {
     transform: translateX(0);
   }
   to {
-    transform: translateX(calc(-50% - 10px));
+    transform: translateX(min(0px, calc(100vw - 100% - 32px)));
   }
 }
 

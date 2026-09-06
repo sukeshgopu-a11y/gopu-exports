@@ -109,7 +109,7 @@ export default async function HomePage() {
           <div className="hero-ambient absolute inset-0 opacity-70" aria-hidden="true" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-[1450px] px-5 pb-14 pt-16 sm:px-8 sm:pb-20 sm:pt-24 lg:pt-32 lg:pb-28">
+        <div className="relative z-10 mx-auto min-h-[620px] max-w-[1450px] px-5 pb-14 pt-16 sm:min-h-[680px] sm:px-8 sm:pb-20 sm:pt-24 lg:min-h-[720px] lg:pb-28 lg:pt-32">
           <div className="hero-copy max-w-[680px]">
             <div className="flex items-center gap-4">
               <div className="h-[2px] w-14 bg-[#0E7490]" />
@@ -224,9 +224,9 @@ export default async function HomePage() {
           )}
           <div className="-mx-6 overflow-hidden px-6 pb-3 sm:mx-0 sm:px-0">
             <div className="featured-products-track flex w-max gap-5">
-              {[...featured.slice(0, 8), ...featured.slice(0, 8)].map((product: FeaturedProduct, index) => (
+              {featured.slice(0, 8).map((product: FeaturedProduct) => (
               <Link
-                key={`${product.slug}-${index}`}
+                key={product.slug}
                 href={`/products/${product.slug}`}
                 prefetch={false}
                 className="group w-[270px] flex-none overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:w-[300px]"

@@ -44,6 +44,12 @@ type Props = { params: Promise<{ slug: string }> };
 
 const SITE_URL = "https://gopuexports.com";
 
+function absoluteUrl(value?: string) {
+  if (!value) return undefined;
+  if (value.startsWith("http://") || value.startsWith("https://")) return value;
+  return `${SITE_URL}${value.startsWith("/") ? value : `/${value}`}`;
+}
+
 function DetailRow({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
   return (
@@ -199,10 +205,45 @@ export default async function ProductDetailsPage({ params }: Props) {
       { "@type": "ListItem", position: 3, name: product.title, item: productUrl },
     ],
   };
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    image: absoluteUrl(product.image) ? [absoluteUrl(product.image)] : undefined,
+    description:
+      product.description ||
+      `${product.title} available for B2B export enquiry from GOPU Exports.`,
+    brand: {
+      "@type": "Brand",
+      name: "GOPU Exports",
+    },
+    category: product.category,
+    sku: product.slug,
+    url: productUrl,
+    additionalProperty: [
+      product.hs ? { "@type": "PropertyValue", name: "HS Code", value: product.hs } : null,
+      product.origin ? { "@type": "PropertyValue", name: "Origin", value: product.origin } : null,
+      commercialMoq ? { "@type": "PropertyValue", name: "MOQ", value: commercialMoq } : null,
+      product.packaging ? { "@type": "PropertyValue", name: "Packaging", value: product.packaging } : null,
+      product.shelfLife ? { "@type": "PropertyValue", name: "Shelf Life", value: product.shelfLife } : null,
+      product.lead ? { "@type": "PropertyValue", name: "Lead Time", value: product.lead } : null,
+      ...specs.slice(0, 12).map((spec) => ({
+        "@type": "PropertyValue",
+        name: spec.label,
+        value: spec.value,
+      })),
+    ].filter(Boolean),
+    potentialAction: {
+      "@type": "CommunicateAction",
+      name: "Request product quotation",
+      target: `${SITE_URL}/contact?product=${encodeURIComponent(product.title)}`,
+    },
+  };
 
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
       <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
 
       <div className="border-b border-[#E2E8F0] bg-white">
         <div className="mx-auto max-w-[1450px] px-6 py-3 sm:px-8">
