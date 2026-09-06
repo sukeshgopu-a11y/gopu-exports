@@ -304,7 +304,7 @@ export default async function ProductDetailsPage({ params }: Props) {
                 <Image src={product.image} alt={`${product.title} product image`} fill preload sizes="(max-width: 1024px) 100vw, 520px" className="object-cover" />
               ) : (
                 <div className="flex h-full min-h-[360px] items-center justify-center text-sm font-semibold text-[#64748B]">
-                  Product image will appear after dashboard upload.
+                  Product image will appear when approved media is available.
                 </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-[#061827]/75 via-transparent to-transparent" />

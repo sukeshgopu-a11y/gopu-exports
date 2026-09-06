@@ -60,7 +60,7 @@ export default async function GalleryPage() {
               Gallery updates are coming soon.
             </h2>
             <p className="mx-auto mt-3 max-w-lg text-[15px] leading-[1.8] text-[#64748B]">
-              The export gallery is managed from the admin dashboard.
+              Export gallery images will appear here as approved company media is published.
             </p>
           </div>
         ) : (

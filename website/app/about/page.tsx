@@ -73,8 +73,8 @@ export default function AboutPage() {
             <p className="text-[11px] font-black tracking-[0.26em] text-white/60">ABOUT GOPU EXPORTS</p>
           </div>
           <h1 className="mt-5 max-w-3xl text-[48px] font-black leading-[0.92] tracking-[-0.05em] text-white lg:text-[64px]">
-            Delivering India&apos;s Finest<br />
-            <span className="text-[#67C9D8]">To The World.</span>
+            Indian agricultural sourcing<br />
+            <span className="text-[#67C9D8]">with export discipline.</span>
           </h1>
           <p className="mt-6 max-w-xl text-[17px] leading-[1.8] text-slate-300">
             GOPU Exports is a Hyderabad-headquartered agricultural export company supporting
@@ -97,7 +97,7 @@ export default function AboutPage() {
               <p className="mt-5 text-sm font-semibold text-white">{COMPANY.contactPerson}</p>
               <p className="text-sm font-semibold text-slate-300">{COMPANY.contactTitle}</p>
               <p className="mt-4 text-xs leading-6 text-slate-400">
-                Buyer & Business Contact for verification and export enquiries.
+                Buyer contact for verification and export enquiries.
               </p>
             </div>
             <div id="vision" className="rounded-3xl border border-[#D9E2EC] bg-[#F8FAFC] p-8">
@@ -171,7 +171,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── EXPORT CAPABILITIES ──────────────────────────────── */}
-      <section className="bg-[#071624] py-20">
+      <section id="operations" className="bg-[#071624] py-20">
         <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>

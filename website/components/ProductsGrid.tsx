@@ -138,7 +138,18 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
           </button>
         </div>
 
-        <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
+        <select
+          value={active}
+          onChange={(event) => setActive(event.target.value)}
+          className="mt-4 w-full rounded-xl border border-[#D9E2EC] bg-white px-4 py-3 text-sm font-bold text-[#374151] outline-none focus:border-[#0E7490] focus:ring-2 focus:ring-[#0E7490]/20 sm:hidden"
+          aria-label="Filter products by category"
+        >
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
+        </select>
+
+        <div className="mt-4 hidden gap-2 overflow-x-auto pb-1 sm:flex">
           {categories.map((cat) => (
             <button
               key={cat}

@@ -9,30 +9,26 @@ type IconProps = { size?: number; className?: string };
 type IconComponent = (props: IconProps) => React.ReactElement;
 
 const NAVIGATION = [
-  ["Home", "/"],
   ["About", "/about"],
-  ["Products", "/products"],
-  ["Export Markets", "/markets"],
-  ["Resources", "/resources"],
-  ["Insights", "/blog"],
-  ["Certifications", "/certifications"],
-  ["Contact", "/contact"],
+  ["Factory", "/about#operations"],
+  ["Company Verification", "/company-verification"],
+  ["Quality & Compliance", "/certifications"],
 ];
 
-const TRUST_LINKS = [
-  ["Company Verification", "/company-verification"],
-  ["Certifications", "/certifications"],
-  ["Request Verification Documents", "/contact?verification=true"],
+const PRODUCT_LINKS = [
+  ["Spices", "/products?category=Spices"],
+  ["Rice", "/products?category=Rice%20%26%20Grains"],
+  ["Pulses", "/products?category=Pulses"],
+  ["Millets", "/products?category=Millets"],
+  ["Fresh Produce", "/products?category=Fresh%20Fruits"],
 ];
 
 const RESOURCE_LINKS = [
-  ["Buyer Resources", "/resources"],
-  ["Insights", "/blog"],
-  ["Documentation Support", "/resources/documentation-support"],
-  ["Buyer FAQ", "/resources/buyer-faq"],
-  ["Export Process", "/resources/export-process"],
-  ["Quality Control", "/resources/quality-control"],
+  ["Request Quote", "/contact"],
+  ["Resources", "/resources"],
   ["Packaging Standards", "/resources/packaging-standards"],
+  ["Contact", "/contact"],
+  ["Insights", "/blog"],
 ];
 
 const POLICY_LINKS = [
@@ -96,17 +92,31 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
   );
 }
 
-export default function Footer() {
+function AddressBlock({ title, lines }: { title: string; lines: string[] }) {
   return (
-    <footer className="relative overflow-hidden bg-[#060E18] text-slate-300">
+    <div className="rounded-md border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-[11px] font-black uppercase tracking-[0.2em] text-amber-300">{title}</p>
+      <address className="mt-3 not-italic text-[13px] leading-6 text-slate-300">
+        {lines.map((line) => <span key={line} className="block">{line}</span>)}
+      </address>
+    </div>
+  );
+}
+
+export default function Footer() {
+  const hqLines = COMPANY.hq.address.split(", ");
+  const factoryLines = COMPANY.factory.address.split(", ");
+
+  return (
+    <footer className="relative overflow-hidden bg-[#061E14] text-slate-300">
       <a href={`${COMPANY.whatsapp}?text=Hi%2C%20I%27m%20interested%20in%20sourcing%20from%20GOPU%20Exports.`} target="_blank" rel="noreferrer" aria-label="Chat with GOPU Exports on WhatsApp" className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl shadow-green-900/30 transition hover:scale-105">
         <svg width="27" height="27" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.051 21.785h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884M20.464 3.488A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
         </svg>
       </a>
 
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(14,116,144,0.22),transparent_34%),linear-gradient(135deg,#060E18,#0a1628_48%,#060E18)]" aria-hidden="true" />
-      <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[1.2fr_0.8fr_0.9fr_1fr]">
+      <div className="absolute inset-0 bg-[linear-gradient(135deg,#061E14,#082A1C_48%,#061E14)]" aria-hidden="true" />
+      <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[1.15fr_0.75fr_0.75fr_0.9fr_1.2fr]">
         <div>
           <Link
             href="/"
@@ -123,8 +133,6 @@ export default function Footer() {
             <span>IEC: <strong className="text-slate-200">{COMPANY.iec}</strong></span>
             <span>CIN: <strong className="text-slate-200">{COMPANY.cin}</strong></span>
             <span>GST: <strong className="text-slate-200">{COMPANY.gst}</strong></span>
-            <span>Australia business presence: <strong className="text-slate-200">{COMPANY.australia.entityName}, {COMPANY.australia.location}</strong></span>
-            <span>ABN: <strong className="text-slate-200">{COMPANY.australia.abn}</strong></span>
           </div>
           <div className="mt-5">
             <PublicCertificationBadges variant="footer" limit={5} />
@@ -132,22 +140,30 @@ export default function Footer() {
         </div>
 
         <nav aria-label="Footer navigation">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Navigation</h3>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Company</h3>
           <ul className="mt-5 grid gap-3">
             {NAVIGATION.map(([label, href]) => <li key={href}><FooterLink href={href}>{label}</FooterLink></li>)}
           </ul>
         </nav>
 
-        <nav aria-label="Footer resources and verification">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Resources</h3>
+        <nav aria-label="Footer product links">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Products</h3>
+          <ul className="mt-5 grid gap-3">
+            {PRODUCT_LINKS.map(([label, href]) => <li key={href}><FooterLink href={href}>{label}</FooterLink></li>)}
+          </ul>
+        </nav>
+
+        <nav aria-label="Footer buyer links">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Buyers</h3>
           <ul className="mt-5 grid gap-3">
             {RESOURCE_LINKS.map(([label, href]) => <li key={href}><FooterLink href={href}>{label}</FooterLink></li>)}
           </ul>
-          <h3 className="mt-7 text-[11px] font-black uppercase tracking-[0.22em] text-white">Verification</h3>
-          <ul className="mt-5 grid gap-3">
-            {TRUST_LINKS.map(([label, href]) => <li key={href}><FooterLink href={href}>{label}</FooterLink></li>)}
-          </ul>
         </nav>
+
+        <div className="grid gap-3">
+          <AddressBlock title="Head Office" lines={hqLines} />
+          <AddressBlock title="Our Factory" lines={factoryLines} />
+        </div>
 
         <div>
           <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Contact Us</h3>

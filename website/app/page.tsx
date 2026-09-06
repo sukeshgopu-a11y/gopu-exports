@@ -77,13 +77,40 @@ const WHY_FEATURES = [
   },
 ];
 
-const PROCUREMENT_STEPS = [
-  "Product specification review",
+const DESTINATION_REVIEW = [
+  "Product eligibility review",
   "Packing and MOQ discussion",
-  "Company verification request",
-  "Document checklist mapping",
-  "Commercial quote preparation",
+  "Destination documentation",
+  "Port and transit planning",
+  "Commercial terms review",
   "Shipment coordination planning",
+];
+
+const SOURCE_TO_SHIPMENT = [
+  "Buyer requirement review",
+  "Source and grade confirmation",
+  "Packing and documentation planning",
+  "Dispatch and shipment coordination",
+];
+
+const EXTENDED_CATEGORIES = [
+  "Spices",
+  "Rice",
+  "Pulses",
+  "Millets",
+  "Oilseeds",
+  "Fresh Produce",
+  "Processed Products",
+];
+
+const RESOURCE_LINKS = [
+  ["Company Profile", "/about"],
+  ["Product Catalogue", "/products"],
+  ["Spice Specifications", "/export/spice-exporters-from-india"],
+  ["Rice Specifications", "/export/rice-exporters-from-india"],
+  ["Packaging Guide", "/resources/packaging-standards"],
+  ["Corporate Verification", "/company-verification"],
+  ["Export Documentation Guide", "/resources/documentation-support"],
 ];
 
 export default async function HomePage() {
@@ -283,18 +310,96 @@ export default async function HomePage() {
       </section>
 
       {/* ── WHY CHOOSE US ────────────────────────────────────── */}
+      <section className="bg-[#FFF9EF] py-20">
+        <div className="mx-auto grid max-w-[1450px] gap-10 px-6 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#7A5A20]">Company introduction</p>
+            <h2 className="mt-3 font-serif text-[34px] font-semibold leading-tight text-[#14231B] sm:text-[46px]">
+              A Hyderabad-based Indian exporter built for serious procurement.
+            </h2>
+          </div>
+          <div className="border-l border-[#D8C7A3] pl-6 text-[15px] leading-8 text-[#475569]">
+            <p>
+              GOPU Exports supports international buyers with specification-led sourcing for spices,
+              rice, and selected agricultural products from India. Each enquiry is reviewed around
+              product fit, packing needs, destination requirements, documentation expectations, and
+              practical shipment coordination.
+            </p>
+            <Link href="/about" prefetch={false} className="mt-5 inline-flex text-[13px] font-black uppercase tracking-[0.12em] text-[#0B5A3B]">
+              Learn about the company →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
+          <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0B5A3B]">From Source to Shipment</p>
+              <h2 className="mt-3 font-serif text-[38px] font-semibold leading-tight text-[#14231B]">
+                Clear steps before a commercial quote.
+              </h2>
+              <p className="mt-4 text-[15px] leading-8 text-[#64748B]">
+                The process is designed to reduce ambiguity for importers, distributors,
+                food-service teams, and private-label buyers.
+              </p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {SOURCE_TO_SHIPMENT.map((step, index) => (
+                <div key={step} className="border-t border-[#C9B98E] bg-[#FAF7EF] p-5">
+                  <span className="font-serif text-3xl text-[#9A6B24]">{String(index + 1).padStart(2, "0")}</span>
+                  <h3 className="mt-4 text-[15px] font-black text-[#14231B]">{step}</h3>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="operations" className="bg-[#F5F7FA] py-20">
+        <div className="mx-auto grid max-w-[1450px] gap-8 px-6 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+          <div className="relative min-h-[360px] overflow-hidden rounded-lg bg-[#D9E2EC]">
+            <Image
+              src="/images/hero-export.webp"
+              alt="GOPU Exports product handling and export operations"
+              fill
+              sizes="(max-width: 1024px) 100vw, 55vw"
+              quality={62}
+              className="object-cover"
+            />
+          </div>
+          <div className="bg-white p-7 ring-1 ring-[#D9E2EC] sm:p-9">
+            <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0B5A3B]">Factory / Operations</p>
+            <h2 className="mt-3 font-serif text-[36px] font-semibold leading-tight text-[#14231B]">Our Factory</h2>
+            <p className="mt-4 text-[15px] leading-8 text-[#64748B]">
+              {COMPANY.factory.address}. Operations are presented as sourcing and handling capability;
+              real facility photos can replace the visual area as approved documentation becomes available.
+            </p>
+            <div className="mt-6 grid gap-2 text-[13px] font-semibold text-[#475569] sm:grid-cols-2">
+              {["Product Handling", "Processing", "Packing", "Storage", "Quality Control", "Dispatch"].map((item) => (
+                <span key={item} className="border border-[#E2E8F0] px-3 py-2">{item}</span>
+              ))}
+            </div>
+            <Link href="/contact?visit=factory" prefetch={false} className="mt-6 inline-flex rounded-md bg-[#0B5A3B] px-5 py-3 text-[13px] font-bold text-white">
+              Arrange a Business Visit
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <section className="bg-[#071624] py-20">
         <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
           <div className="mb-12 text-center">
             <p className="text-[11px] font-black tracking-[0.26em] text-[#67C9D8]">
-              WHY IMPORTERS TRUST US
+              QUALITY & COMPLIANCE
             </p>
             <h2 className="mt-3 text-[38px] font-black tracking-[-0.04em] text-white">
-              The GOPU Exports Advantage
+              Documentation-led buyer confidence
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[16px] leading-[1.8] text-slate-400">
-              We structure each export discussion around product specification, packing,
-              documentation, supplier coordination, and clear buyer communication.
+              Relevant registrations and compliance documentation are available for buyer review.
+              Product documentation depends on product, destination, buyer requirements and issuing authorities.
             </p>
           </div>
 
@@ -357,27 +462,27 @@ export default async function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-[#071624]/20 via-[#071624]/5 to-white lg:block hidden" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#071624]/45 via-transparent to-transparent" />
                 <div className="absolute bottom-6 left-6 rounded-2xl border border-white/15 bg-white/10 px-5 py-4 text-white backdrop-blur-sm">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9EE7EF]">Export Coordination</p>
-                  <p className="mt-1 max-w-[260px] text-sm font-semibold leading-6">Packing, documentation, verification, and shipment planning handled step by step.</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9EE7EF]">Destination Review</p>
+                  <p className="mt-1 max-w-[260px] text-sm font-semibold leading-6">Product eligibility, documentation, packing, and commercial planning are reviewed for each buyer destination.</p>
                 </div>
               </div>
 
               {/* RIGHT — content */}
               <div className="p-10 lg:p-12">
                 <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">
-                  BUYER PROCUREMENT FLOW
+                  MARKETS SUPPORTED
                 </p>
                 <h2 className="mt-3 text-[34px] font-black leading-[1.05] tracking-[-0.04em] text-[#0F172A]">
-                  Built Around Clear<br />Procurement Steps
+                  Destination planning before<br />order confirmation.
                 </h2>
                 <p className="mt-4 text-[15px] leading-[1.8] text-[#64748B]">
-                  Serious buyers need clarity before price discussions. GOPU Exports
-                  structures each enquiry around product, packing, documentation,
-                  verification, and shipment assumptions.
+                  Product eligibility, documentation and destination requirements are
+                  reviewed before order confirmation. Availability and commercial
+                  feasibility remain subject to product, buyer and destination requirements.
                 </p>
 
                 <div className="mt-7 flex flex-wrap gap-2.5">
-                  {PROCUREMENT_STEPS.map((step) => (
+                  {DESTINATION_REVIEW.map((step) => (
                     <div
                       key={step}
                       className="flex items-center gap-2 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-2 text-[13px] font-semibold text-[#0F172A] transition hover:border-[#0E7490] hover:bg-[#E6F4F7]"
@@ -402,6 +507,77 @@ export default async function HomePage() {
       </section>
 
       {/* ── CTA BANNER ───────────────────────────────────────── */}
+      <section className="bg-[#FFF9EF] py-20">
+        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
+          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#7A5A20]">Packaging</p>
+              <h2 className="mt-3 font-serif text-[38px] font-semibold leading-tight text-[#14231B]">
+                Packaging planned around product and destination.
+              </h2>
+              <p className="mt-4 text-[15px] leading-8 text-[#64748B]">
+                Retail, food-service, bulk, and private-label packing discussions are handled
+                where product type, order size, and destination rules make them practical.
+              </p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {["Retail", "Food Service", "Bulk", "Private Label"].map((item) => (
+                <div key={item} className="border border-[#D8C7A3] bg-white p-6">
+                  <h3 className="font-serif text-2xl font-semibold text-[#14231B]">{item}</h3>
+                  <p className="mt-2 text-sm leading-7 text-[#64748B]">
+                    Confirmed during quotation based on product, quantity, artwork, handling, and market requirements.
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0B5A3B]">Extended Sourcing Portfolio</p>
+              <h2 className="mt-3 font-serif text-[38px] font-semibold leading-tight text-[#14231B]">Wider agricultural sourcing categories.</h2>
+              <p className="mt-4 max-w-3xl text-[15px] leading-8 text-[#64748B]">
+                Availability, MOQ, specification and export feasibility are confirmed during quotation.
+              </p>
+            </div>
+            <Link href="/products" prefetch={false} className="text-[13px] font-black uppercase tracking-[0.12em] text-[#0B5A3B]">
+              Explore Full Product Catalogue →
+            </Link>
+          </div>
+          <div className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {EXTENDED_CATEGORIES.map((category) => (
+              <Link key={category} href="/products" prefetch={false} className="border border-[#D9E2EC] px-5 py-4 text-[15px] font-bold text-[#14231B] transition hover:border-[#0B5A3B] hover:text-[#0B5A3B]">
+                {category}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#F5F7FA] py-20">
+        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
+          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0B5A3B]">Buyer Resources</p>
+              <h2 className="mt-3 font-serif text-[38px] font-semibold leading-tight text-[#14231B]">
+                Procurement documents and practical export guides.
+              </h2>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {RESOURCE_LINKS.map(([label, href]) => (
+                <Link key={href} href={href} prefetch={false} className="border border-[#D9E2EC] bg-white px-5 py-4 text-[14px] font-bold text-[#14231B] transition hover:border-[#0B5A3B] hover:text-[#0B5A3B]">
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-16">
         <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
           <div className="relative overflow-hidden rounded-2xl">

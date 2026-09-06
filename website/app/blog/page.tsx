@@ -47,14 +47,14 @@ export default async function BlogPage() {
       <section className="mx-auto max-w-[1450px] px-6 py-14 sm:px-8">
         {error ? (
           <div className="rounded-2xl border border-red-200 bg-white p-10 text-center text-red-700">
-            <h2 className="text-[24px] font-black tracking-[-0.03em]">Unable to load blog posts.</h2>
+            <h2 className="text-[24px] font-black tracking-[-0.03em]">Unable to load insights.</h2>
             <p className="mx-auto mt-3 max-w-lg text-[15px] leading-[1.8]">{error}</p>
           </div>
         ) : posts.length === 0 ? (
           <div className="rounded-2xl border border-[#D9E2EC] bg-white p-10 text-center">
             <h2 className="text-[24px] font-black tracking-[-0.03em]">No published posts yet.</h2>
             <p className="mx-auto mt-3 max-w-lg text-[15px] leading-[1.8] text-[#64748B]">
-              Insights published from the admin dashboard will appear here.
+              New buyer insights will appear here.
             </p>
           </div>
         ) : (

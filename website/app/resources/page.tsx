@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, ClipboardCheck, PackageCheck, Ship } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
 
 export const metadata: Metadata = {
@@ -13,11 +13,11 @@ export const metadata: Metadata = {
 export default function ResourcesPage() {
   return (
     <main className="bg-[#F5F8FB]">
-      <section className="bg-[#071624] px-5 py-20 text-white">
+      <section className="bg-[#061E14] px-5 py-20 text-white">
         <div className="mx-auto max-w-6xl">
           <p className="text-sm font-bold uppercase tracking-[0.24em] text-[#67C9D8]">Buyer resources</p>
-          <h1 className="mt-4 max-w-3xl text-4xl font-black leading-tight sm:text-5xl">
-            Practical export guidance for international agri-product buyers
+          <h1 className="mt-4 max-w-3xl font-serif text-4xl font-semibold leading-tight sm:text-5xl">
+            Procurement library for international agri-product buyers
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
             Learn how to structure sourcing enquiries, packaging decisions, quality checks, documentation, and shipment coordination for Indian agricultural products.
@@ -36,12 +36,12 @@ export default function ResourcesPage() {
       <section className="px-5 py-14">
         <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-3">
           {[
-            { icon: ClipboardCheck, title: "Documentation-ready", text: "Understand common commercial and product documents before shipment planning." },
-            { icon: PackageCheck, title: "Packing-aware", text: "Review bulk, retail, and commodity-specific packing considerations." },
-            { icon: Ship, title: "Shipment-focused", text: "Clarify logistics, route planning, and buyer-forwarder coordination early." },
-          ].map(({ icon: Icon, title, text }) => (
-            <div key={title} className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-              <Icon className="h-7 w-7 text-[#0E7490]" />
+            { code: "DOC", title: "Documentation-ready", text: "Understand common commercial and product documents before shipment planning." },
+            { code: "PKG", title: "Packing-aware", text: "Review bulk, retail, and commodity-specific packing considerations." },
+            { code: "SHP", title: "Shipment-focused", text: "Clarify logistics, route planning, and buyer-forwarder coordination early." },
+          ].map(({ code, title, text }) => (
+            <div key={title} className="border-t border-[#C9B98E] bg-white p-6 shadow-sm ring-1 ring-slate-200">
+              <p className="font-serif text-2xl text-[#9A6B24]">{code}</p>
               <h2 className="mt-4 text-lg font-black text-slate-900">{title}</h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
             </div>
@@ -55,7 +55,7 @@ export default function ResourcesPage() {
             <Link
               key={page.slug}
               href={`/resources/${page.slug}`}
-              className="group rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-1 hover:shadow-xl"
+              className="group border border-slate-200 bg-white p-6 shadow-sm transition hover:border-[#0B5A3B] hover:shadow-md"
             >
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#0E7490]">Export operations</p>
               <h2 className="mt-3 text-2xl font-black text-slate-900">{page.title}</h2>
