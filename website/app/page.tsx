@@ -3,9 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
-import { formatCommercialMoq } from "@/lib/moq";
 import { COMPANY } from "@/lib/company";
 import { cleanPublicProduct } from "@/lib/publicProductCopy";
+import FeaturedProductsCarousel from "@/components/FeaturedProductsCarousel";
 
 export const revalidate = 300;
 
@@ -249,53 +249,7 @@ export default async function HomePage() {
               <p className="mt-1 text-[13px]">Add products and mark them as featured in the admin panel.</p>
             </div>
           )}
-          <div className="-mx-6 overflow-hidden px-6 pb-3 sm:mx-0 sm:px-0">
-            <div className="featured-products-track flex w-max gap-5">
-              {featured.slice(0, 8).map((product: FeaturedProduct) => (
-              <Link
-                key={product.slug}
-                href={`/products/${product.slug}`}
-                prefetch={false}
-                className="group w-[270px] flex-none overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:w-[300px]"
-              >
-                <div className="relative h-52 overflow-hidden">
-                  {product.image ? (
-                    <Image
-                      src={product.image}
-                      alt={product.title}
-                      fill
-                      sizes="(max-width: 640px) 270px, 300px"
-                      quality={58}
-                      className="object-cover transition duration-500 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center bg-[#F0F9FA] text-4xl">📦</div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/40 to-transparent" />
-                  <span className="absolute left-3 top-3 rounded-md bg-white/90 px-2.5 py-1 text-[10px] font-bold tracking-wide text-[#0E7490] backdrop-blur-sm">
-                    {product.category.toUpperCase()}
-                  </span>
-                </div>
-                <div className="p-5">
-                  <h3 className="text-[16px] font-black tracking-[-0.02em] text-[#0F172A]">
-                    {product.title}
-                  </h3>
-                  <p className="mt-1.5 text-[13px] italic text-[#64748B]">
-                    {product.tagline}
-                  </p>
-                  <div className="mt-4 flex items-center justify-between border-t border-[#F1F5F9] pt-3">
-                    <span className="text-[12px] font-semibold text-[#475569]">
-                      MOQ: {formatCommercialMoq(product)}
-                    </span>
-                    <span className="text-[12px] font-bold text-[#0E7490]">
-                      VIEW DETAILS →
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-            </div>
-          </div>
+          {featured.length > 0 && <FeaturedProductsCarousel products={featured.slice(0, 8)} />}
 
           <div className="mt-8 text-center sm:hidden">
             <Link

@@ -29,15 +29,6 @@ canvas {
   max-width: 100%;
 }
 
-.featured-products-track {
-  animation: featured-products-scroll 42s ease-in-out infinite alternate;
-  will-change: transform;
-}
-
-.featured-products-track:hover {
-  animation-play-state: paused;
-}
-
 .hero-ambient {
   background:
     radial-gradient(circle at 18% 28%, rgba(103, 201, 216, 0.28), transparent 28%),
@@ -108,15 +99,6 @@ canvas {
 
 .hero-scroll-cue > span {
   animation: hero-scroll-shell 1.8s ease-in-out infinite;
-}
-
-@keyframes featured-products-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(min(0px, calc(100vw - 100% - 32px)));
-  }
 }
 
 @keyframes hero-ambient-sweep {
@@ -221,7 +203,6 @@ canvas {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .featured-products-track,
   .hero-ambient,
   .hero-copy,
   .hero-float-card,
@@ -252,8 +233,3 @@ canvas {
   }
 }
 
-@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
-  .featured-products-track {
-    animation: featured-products-scroll 30s linear infinite !important;
-  }
-}
