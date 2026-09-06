@@ -32,7 +32,6 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
   const scrollFrameRef = useRef<number | null>(null);
   const autoplayTimerRef = useRef<number | null>(null);
   const autoplayScheduleIdRef = useRef(0);
-  const lastAutoplayAdvanceRef = useRef(0);
   const dragStartXRef = useRef<number | null>(null);
   const suppressClickUntilRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -96,11 +95,7 @@ export default function FeaturedProductsCarousel({ products }: FeaturedProductsC
     const timer = window.setTimeout(() => {
       if (scheduleId !== autoplayScheduleIdRef.current) return;
 
-      const now = Date.now();
-      if (remainingPause === 0 && now - lastAutoplayAdvanceRef.current < AUTO_ADVANCE_MS - 100) return;
-
       const nextIndex = wrapIndex(safeActiveIndex + 1, productCount);
-      lastAutoplayAdvanceRef.current = now;
 
       if (remainingPause > 0) {
         setInteractionPauseUntil(0);
