@@ -27,7 +27,7 @@ export default function BrandLogo({
       decoding="async"
       width={markOnly ? 512 : variant === "light" ? 900 : 520}
       height={markOnly ? 512 : variant === "light" ? 613 : 309}
-      className={`object-contain ${className}`}
+      className={`${markOnly ? "h-14 w-14" : "h-16 w-auto"} object-contain ${className}`}
     />
   );
 }

@@ -88,26 +88,22 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  const isActive = (href: string) => {
-    if (href.includes("#")) return false;
-    const route = href.split("#")[0];
-    return route === "/" ? pathname === "/" : pathname === route || pathname.startsWith(`${route}/`);
-  };
+  const isActive = (href: string) => href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--brand-border)] bg-[var(--brand-header)] text-[var(--brand-text-light)] shadow-sm">
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-md focus:bg-[var(--brand-accent)] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-[var(--brand-header)] focus:outline-none">
+    <header className="sticky top-0 z-50 border-b border-[#D9E2EC] bg-white/95 shadow-sm backdrop-blur">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-[#0E7490] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white">
         Skip to main content
       </a>
 
-      <div className="border-b border-[var(--brand-border)] bg-[var(--brand-footer)]">
-        <div className="mx-auto flex max-w-[1450px] flex-col gap-2 px-4 py-2 text-[11px] font-semibold tracking-[0.02em] text-[var(--brand-text-muted)] min-[560px]:flex-row min-[560px]:items-center min-[560px]:justify-between sm:px-6">
+      <div className="border-b border-white/10 bg-[#071624]">
+        <div className="mx-auto flex max-w-[1450px] flex-col gap-2 px-4 py-2 text-[11px] font-semibold tracking-[0.02em] text-white/85 min-[560px]:flex-row min-[560px]:items-center min-[560px]:justify-between sm:px-6">
           <div className="flex min-w-0 flex-col gap-1 min-[420px]:flex-row min-[420px]:items-center min-[420px]:gap-4">
-            <a href={`mailto:${COMPANY.email}`} className="inline-flex min-h-6 min-w-0 items-center gap-1.5 break-all transition hover:text-[var(--brand-accent)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-accent)]">
+            <a href={`mailto:${COMPANY.email}`} className="inline-flex min-h-6 min-w-0 items-center gap-1.5 transition hover:text-[#67C9D8]">
               <MailIcon size={13} />
               <span className="truncate">{COMPANY.email}</span>
             </a>
-            <a href={COMPANY.phoneHref} className="inline-flex min-h-6 items-center gap-1.5 transition hover:text-[var(--brand-accent)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-accent)]">
+            <a href={COMPANY.phoneHref} className="inline-flex min-h-6 items-center gap-1.5 transition hover:text-[#67C9D8]">
               <PhoneIcon size={13} />
               {COMPANY.phone}
             </a>
@@ -121,7 +117,7 @@ export default function Navbar() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={label}
-                  className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[var(--brand-border)] text-[var(--brand-text-muted)] transition hover:border-[var(--brand-gold-separator)] hover:text-[var(--brand-accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-accent)]"
+                  className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/75 transition hover:border-[#67C9D8]/40 hover:text-[#67C9D8]"
                 >
                   <Icon size={13} />
                 </a>
@@ -131,22 +127,21 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-[1450px] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:py-3.5">
-        <Link href="/" prefetch={false} aria-label="GOPU Exports Home" className="shrink-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand-accent)]">
-          <BrandLogo priority className="h-auto w-[132px] sm:w-[150px]" />
+      <div className="mx-auto flex max-w-[1450px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:py-4">
+        <Link href="/" prefetch={false} aria-label="GOPU Exports Home" className="shrink-0">
+          <BrandLogo priority className="h-12 w-auto" />
         </Link>
 
-        <nav aria-label="Primary navigation" className="hidden items-center gap-1 lg:ml-auto lg:flex">
+        <nav className="hidden items-center gap-1 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC]/80 p-1 shadow-sm lg:ml-auto lg:flex">
           {MAIN_LINKS.map(([label, href]) => (
             <Link
               key={href}
               href={href}
               prefetch={false}
-              aria-current={isActive(href) ? "page" : undefined}
-              className={`relative px-3 py-3 text-[10px] font-black uppercase tracking-[0.11em] transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand-accent)] xl:px-4 xl:text-[11px] ${
+              className={`rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.12em] transition ${
                 isActive(href)
-                  ? "text-[var(--brand-text-light)] after:absolute after:bottom-1 after:left-3 after:right-3 after:h-px after:bg-[var(--brand-accent)] xl:after:left-4 xl:after:right-4"
-                  : "text-white/85 hover:text-[var(--brand-accent)]"
+                  ? "bg-white text-[#0E7490] shadow-sm ring-1 ring-[#D9E2EC]"
+                  : "text-slate-600 hover:bg-white hover:text-[#0E7490] hover:shadow-sm"
               }`}
             >
               {label}
@@ -155,33 +150,33 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <a href={COMPANY.whatsapp} target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp" className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-[var(--brand-gold-separator)] text-[var(--brand-accent)] transition hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--brand-accent)]">
+          <a href={COMPANY.whatsapp} target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#22C55E]/40 bg-[#F0FDF4] text-[#16A34A] transition hover:bg-[#DCFCE7]">
             <WhatsAppIcon />
           </a>
-          <Link href="/contact" prefetch={false} className="rounded-md bg-[var(--brand-accent)] px-5 py-3 text-[11px] font-black uppercase tracking-[0.12em] text-[var(--brand-header)] transition hover:bg-[var(--brand-accent-hover)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--brand-text-light)]">
+          <Link href="/contact" prefetch={false} className="rounded-xl bg-[#0E7490] px-5 py-3 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-sm transition hover:bg-[#0A5A70] hover:shadow-md">
             Request Quote
           </Link>
         </div>
 
-        <button type="button" onClick={() => setMenuOpen((value) => !value)} aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} className="rounded-md border border-[var(--brand-border)] p-2.5 text-[var(--brand-text-light)] transition hover:border-[var(--brand-gold-separator)] hover:text-[var(--brand-accent)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--brand-accent)] lg:hidden">
+        <button type="button" onClick={() => setMenuOpen((value) => !value)} aria-label={menuOpen ? "Close menu" : "Open menu"} className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-2 text-slate-700 transition hover:bg-slate-100 lg:hidden">
           {menuOpen ? <XIcon size={24} /> : <MenuIcon size={24} />}
         </button>
       </div>
 
       {menuOpen && (
-        <div className="border-t border-[var(--brand-border)] bg-[var(--brand-footer)] px-5 py-5 shadow-xl lg:hidden">
+        <div className="border-t border-[#E2E8F0] bg-white px-5 py-5 shadow-xl lg:hidden">
           <nav className="grid gap-1">
             {MAIN_LINKS.map(([label, href]) => (
-              <Link key={href} href={href} prefetch={false} onClick={() => setMenuOpen(false)} aria-current={isActive(href) ? "page" : undefined} className={`border-l-2 px-3 py-3 text-[12px] font-black uppercase tracking-[0.12em] transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-accent)] ${isActive(href) ? "border-[var(--brand-accent)] text-[var(--brand-text-light)]" : "border-transparent text-[var(--brand-text-muted)] hover:border-[var(--brand-gold-separator)] hover:text-[var(--brand-accent)]"}`}>
+              <Link key={href} href={href} prefetch={false} onClick={() => setMenuOpen(false)} className="rounded-xl px-3 py-3 text-[12px] font-black uppercase tracking-[0.12em] text-slate-800 hover:bg-[#F0F9FA] hover:text-[#0E7490]">
                 {label}
               </Link>
             ))}
           </nav>
           <div className="mt-4 grid gap-3">
-            <Link href="/contact" prefetch={false} onClick={() => setMenuOpen(false)} className="rounded-md bg-[var(--brand-accent)] px-5 py-3 text-center text-sm font-bold text-[var(--brand-header)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--brand-text-light)]">
+            <Link href="/contact" prefetch={false} onClick={() => setMenuOpen(false)} className="rounded-xl bg-[#0E7490] px-5 py-3 text-center text-sm font-bold text-white">
               Request Quote
             </Link>
-            <a href={COMPANY.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-md border border-[var(--brand-gold-separator)] py-3 text-sm font-bold text-[var(--brand-accent)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--brand-accent)]">
+            <a href={COMPANY.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#22C55E]/40 py-3 text-sm font-bold text-[#16A34A]">
               <WhatsAppIcon /> WhatsApp Inquiry
             </a>
           </div>

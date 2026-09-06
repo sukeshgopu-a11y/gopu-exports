@@ -9,15 +9,6 @@
   --accent: #0E7490;
   --accent-hover: #0A5A70;
   --highlight: #E6F4F7;
-  --brand-header: #0D2B24;
-  --brand-footer: #071F1A;
-  --brand-footer-bottom: #061813;
-  --brand-accent: #C9A35B;
-  --brand-accent-hover: #D8B46B;
-  --brand-text-light: #FFFFFF;
-  --brand-text-muted: #CBD8D3;
-  --brand-border: rgba(255, 255, 255, 0.10);
-  --brand-gold-separator: rgba(201, 163, 91, 0.35);
 }
 
 html {
