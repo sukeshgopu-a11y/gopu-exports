@@ -12,6 +12,15 @@ const REPLACEMENTS: Array<[RegExp, string]> = [
   [/World-Class Export Quality/gi, "Bulk export procurement"],
   [/GI Protected Origin/gi, "Origin documentation review available"],
   [/GI protected origin certification/gi, "Origin documentation can be reviewed where applicable"],
+  [/Specification-led sourcing/gi, "Buyer-specification export supply"],
+  [/\bsourcing use case\b/gi, "buyer requirement"],
+  [/\bsourcing for B2B buyers\b/gi, "export supply for B2B buyers"],
+  [/\bsourcing for export buyers\b/gi, "export supply for international buyers"],
+  [/\bspice sourcing\b/gi, "spice export supply"],
+  [/\boilseed sourcing\b/gi, "oilseed export supply"],
+  [/\bmillet sourcing\b/gi, "millet export supply"],
+  [/\bingredient sourcing\b/gi, "ingredient export supply"],
+  [/\bpulses sourcing\b/gi, "pulses export supply"],
 ];
 
 export function cleanPublicProductText(value: TextValue) {
