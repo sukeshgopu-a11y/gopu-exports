@@ -41,7 +41,7 @@ const CATEGORY_COPY: Record<string, string> = {
   Millets: "Indian millet options for health-food brands, grain wholesalers, ingredient buyers, and retail packing.",
   Pulses: "Pulses and lentils for wholesalers, millers, retail packers, and food manufacturing buyers.",
   "Fresh Fruits": "Fresh produce enquiries planned around season, grade, packing, destination, and transit route.",
-  "Fresh Vegetables": "Fresh vegetable sourcing based on variety, packing, shelf life, route, and destination requirements.",
+  "Fresh Vegetables": "Fresh vegetable export supply based on variety, packing, shelf life, route, and destination requirements.",
   "Oil Seeds": "Oil seed and kernel options for food processors, ingredient buyers, wholesalers, and edible oil discussions.",
   "Processed Agricultural Products": "Processed agri products and ingredients for food brands, wholesalers, and private-label supply.",
   "Private Label / Packaging": "Buyer-brand and packing discussions for suitable products, order sizes, and destination requirements.",
@@ -97,7 +97,7 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
     <div>
       <div className="grid gap-4 md:grid-cols-3">
         {[
-          ["Buyer-ready filters", "Search by product, category, origin, or sourcing use case.", Search],
+          ["Buyer-ready filters", "Search by product, category, origin, or buyer requirement.", Search],
           ["Export detail cards", "Review MOQ, origin, lead time, HS code, and packing context.", PackageCheck],
           ["Fast enquiry path", "Open any product and send a product-specific quote request.", Ship],
         ].map(([title, text, Icon]) => (
@@ -119,7 +119,7 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search products, categories, origin, or use case..."
+              placeholder="Search products, categories, origin, or buyer requirement..."
               className="w-full rounded-xl border border-[#D9E2EC] bg-[#F8FAFC] py-3 pl-10 pr-10 text-sm outline-none focus:border-[#0E7490] focus:ring-2 focus:ring-[#0E7490]/20"
             />
             {query && (
@@ -229,7 +229,7 @@ function ProductCard({ product }: { product: Product }) {
       </div>
       <div className="p-5">
         <h3 className="text-[19px] font-black tracking-[-0.03em] text-[#0F172A]">{product.title}</h3>
-        <p className="mt-2 line-clamp-2 text-[13px] leading-6 text-[#64748B]">{product.tagline || product.description || "Export-ready product for B2B sourcing enquiries."}</p>
+        <p className="mt-2 line-clamp-2 text-[13px] leading-6 text-[#64748B]">{product.tagline || product.description || "Export-ready product for international B2B export enquiries."}</p>
         <div className="mt-4 grid gap-2 rounded-2xl bg-[#F8FAFC] p-3">
           {product.origin && <Row label="Origin" value={product.origin.split(",")[0]} />}
           {product.moq && <Row label="MOQ" value={formatCommercialMoq(product)} />}
