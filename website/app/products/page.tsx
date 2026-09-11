@@ -12,7 +12,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Products",
   description:
-    "Browse GOPU Exports agricultural product catalogue for rice, spices, fresh produce, millets, pulses, and export sourcing enquiries.",
+    "Browse GOPU Exports agricultural product catalogue for rice, spices, fresh produce, millets, pulses, and bulk export enquiries from international importers and distributors.",
   alternates: { canonical: "/products" },
 };
 
@@ -69,14 +69,14 @@ export default async function ProductsPage() {
               Indian Agri Products for Bulk Buyers
             </h1>
             <p className="mt-6 max-w-2xl text-[16px] leading-[1.9] text-slate-300 sm:text-[18px]">
-              Browse rice, spices, fresh produce, millets, pulses, and processed agricultural products organised for importers reviewing grade, packing, MOQ, destination, and documentation needs.
+              For international importers, distributors, wholesalers, and food-service buyers reviewing grade, packing, MOQ, destination, and documentation requirements.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/contact" className="rounded-xl bg-[#0E7490] px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-white shadow-lg shadow-cyan-950/30 transition hover:bg-[#0A5A70]">
                 Request Bulk Quote
               </Link>
               <a href="https://wa.me/919618991917" target="_blank" rel="noreferrer" className="rounded-xl border border-white/20 bg-white/10 px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-white backdrop-blur transition hover:bg-white/15">
-                WhatsApp Sourcing Desk
+                International Buyer Desk
               </a>
             </div>
           </div>
@@ -122,18 +122,17 @@ export default async function ProductsPage() {
       <section className="bg-white border-t border-[#E2E8F0] py-16">
         <div className="mx-auto max-w-[1450px] px-6 sm:px-8 text-center">
           <h2 className="text-[30px] font-black tracking-[-0.04em] text-[#0F172A]">
-            Don&apos;t See What You&apos;re Looking For?
+            Looking to Import from India?
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-[15px] leading-[1.8] text-[#64748B]">
-            We source a wide range of Indian agricultural commodities on request.
-            Send product specifications, packing needs, quantity, destination, and document requirements for review.
+            International importers, distributors, and wholesale buyers can send product specifications, packing needs, quantity, destination, and document requirements for an export quotation.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-4">
             <Link
               href="/contact"
               className="rounded-lg bg-[#0E7490] px-8 py-4 text-[13px] font-bold tracking-wide text-white transition hover:bg-[#0A5A70]"
             >
-              REQUEST A PRODUCT →
+              REQUEST EXPORT QUOTE →
             </Link>
             <a
               href="https://wa.me/919618991917"
