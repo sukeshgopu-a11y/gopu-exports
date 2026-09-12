@@ -10,6 +10,9 @@ import FeaturedProductsCarousel from "@/components/FeaturedProductsCarousel";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
+  title: "Indian Agricultural & Spice Exporter",
+  description:
+    "GOPU Exports is a Hyderabad-based Indian agricultural and spice export company supplying international importers, distributors, wholesalers and food businesses.",
   alternates: { canonical: "/" },
 };
 
@@ -26,17 +29,19 @@ async function getFeatured(): Promise<FeaturedProduct[]> {
   const priority = [
     "red-chilli",
     "turmeric-powder",
-    "coriander-seeds",
+    "spice-powders",
+    "garam-masala",
     "basmati-rice",
     "sona-masoori-rice",
-    "spice-powders",
   ];
+
   const orderFeatured = (items: FeaturedProduct[]) =>
     [...items].sort((a, b) => {
       const ai = priority.indexOf(a.slug);
       const bi = priority.indexOf(b.slug);
       return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
     });
+
   try {
     const supabase = createPublicClient();
     const { data, error } = await supabase
@@ -45,8 +50,9 @@ async function getFeatured(): Promise<FeaturedProduct[]> {
       .eq("is_featured", true)
       .eq("is_active", true)
       .order("sort_order", { ascending: true })
-      .limit(8)
+      .limit(6)
       .returns<ProductRow[]>();
+
     if (error) return [];
     return orderFeatured(((data ?? []).map(productToApi) as FeaturedProduct[]).map(cleanPublicProduct));
   } catch {
@@ -54,63 +60,18 @@ async function getFeatured(): Promise<FeaturedProduct[]> {
   }
 }
 
-const WHY_FEATURES = [
-  {
-    icon: "QC",
-    title: "Quality-Focused Exports",
-    desc: "Product discussions are handled around grade, quality expectations, packing, and buyer specifications.",
-  },
-  {
-    icon: "PK",
-    title: "Export-Compliant Packaging",
-    desc: "Packaging options are planned around product handling, buyer requirements, and export documentation needs.",
-  },
-  {
-    icon: "RS",
-    title: "Reliable Supplier Coordination",
-    desc: "Supplier communication is organised to support practical sourcing review and clear next steps.",
-  },
-  {
-    icon: "BC",
-    title: "Buyer-Centric Communication",
-    desc: "Enquiries and order discussions are handled with practical updates and clear next steps.",
-  },
+const EXPORT_CATEGORIES = [
+  ["Spices & Spice Powders", "Whole spices, ground spices and selected blends for international B2B buyers."],
+  ["Rice & Grains", "Indian rice and grain options reviewed against buyer specifications, packing and destination."],
+  ["Pulses & Millets", "Selected pulses and millets for wholesale, food-service and ingredient buyers."],
+  ["Fresh & Processed Products", "Selected fresh and processed agricultural products subject to availability and route suitability."],
 ];
 
-const DESTINATION_REVIEW = [
-  "Product eligibility review",
-  "Packing and MOQ discussion",
-  "Destination documentation",
-  "Port and transit planning",
-  "Commercial terms review",
-  "Shipment coordination planning",
-];
-
-const SOURCE_TO_SHIPMENT = [
-  "Buyer requirement review",
-  "Source and grade confirmation",
-  "Packing and documentation planning",
-  "Dispatch and shipment coordination",
-];
-
-const EXTENDED_CATEGORIES = [
-  "Spices",
-  "Rice",
-  "Pulses",
-  "Millets",
-  "Oilseeds",
-  "Fresh Produce",
-  "Processed Products",
-];
-
-const RESOURCE_LINKS = [
-  ["Company Profile", "/about"],
-  ["Product Catalogue", "/products"],
-  ["Spice Specifications", "/export/spice-exporters-from-india"],
-  ["Rice Specifications", "/export/rice-exporters-from-india"],
-  ["Packaging Guide", "/resources/packaging-standards"],
-  ["Corporate Verification", "/company-verification"],
-  ["Export Documentation Guide", "/resources/documentation-support"],
+const WHY_GOPU = [
+  ["Verified Indian Company", "IEC, GST and CIN details are available for buyer verification."],
+  ["Buyer-Specific Export Supply", "Product specifications, packing and quantity are reviewed against buyer requirements."],
+  ["Export Documentation Support", "Documentation is reviewed according to product, destination and issuing-authority requirements."],
+  ["Shipment Coordination", "Commercial and logistics communication is coordinated from order confirmation through dispatch."],
 ];
 
 export default async function HomePage() {
@@ -118,474 +79,132 @@ export default async function HomePage() {
 
   return (
     <main className="bg-[#F5F7FA] text-[#0F172A]">
-
-      {/* ── HERO ─────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden bg-[#071624]">
         <div className="absolute inset-0">
           <Image
             src="/images/hero-bg.webp"
-            alt="Global Export Logistics"
+            alt="GOPU Exports international agricultural export logistics"
             fill
             fetchPriority="high"
             loading="eager"
             sizes="100vw"
             quality={62}
-            className="object-cover"
+            className="object-cover opacity-45"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-[#071624]/80 via-[#08182F]/60 to-[#0E7490]/30" />
-          <div className="hero-ambient absolute inset-0 opacity-70" aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#071624]/95 via-[#071624]/80 to-[#0E7490]/40" />
         </div>
-
-        <div className="relative z-10 mx-auto min-h-[620px] max-w-[1450px] px-5 pb-14 pt-16 sm:min-h-[680px] sm:px-8 sm:pb-20 sm:pt-24 lg:min-h-[720px] lg:pb-28 lg:pt-32">
-          <div className="hero-copy max-w-[680px]">
-            <div className="flex items-center gap-4">
-              <div className="h-[2px] w-14 bg-[#0E7490]" />
-              <p className="text-[11px] font-black tracking-[0.26em] text-white/80">
-                INDIA • GLOBAL TRADE
-              </p>
-            </div>
-
-            <h1 className="mt-5 text-[38px] font-black leading-[0.96] tracking-[-0.04em] text-white sm:mt-6 sm:text-[48px] lg:text-[68px]">
-              Indian Spices, Rice &<br />Agricultural Products<br />
-              <span className="text-[#67C9D8]">for Global Markets.</span>
-            </h1>
-
-            <p className="mt-5 max-w-[560px] text-[15px] leading-[1.7] text-slate-300 sm:mt-7 sm:text-[17px] sm:leading-[1.8]">
-              Specification-led sourcing, packaging, documentation and shipment
-              coordination for importers, distributors and food businesses.
-            </p>
-
-            <div className="mt-6 flex flex-col gap-3 min-[420px]:flex-row sm:mt-8 sm:flex-wrap sm:gap-4">
-              <Link
-                href="/products"
-                prefetch={false}
-                className="hero-cta rounded-lg bg-[#0E7490] px-6 py-3.5 text-center text-[12px] font-bold tracking-wide text-white shadow-lg transition hover:bg-[#0A5A70] hover:shadow-xl sm:px-8 sm:py-4 sm:text-[13px]"
-              >
-                Explore Products →
-              </Link>
-              <Link
-                href="/contact"
-                prefetch={false}
-                className="hero-cta rounded-lg border border-white/25 bg-white/10 px-6 py-3.5 text-center text-[12px] font-bold tracking-wide text-white backdrop-blur-sm transition hover:bg-white/20 sm:px-8 sm:py-4 sm:text-[13px]"
-              >
-                Request a Quote →
-              </Link>
-              <Link
-                href="/company-verification"
-                prefetch={false}
-                className="hero-cta inline-flex items-center justify-center px-2 py-3.5 text-center text-[12px] font-bold tracking-wide text-white transition hover:text-[#67C9D8] sm:px-1 sm:py-4 sm:text-[13px]"
-              >
-                Verify GOPU Exports →
-              </Link>
-            </div>
-
+        <div className="relative z-10 mx-auto max-w-[1450px] px-6 py-24 sm:px-8 lg:py-32">
+          <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#67C9D8]">INDIA, DELIVERED GLOBALLY.</p>
+          <h1 className="mt-5 max-w-4xl text-[44px] font-black leading-[0.98] tracking-[-0.05em] text-white sm:text-[58px] lg:text-[76px]">
+            Indian Agricultural & Spice Exporter
+          </h1>
+          <p className="mt-6 max-w-2xl text-[16px] leading-8 text-slate-300 sm:text-[18px]">
+            Supplying international importers, distributors, wholesalers and food businesses with Indian spices, rice and selected agricultural products from Hyderabad, India.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/contact" className="rounded-xl bg-[#0E7490] px-7 py-4 text-[13px] font-black uppercase tracking-wide text-white transition hover:bg-[#0A5A70]">
+              Request Export Quote
+            </Link>
+            <Link href="/products" className="rounded-xl border border-white/20 bg-white/10 px-7 py-4 text-[13px] font-black uppercase tracking-wide text-white transition hover:bg-white/15">
+              View Products
+            </Link>
           </div>
-          <div className="pointer-events-none absolute bottom-32 right-8 hidden w-[410px] lg:block">
-            <div className="hero-motion-beam absolute -inset-8 rounded-[2rem]" aria-hidden="true" />
-            <div className="hero-process-line absolute left-5 top-6 h-[calc(100%-48px)] w-px bg-cyan-200/35" aria-hidden="true" />
-            <div className="grid gap-4">
-            {["Specification Review", "Packing Options", "Documentation", "Shipment Planning"].map((item, index) => (
-              <div
-                key={item}
-                className={`hero-float-card relative ml-8 rounded-2xl border border-cyan-100/25 bg-[#071624]/70 px-5 py-4 text-white shadow-2xl backdrop-blur-md ${index % 2 === 1 ? "hero-float-card-offset" : ""}`}
-                style={{ animationDelay: `${index * 0.18}s` }}
-              >
-                <span className="hero-process-dot absolute -left-[33px] top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border border-[#9EE7EF] bg-[#0E7490] shadow-lg shadow-cyan-300/30" />
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#9EE7EF]">{item}</p>
-                <p className="mt-1 text-xs text-white/70">Buyer-ready export support</p>
-              </div>
-            ))}
-            </div>
-          </div>
-          <div className="hero-scroll-cue absolute bottom-5 left-1/2 hidden -translate-x-1/2 text-white/70 sm:flex">
-            <span className="h-9 w-5 rounded-full border border-white/35 p-1">
-              <span className="block h-2 w-2 rounded-full bg-white/80" />
-            </span>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-b border-[#D9E2EC] bg-white">
-        <div className="mx-auto flex max-w-[1450px] flex-col gap-4 px-6 py-5 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#0E7490]">Corporate Verification</p>
-            <p className="mt-1 text-[16px] font-black uppercase tracking-[-0.02em] text-[#0F172A]">{COMPANY.legalName}</p>
-          </div>
-          <div className="flex flex-wrap gap-2 text-[12px] font-bold text-[#475569]">
-            {["IEC Verified", "GST Registered", "CIN Registered", "Hyderabad Head Office", "Telangana Factory"].map((item) => (
-              <span key={item} className="rounded-full border border-[#D9E2EC] bg-[#F8FAFC] px-3 py-1.5">{item}</span>
-            ))}
-          </div>
-          <Link href="/company-verification" prefetch={false} className="text-[13px] font-black text-[#0E7490] transition hover:text-[#0A5A70]">
-            View Corporate Verification →
+          <Link href="/company-verification" className="mt-5 inline-flex text-sm font-bold text-[#9EE7EF] hover:text-white">
+            Verify GOPU Exports →
           </Link>
         </div>
       </section>
 
-      {/* ── FEATURED PRODUCTS ────────────────────────────────── */}
-      <section className="py-20">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-          <div className="mb-10 flex items-end justify-between">
-            <div>
-              <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">
-                CORE EXPORT PORTFOLIO
-              </p>
-              <h2 className="mt-2 text-[34px] font-black tracking-[-0.04em] text-[#0F172A]">
-                Core Export Portfolio
-              </h2>
-            </div>
-            <Link
-              href="/products"
-              prefetch={false}
-              className="hidden text-sm font-bold text-[#0E7490] transition hover:text-[#0A5A70] sm:block"
-            >
-              Explore Full Product Catalogue →
-            </Link>
+      <section className="bg-white py-18">
+        <div className="mx-auto max-w-[1450px] px-6 py-16 sm:px-8">
+          <div className="max-w-2xl">
+            <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0E7490]">What We Export</p>
+            <h2 className="mt-3 text-[34px] font-black tracking-[-0.04em]">Focused product categories for international buyers.</h2>
           </div>
-
-          {featured.length === 0 && (
-            <div className="col-span-4 rounded-2xl border border-dashed border-[#D9E2EC] bg-white py-16 text-center text-[#94A3B8]">
-              <p className="text-[15px]">No featured products yet.</p>
-              <p className="mt-1 text-[13px]">Add products and mark them as featured in the admin panel.</p>
-            </div>
-          )}
-          {featured.length > 0 && <FeaturedProductsCarousel products={featured.slice(0, 8)} />}
-
-          <div className="mt-8 text-center sm:hidden">
-            <Link
-              href="/products"
-              prefetch={false}
-              className="inline-block rounded-lg border border-[#0E7490] px-6 py-3 text-sm font-bold text-[#0E7490]"
-            >
-              VIEW ALL PRODUCTS →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── WHY CHOOSE US ────────────────────────────────────── */}
-      <section className="bg-[#FFF9EF] py-20">
-        <div className="mx-auto grid max-w-[1450px] gap-10 px-6 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <div>
-            <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#7A5A20]">Company introduction</p>
-            <h2 className="mt-3 font-serif text-[34px] font-semibold leading-tight text-[#14231B] sm:text-[46px]">
-              A Hyderabad-based Indian exporter built for serious procurement.
-            </h2>
-          </div>
-          <div className="border-l border-[#D8C7A3] pl-6 text-[15px] leading-8 text-[#475569]">
-            <p>
-              GOPU Exports supports international buyers with specification-led sourcing for spices,
-              rice, and selected agricultural products from India. Each enquiry is reviewed around
-              product fit, packing needs, destination requirements, documentation expectations, and
-              practical shipment coordination.
-            </p>
-            <Link href="/about" prefetch={false} className="mt-5 inline-flex text-[13px] font-black uppercase tracking-[0.12em] text-[#0B5A3B]">
-              Learn about the company →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white py-20">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-          <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
-            <div>
-              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0B5A3B]">From Source to Shipment</p>
-              <h2 className="mt-3 font-serif text-[38px] font-semibold leading-tight text-[#14231B]">
-                Clear steps before a commercial quote.
-              </h2>
-              <p className="mt-4 text-[15px] leading-8 text-[#64748B]">
-                The process is designed to reduce ambiguity for importers, distributors,
-                food-service teams, and private-label buyers.
-              </p>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {SOURCE_TO_SHIPMENT.map((step, index) => (
-                <div key={step} className="border-t border-[#C9B98E] bg-[#FAF7EF] p-5">
-                  <span className="font-serif text-3xl text-[#9A6B24]">{String(index + 1).padStart(2, "0")}</span>
-                  <h3 className="mt-4 text-[15px] font-black text-[#14231B]">{step}</h3>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="operations" className="bg-[#F5F7FA] py-20">
-        <div className="mx-auto grid max-w-[1450px] gap-8 px-6 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-          <div className="relative min-h-[360px] overflow-hidden rounded-lg bg-[#D9E2EC]">
-            <Image
-              src="/images/hero-export.webp"
-              alt="GOPU Exports product handling and export operations"
-              fill
-              sizes="(max-width: 1024px) 100vw, 55vw"
-              quality={62}
-              className="object-cover"
-            />
-          </div>
-          <div className="bg-white p-7 ring-1 ring-[#D9E2EC] sm:p-9">
-            <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0B5A3B]">Factory / Operations</p>
-            <h2 className="mt-3 font-serif text-[36px] font-semibold leading-tight text-[#14231B]">Our Factory</h2>
-            <p className="mt-4 text-[15px] leading-8 text-[#64748B]">
-              {COMPANY.factory.address}. Operations are presented as sourcing and handling capability;
-              real facility photos can replace the visual area as approved documentation becomes available.
-            </p>
-            <div className="mt-6 grid gap-2 text-[13px] font-semibold text-[#475569] sm:grid-cols-2">
-              {["Product Handling", "Processing", "Packing", "Storage", "Quality Control", "Dispatch"].map((item) => (
-                <span key={item} className="border border-[#E2E8F0] px-3 py-2">{item}</span>
-              ))}
-            </div>
-            <Link href="/contact?visit=factory" prefetch={false} className="mt-6 inline-flex rounded-md bg-[#0B5A3B] px-5 py-3 text-[13px] font-bold text-white">
-              Arrange a Business Visit
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[#071624] py-20">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-          <div className="mb-12 text-center">
-            <p className="text-[11px] font-black tracking-[0.26em] text-[#67C9D8]">
-              QUALITY & COMPLIANCE
-            </p>
-            <h2 className="mt-3 text-[38px] font-black tracking-[-0.04em] text-white">
-              Documentation-led buyer confidence
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-[16px] leading-[1.8] text-slate-400">
-              Relevant registrations and compliance documentation are available for buyer review.
-              Product documentation depends on product, destination, buyer requirements and issuing authorities.
-            </p>
-          </div>
-
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {WHY_FEATURES.map((f) => (
-              <div
-                key={f.title}
-                className="group rounded-2xl border border-white/[0.10] bg-white/[0.06] p-6 shadow-sm shadow-black/10 transition hover:border-[#67C9D8]/50 hover:bg-white/[0.09]"
-              >
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#67C9D8]/25 bg-[#67C9D8]/14 text-sm font-black tracking-wide text-[#9EE7EF]">
-                  {f.icon}
-                </span>
-                <h3 className="mt-4 text-[16px] font-black tracking-[-0.01em] text-white">
-                  {f.title}
-                </h3>
-                <p className="mt-2 text-[13px] leading-[1.75] text-slate-300">
-                  {f.desc}
-                </p>
+          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {EXPORT_CATEGORIES.map(([title, text]) => (
+              <div key={title} className="rounded-2xl border border-[#D9E2EC] bg-[#F8FAFC] p-6">
+                <h3 className="text-lg font-black">{title}</h3>
+                <p className="mt-3 text-sm leading-7 text-[#64748B]">{text}</p>
               </div>
             ))}
           </div>
-
-          <div className="mt-12 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/certifications"
-              prefetch={false}
-              className="rounded-lg border border-white/20 px-7 py-3.5 text-[13px] font-bold tracking-wide text-white transition hover:bg-white/10"
-            >
-              VIEW CERTIFICATIONS →
-            </Link>
-            <Link
-              href="/about"
-              prefetch={false}
-              className="rounded-lg bg-[#0E7490] px-7 py-3.5 text-[13px] font-bold tracking-wide text-white transition hover:bg-[#0A5A70]"
-            >
-              ABOUT GOPU EXPORTS →
-            </Link>
-          </div>
+          <Link href="/products" className="mt-8 inline-flex text-sm font-black text-[#0E7490]">
+            Explore All Products →
+          </Link>
         </div>
       </section>
 
-      {/* ── EXPORT MARKETS ───────────────────────────────────── */}
-      <section className="py-20">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-          <div className="overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm">
-            <div className="grid lg:grid-cols-2">
-
-              {/* LEFT — map */}
-              <div className="relative min-h-[340px] overflow-hidden bg-[#071624]">
-                <div className="absolute inset-0">
-                  <Image
-                    src="/images/hero-export.webp"
-                    alt="GOPU Exports container logistics and export coordination"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    quality={62}
-                    className="object-cover"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#071624]/20 via-[#071624]/5 to-white lg:block hidden" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#071624]/45 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 rounded-2xl border border-white/15 bg-white/10 px-5 py-4 text-white backdrop-blur-sm">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9EE7EF]">Destination Review</p>
-                  <p className="mt-1 max-w-[260px] text-sm font-semibold leading-6">Product eligibility, documentation, packing, and commercial planning are reviewed for each buyer destination.</p>
-                </div>
-              </div>
-
-              {/* RIGHT — content */}
-              <div className="p-10 lg:p-12">
-                <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">
-                  MARKETS SUPPORTED
-                </p>
-                <h2 className="mt-3 text-[34px] font-black leading-[1.05] tracking-[-0.04em] text-[#0F172A]">
-                  Destination planning before<br />order confirmation.
-                </h2>
-                <p className="mt-4 text-[15px] leading-[1.8] text-[#64748B]">
-                  Product eligibility, documentation and destination requirements are
-                  reviewed before order confirmation. Availability and commercial
-                  feasibility remain subject to product, buyer and destination requirements.
-                </p>
-
-                <div className="mt-7 flex flex-wrap gap-2.5">
-                  {DESTINATION_REVIEW.map((step) => (
-                    <div
-                      key={step}
-                      className="flex items-center gap-2 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-2 text-[13px] font-semibold text-[#0F172A] transition hover:border-[#0E7490] hover:bg-[#E6F4F7]"
-                    >
-                      <span className="text-[#0E7490]">✓</span>
-                      {step}
-                    </div>
-                  ))}
-                </div>
-
-                <Link
-                  href="/company-verification"
-                  prefetch={false}
-                  className="mt-8 inline-flex items-center gap-2 text-[13px] font-bold text-[#0E7490] transition hover:text-[#0A5A70]"
-                >
-                  VIEW COMPANY VERIFICATION →
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA BANNER ───────────────────────────────────────── */}
-      <section className="bg-[#FFF9EF] py-20">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+      <section className="py-18">
+        <div className="mx-auto max-w-[1450px] px-6 py-16 sm:px-8">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#7A5A20]">Packaging</p>
-              <h2 className="mt-3 font-serif text-[38px] font-semibold leading-tight text-[#14231B]">
-                Packaging planned around product and destination.
-              </h2>
-              <p className="mt-4 text-[15px] leading-8 text-[#64748B]">
-                Retail, food-service, bulk, and private-label packing discussions are handled
-                where product type, order size, and destination rules make them practical.
-              </p>
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0E7490]">Featured Export Products</p>
+              <h2 className="mt-3 text-[34px] font-black tracking-[-0.04em]">Priority products for buyer enquiries.</h2>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {["Retail", "Food Service", "Bulk", "Private Label"].map((item) => (
-                <div key={item} className="border border-[#D8C7A3] bg-white p-6">
-                  <h3 className="font-serif text-2xl font-semibold text-[#14231B]">{item}</h3>
-                  <p className="mt-2 text-sm leading-7 text-[#64748B]">
-                    Confirmed during quotation based on product, quantity, artwork, handling, and market requirements.
-                  </p>
-                </div>
-              ))}
-            </div>
+            <Link href="/products" className="text-sm font-black text-[#0E7490]">View Full Catalogue →</Link>
+          </div>
+          <div className="mt-8">
+            {featured.length > 0 ? (
+              <FeaturedProductsCarousel products={featured.slice(0, 6)} />
+            ) : (
+              <div className="rounded-2xl border border-dashed border-[#D9E2EC] bg-white px-6 py-12 text-center text-sm text-[#64748B]">
+                Featured products will appear when approved catalogue data is available.
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      <section className="bg-white py-20">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0B5A3B]">Extended Sourcing Portfolio</p>
-              <h2 className="mt-3 font-serif text-[38px] font-semibold leading-tight text-[#14231B]">Wider agricultural sourcing categories.</h2>
-              <p className="mt-4 max-w-3xl text-[15px] leading-8 text-[#64748B]">
-                Availability, MOQ, specification and export feasibility are confirmed during quotation.
-              </p>
-            </div>
-            <Link href="/products" prefetch={false} className="text-[13px] font-black uppercase tracking-[0.12em] text-[#0B5A3B]">
-              Explore Full Product Catalogue →
-            </Link>
-          </div>
-          <div className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {EXTENDED_CATEGORIES.map((category) => (
-              <Link key={category} href="/products" prefetch={false} className="border border-[#D9E2EC] px-5 py-4 text-[15px] font-bold text-[#14231B] transition hover:border-[#0B5A3B] hover:text-[#0B5A3B]">
-                {category}
-              </Link>
+      <section className="bg-[#FFF9EF] py-18">
+        <div className="mx-auto max-w-[1450px] px-6 py-16 sm:px-8">
+          <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#7A5A20]">Why GOPU Exports</p>
+          <h2 className="mt-3 max-w-3xl text-[34px] font-black tracking-[-0.04em]">Built for clear international B2B export transactions.</h2>
+          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {WHY_GOPU.map(([title, text]) => (
+              <div key={title} className="border border-[#E5D8BB] bg-white p-6">
+                <h3 className="text-base font-black text-[#14231B]">{title}</h3>
+                <p className="mt-3 text-sm leading-7 text-[#64748B]">{text}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-[#F5F7FA] py-20">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+      <section className="bg-white py-18">
+        <div className="mx-auto max-w-[1450px] px-6 py-16 sm:px-8">
+          <div className="grid gap-8 rounded-3xl border border-[#D9E2EC] bg-[#F8FAFC] p-8 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
-              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0B5A3B]">Buyer Resources</p>
-              <h2 className="mt-3 font-serif text-[38px] font-semibold leading-tight text-[#14231B]">
-                Procurement documents and practical export guides.
-              </h2>
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0E7490]">Company Verification</p>
+              <h2 className="mt-3 text-[32px] font-black tracking-[-0.04em]">A company international buyers can verify.</h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-[#64748B]">
+                {COMPANY.legalName} publishes its business identifiers and official contact information for buyer due diligence before commercial discussions.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2 text-xs font-bold text-[#475569]">
+                {["IEC", "GST", "CIN", "Hyderabad Head Office"].map((item) => (
+                  <span key={item} className="rounded-full border border-[#D9E2EC] bg-white px-3 py-1.5">{item}</span>
+                ))}
+              </div>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {RESOURCE_LINKS.map(([label, href]) => (
-                <Link key={href} href={href} prefetch={false} className="border border-[#D9E2EC] bg-white px-5 py-4 text-[14px] font-bold text-[#14231B] transition hover:border-[#0B5A3B] hover:text-[#0B5A3B]">
-                  {label}
-                </Link>
-              ))}
-            </div>
+            <Link href="/company-verification" className="rounded-xl bg-[#071624] px-6 py-3.5 text-center text-sm font-black text-white">
+              View Company Verification
+            </Link>
           </div>
         </div>
       </section>
 
-      <section className="py-16">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-          <div className="relative overflow-hidden rounded-2xl">
-            <div className="absolute inset-0">
-              <Image
-                src="/images/cta-ship.webp"
-                alt="Container Ship"
-                fill
-                sizes="100vw"
-                quality={62}
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#071624]/95 via-[#08182F]/85 to-[#0E7490]/60" />
-            </div>
-
-            <div className="relative z-10 flex flex-col gap-8 px-10 py-12 lg:flex-row lg:items-center lg:justify-between lg:px-16 lg:py-14">
-              <div className="max-w-2xl">
-                <p className="text-[11px] font-black tracking-[0.26em] text-[#67C9D8]">
-                  START IMPORTING FROM INDIA
-                </p>
-                <h2 className="mt-3 text-[36px] font-black leading-[1.05] tracking-[-0.04em] text-white">
-                  Ready To Source Indian<br />Agricultural Products?
-                </h2>
-                <p className="mt-4 text-[16px] leading-[1.8] text-slate-300">
-                  Send product, grade, packing, quantity, destination, and document
-                  requirements so the team can review sourcing feasibility and next steps.
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
-                <Link
-                  href="/contact"
-                  prefetch={false}
-                  className="rounded-lg bg-[#0E7490] px-8 py-4 text-center text-[13px] font-bold tracking-wide text-white shadow-lg transition hover:bg-[#0A5A70] hover:shadow-xl"
-                >
-                  GET A QUOTE →
-                </Link>
-                <a
-                  href="https://wa.me/919618991917"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center justify-center gap-2 rounded-lg border border-[#22C55E]/50 bg-[#F0FDF4]/10 px-8 py-4 text-[13px] font-bold text-[#4ADE80] transition hover:bg-[#22C55E]/20"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                  </svg>
-                  WHATSAPP US
-                </a>
-              </div>
-            </div>
-          </div>
+      <section className="bg-[#071624] py-18 text-white">
+        <div className="mx-auto max-w-[1450px] px-6 py-16 text-center sm:px-8">
+          <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#67C9D8]">International Buyer Desk</p>
+          <h2 className="mx-auto mt-3 max-w-3xl text-[38px] font-black tracking-[-0.04em]">Looking to Import from India?</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-8 text-slate-300">
+            Send your product, specification, quantity, packaging and destination requirements for an export quotation.
+          </p>
+          <Link href="/contact" className="mt-7 inline-flex rounded-xl bg-[#0E7490] px-8 py-4 text-sm font-black uppercase tracking-wide text-white">
+            Request Export Quote
+          </Link>
         </div>
       </section>
-
     </main>
   );
 }
