@@ -7,7 +7,7 @@ import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
 import { PRODUCTS } from "@/lib/products";
 
 const BASE_URL = "https://gopuexports.com";
-const STATIC_LAST_MODIFIED = new Date("2026-06-10T00:00:00.000Z");
+const STATIC_LAST_MODIFIED = new Date("2026-09-12T00:00:00.000Z");
 
 export const revalidate = 30;
 
@@ -78,13 +78,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch {
     posts = [];
   }
-  const blogRoutes: MetadataRoute.Sitemap = posts
-    .map((post) => ({
-      url: `${BASE_URL}/blog/${post.slug}`,
-      lastModified: post.createdAt ? new Date(post.createdAt) : STATIC_LAST_MODIFIED,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    }));
+
+  const blogRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${BASE_URL}/blog/${post.slug}`,
+    lastModified: post.createdAt ? new Date(post.createdAt) : STATIC_LAST_MODIFIED,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
 
   return [...staticRoutes, ...categoryRoutes, ...resourceRoutes, ...productRoutes, ...blogRoutes];
 }
