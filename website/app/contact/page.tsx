@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import ContactPageClient from "./ContactPageClient";
 
 export const metadata: Metadata = {
-  title: "Contact GOPU Exports",
+  title: "Request an Export Quote",
   description:
-    "Contact GOPU Exports for Indian agricultural export enquiries, product sourcing, quotations, documentation support, and buyer verification requests.",
+    "Contact GOPU Exports for Indian agricultural export enquiries, product quotations, buyer-specific packing, export documentation and company verification.",
   alternates: { canonical: "/contact" },
 };
 
