@@ -7,23 +7,21 @@ import { COMPANY } from "@/lib/company";
 
 export const metadata: Metadata = {
   title: {
-    default: "GOPU Exports | Indian Agricultural Exports, Rice, Spices & Food Products",
+    default: "GOPU Exports | Indian Agricultural & Spice Exporter",
     template: "%s | GOPU Exports",
   },
   description:
-    "GOPU Exports is an Indian food products export company supplying rice, spices, grains, fruits, vegetables, and agri commodities to global B2B buyers.",
+    "GOPU Exports is a Hyderabad-based Indian agricultural and spice export company supplying international importers, distributors, wholesalers and B2B food buyers.",
   keywords: [
     "GOPU Exports",
-    "Indian agricultural exports",
+    "Indian agricultural exporter",
+    "Indian spice exporter",
+    "spice exporter Hyderabad",
+    "agricultural exporter Hyderabad",
     "rice exporters from India",
-    "spice exporters from India",
-    "fruits and vegetables exporters from India",
-    "global agri commodity suppliers",
-    "Indian food products export company",
+    "red chilli exporter India",
+    "turmeric exporter India",
     "B2B export supplier India",
-    "basmati rice exporters India",
-    "Indian spices supplier",
-    "agricultural commodity exporter",
   ],
   metadataBase: new URL("https://gopuexports.com"),
   icons: {
@@ -40,22 +38,22 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://gopuexports.com",
     siteName: "GOPU Exports",
-    title: "GOPU Exports | Indian Agricultural Exports",
+    title: "GOPU Exports | Indian Agricultural & Spice Exporter",
     description:
-      "Indian rice, spices, grains, fruits, vegetables, and food products for global B2B importers.",
+      "Hyderabad-based Indian exporter supplying spices, rice and selected agricultural products to international B2B buyers.",
     images: [
       {
         url: "/logos/og-image.png",
         width: 1200,
         height: 630,
-        alt: "GOPU Exports Indian agri commodities export company",
+        alt: "GOPU Exports Indian agricultural and spice export company",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "GOPU Exports | Indian Food Products Export Company",
-    description: "Indian agricultural exports, rice, spices, fruits, vegetables, and agri commodities for global buyers.",
+    title: "GOPU Exports | Indian Agricultural & Spice Exporter",
+    description: "Indian spices, rice and selected agricultural products for international B2B buyers.",
     images: ["/logos/og-image.png"],
   },
   robots: {
@@ -71,10 +69,13 @@ export const metadata: Metadata = {
   },
 };
 
+const officialSocialProfiles = Object.values(COMPANY.social).filter(Boolean);
+
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: COMPANY.legalName,
+  alternateName: COMPANY.name,
   url: "https://gopuexports.com",
   logo: "https://gopuexports.com/logos/gopu-exports-logo-full.webp",
   email: COMPANY.email,
@@ -86,10 +87,10 @@ const organizationJsonLd = {
     { "@type": "PropertyValue", name: "GST", value: COMPANY.gst },
   ],
   description:
-    "Indian agricultural exports, rice, spices, fruits, vegetables, grains, and food products for global B2B buyers.",
+    "Hyderabad-based Indian agricultural and spice export company supplying international importers, distributors, wholesalers and B2B food buyers.",
   address: {
     "@type": "PostalAddress",
-    streetAddress: COMPANY.registeredAddress,
+    streetAddress: "2nd Floor, Surya Arcade, Door No. 1-9-388, Kushaiguda Road, ECIL",
     addressLocality: "Hyderabad",
     postalCode: "500062",
     addressRegion: "Telangana",
@@ -104,14 +105,10 @@ const organizationJsonLd = {
       availableLanguage: ["English"],
     },
   ],
-  sameAs: Object.values(COMPANY.social),
+  sameAs: officialSocialProfiles,
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
