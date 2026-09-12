@@ -6,7 +6,7 @@ import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
 export const metadata: Metadata = {
   title: "Export Buyer Resources",
   description:
-    "Practical export buyer resources for Indian agricultural products, packaging, documentation, logistics, private label, and bulk sourcing.",
+    "Practical export buyer resources for Indian agricultural products, packaging, documentation, logistics, private label and bulk export supply.",
   alternates: { canonical: "/resources" },
 };
 
@@ -17,14 +17,14 @@ export default function ResourcesPage() {
         <div className="mx-auto max-w-6xl">
           <p className="text-sm font-bold uppercase tracking-[0.24em] text-[#67C9D8]">Buyer resources</p>
           <h1 className="mt-4 max-w-3xl font-serif text-4xl font-semibold leading-tight sm:text-5xl">
-            Procurement library for international agri-product buyers
+            Export guide library for international buyers
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-            Learn how to structure sourcing enquiries, packaging decisions, quality checks, documentation, and shipment coordination for Indian agricultural products.
+            Learn how to prepare export enquiries, packaging requirements, quality specifications, documentation and shipment planning for Indian agricultural products.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/contact" className="rounded-xl bg-[#0E7490] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0A5A70]">
-              Request Export Support
+              Request Export Quote
             </Link>
             <Link href="/products" className="rounded-xl border border-white/20 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/10">
               View Products
@@ -36,9 +36,9 @@ export default function ResourcesPage() {
       <section className="px-5 py-14">
         <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-3">
           {[
-            { code: "DOC", title: "Documentation-ready", text: "Understand common commercial and product documents before shipment planning." },
-            { code: "PKG", title: "Packing-aware", text: "Review bulk, retail, and commodity-specific packing considerations." },
-            { code: "SHP", title: "Shipment-focused", text: "Clarify logistics, route planning, and buyer-forwarder coordination early." },
+            { code: "DOC", title: "Documentation-aware", text: "Understand common commercial and product documents before shipment planning." },
+            { code: "PKG", title: "Packing-ready", text: "Review bulk, retail and product-specific packing considerations." },
+            { code: "SHP", title: "Shipment-focused", text: "Clarify logistics, route planning and buyer-forwarder coordination early." },
           ].map(({ code, title, text }) => (
             <div key={title} className="border-t border-[#C9B98E] bg-white p-6 shadow-sm ring-1 ring-slate-200">
               <p className="font-serif text-2xl text-[#9A6B24]">{code}</p>
@@ -57,7 +57,7 @@ export default function ResourcesPage() {
               href={`/resources/${page.slug}`}
               className="group border border-slate-200 bg-white p-6 shadow-sm transition hover:border-[#0B5A3B] hover:shadow-md"
             >
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#0E7490]">Export operations</p>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#0E7490]">Export buyer guide</p>
               <h2 className="mt-3 text-2xl font-black text-slate-900">{page.title}</h2>
               <p className="mt-3 leading-7 text-slate-600">{page.description}</p>
               <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#0E7490]">

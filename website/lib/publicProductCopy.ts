@@ -7,13 +7,14 @@ const REPLACEMENTS: Array<[RegExp, string]> = [
   [/Private labeling\s*&\s*OEM packaging/gi, "Private-label packaging available for suitable order quantities and buyer requirements"],
   [/\bOEM packaging\b/gi, "private-label packaging"],
   [/\bOEM Ready\b/gi, "Private Label"],
-  [/King of Spices\s*[—-]\s*World-Class Export Quality/gi, "Whole black pepper available for bulk and food-service procurement"],
-  [/Queen of Spices\s*[—-]\s*Premium Export Grade/gi, "Whole green cardamom available by grade and buyer specification"],
-  [/World-Class Export Quality/gi, "Bulk export procurement"],
+  [/King of Spices\s*[—-]\s*World-Class Export Quality/gi, "Whole black pepper available for international bulk and food-service buyers"],
+  [/Queen of Spices\s*[—-]\s*Premium Export Grade/gi, "Whole green cardamom available by grade and international buyer specification"],
+  [/World-Class Export Quality/gi, "Bulk export supply"],
   [/GI Protected Origin/gi, "Origin documentation review available"],
   [/GI protected origin certification/gi, "Origin documentation can be reviewed where applicable"],
   [/Specification-led sourcing/gi, "Buyer-specification export supply"],
   [/\bsourcing use case\b/gi, "buyer requirement"],
+  [/\bsourcing requirements?\b/gi, "export requirements"],
   [/\bsourcing for B2B buyers\b/gi, "export supply for B2B buyers"],
   [/\bsourcing for export buyers\b/gi, "export supply for international buyers"],
   [/\bspice sourcing\b/gi, "spice export supply"],
@@ -21,6 +22,10 @@ const REPLACEMENTS: Array<[RegExp, string]> = [
   [/\bmillet sourcing\b/gi, "millet export supply"],
   [/\bingredient sourcing\b/gi, "ingredient export supply"],
   [/\bpulses sourcing\b/gi, "pulses export supply"],
+  [/\bbulk export procurement\b/gi, "bulk export supply"],
+  [/\bfood-service procurement\b/gi, "food-service export supply"],
+  [/\bprocurement requirements?\b/gi, "buyer requirements"],
+  [/\bprocurement checklist\b/gi, "export enquiry checklist"],
 ];
 
 export function cleanPublicProductText(value: TextValue) {
