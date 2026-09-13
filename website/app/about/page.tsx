@@ -1,6 +1,7 @@
 import { publicMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
+import { ShieldCheck, Network, PackageCheck, FileCheck2, Truck, SlidersHorizontal, MessageSquare } from "lucide-react";
 import { COMPANY } from "@/lib/company";
 
 export const metadata = publicMetadata(
@@ -11,37 +12,37 @@ export const metadata = publicMetadata(
 
 const STRENGTHS = [
   {
-    icon: "QC",
+    icon: ShieldCheck,
     title: "Quality-Focused Exports",
     desc: "Product checks and grading are coordinated around buyer specifications and export handling needs.",
   },
   {
-    icon: "SN",
+    icon: Network,
     title: "Reliable Supplier Network",
     desc: "Supplier relationships are managed to support consistent export supply across agricultural categories.",
   },
   {
-    icon: "PK",
+    icon: PackageCheck,
     title: "Export-Compliant Packaging",
     desc: "Packaging options are planned around product handling, buyer requirements, and export documentation needs.",
   },
   {
-    icon: "DS",
+    icon: FileCheck2,
     title: "Professional Documentation Support",
     desc: "Documentation support is aligned with product type, buyer destination, and standard export requirements.",
   },
   {
-    icon: "SC",
+    icon: Truck,
     title: "Timely Shipment Coordination",
     desc: "Orders are coordinated with attention to readiness, logistics communication, and shipment milestones.",
   },
   {
-    icon: "FS",
+    icon: SlidersHorizontal,
     title: "Buyer-Specific Export Supply",
     desc: "Our export range covers standard catalogue items as well as specific buyer requirements.",
   },
   {
-    icon: "BC",
+    icon: MessageSquare,
     title: "Buyer-Centric Communication",
     desc: "Enquiries and order discussions are handled with practical updates and clear next steps.",
   },
@@ -66,12 +67,12 @@ export default function AboutPage() {
           <div className="absolute inset-0 bg-gradient-to-br from-[#071624]/90 to-[#0E7490]/30" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-[1450px] px-6 py-24 sm:px-8 lg:py-32">
+        <div className="relative z-10 mx-auto max-w-[1280px] px-6 py-12 sm:px-8 lg:py-16">
           <div className="flex items-center gap-4">
             <div className="h-[2px] w-12 bg-[#0E7490]" />
             <p className="text-[11px] font-black tracking-[0.26em] text-white/60">ABOUT GOPU EXPORTS</p>
           </div>
-          <h1 className="mt-5 max-w-3xl text-[48px] font-black leading-[0.92] tracking-[-0.05em] text-white lg:text-[64px]">
+          <h1 className="mt-5 max-w-3xl text-4xl font-bold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">
             Indian agricultural exports<br />
             <span className="text-[#67C9D8]">for international buyers.</span>
           </h1>
@@ -84,8 +85,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section id="founder-message" className="bg-white py-20">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
+      <section id="founder-message" className="bg-white py-12 sm:py-16">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
           <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
             <div className="rounded-3xl bg-[#071624] p-8 text-white">
               <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#67C9D8]">CEO MESSAGE</p>
@@ -114,8 +115,8 @@ export default function AboutPage() {
       </section>
 
       {/* ── OUR STORY ────────────────────────────────────────── */}
-      <section className="py-20">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
+      <section className="py-12 sm:py-16">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
               <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">OUR STORY</p>
@@ -160,7 +161,7 @@ export default function AboutPage() {
                 />
               </div>
               {/* floating badge */}
-              <div className="absolute -bottom-6 -left-6 rounded-2xl border border-[#D9E2EC] bg-white p-5 shadow-xl">
+              <div className="absolute bottom-4 left-4 rounded-2xl border border-[#D9E2EC] bg-white p-5 shadow-xl">
                 <p className="text-[22px] font-black leading-none tracking-[-0.03em] text-[#0E7490]">EXPORT</p>
                 <p className="mt-1 text-[13px] font-semibold text-[#374151]">Documentation Ready</p>
               </div>
@@ -170,8 +171,8 @@ export default function AboutPage() {
       </section>
 
       {/* ── EXPORT CAPABILITIES ──────────────────────────────── */}
-      <section id="operations" className="bg-[#071624] py-20">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
+      <section id="operations" className="bg-[#071624] py-12 sm:py-16">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
               <p className="text-[11px] font-black tracking-[0.24em] text-[#67C9D8]">EXPORT CAPABILITIES</p>
@@ -199,18 +200,18 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-4 sm:grid-cols-2">
               {[
-                { label: "Quality Inspection", icon: "QC", desc: "Multi-point checks at source, packing, and pre-shipment stages." },
-                { label: "Documentation", icon: "DS", desc: "Phytosanitary, COO, COA, inspection, and fumigation document support." },
-                { label: "Logistics", icon: "LG", desc: "Shipment planning and coordination with logistics partners." },
-                { label: "Buyer Support", icon: "BS", desc: "Dedicated updates and responsive export communication." },
+                { label: "Quality Inspection", icon: ShieldCheck, desc: "Multi-point checks at source, packing, and pre-shipment stages." },
+                { label: "Documentation", icon: FileCheck2, desc: "Phytosanitary, COO, COA, inspection, and fumigation document support." },
+                { label: "Logistics", icon: Truck, desc: "Shipment planning and coordination with logistics partners." },
+                { label: "Buyer Support", icon: MessageSquare, desc: "Dedicated updates and responsive export communication." },
               ].map((item) => (
                 <div
                   key={item.label}
                   className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5"
                 >
-                  <div className="text-2xl">{item.icon}</div>
+                  <div className="text-[#67C9D8]"><item.icon size={26} aria-hidden="true" /></div>
                   <h3 className="mt-3 text-[15px] font-bold text-white">{item.label}</h3>
                   <p className="mt-2 text-[12px] leading-[1.7] text-slate-400">{item.desc}</p>
                 </div>
@@ -221,8 +222,8 @@ export default function AboutPage() {
       </section>
 
       {/* ── OPERATIONAL STRENGTHS (replaces fake timeline) ───── */}
-      <section className="py-20">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
+      <section className="py-12 sm:py-16">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
           <div className="mb-12 text-center">
             <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">HOW WE OPERATE</p>
             <h2 className="mt-3 text-[38px] font-black tracking-[-0.04em] text-[#0F172A]">
@@ -240,7 +241,7 @@ export default function AboutPage() {
                 key={s.title}
                 className="rounded-2xl border border-[#D9E2EC] bg-white p-7 transition hover:border-[#0E7490]/40 hover:shadow-md"
               >
-                <span className="text-3xl">{s.icon}</span>
+                <span className="inline-flex rounded-xl bg-[#E6F4F7] p-3 text-[#0E7490]"><s.icon size={24} aria-hidden="true" /></span>
                 <h3 className="mt-4 text-[15px] font-bold text-[#0F172A]">{s.title}</h3>
                 <p className="mt-2 text-[13px] leading-[1.8] text-[#64748B]">{s.desc}</p>
               </div>
@@ -251,8 +252,8 @@ export default function AboutPage() {
 
       {/* ── CTA ──────────────────────────────────────────────── */}
       <section className="pb-16">
-        <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
-          <div className="rounded-2xl bg-[#0E7490] p-12 text-center">
+        <div className="mx-auto max-w-[1280px] px-6 sm:px-8">
+          <div className="rounded-2xl bg-[#0E7490] p-6 sm:p-10 text-center">
             <h2 className="text-[36px] font-black tracking-[-0.04em] text-white">
               Partner with GOPU Exports
             </h2>

@@ -58,45 +58,20 @@ export default async function ProductsPage() {
       <section className="relative overflow-hidden border-b border-[#D9E2EC] bg-[#061827]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(103,201,216,0.22),transparent_34%),linear-gradient(135deg,rgba(14,116,144,0.28),transparent_45%)]" />
         <div className="absolute right-0 top-0 h-full w-1/2 bg-[linear-gradient(135deg,transparent,rgba(255,255,255,0.08))]" />
-        <div className="relative mx-auto grid max-w-[1450px] gap-10 px-6 py-16 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:py-20">
-          <div>
-            <div className="flex items-center gap-4">
-              <div className="h-[2px] w-10 bg-[#67C9D8]" />
-              <p className="text-[11px] font-black tracking-[0.26em] text-[#67C9D8]">EXPORT CATALOGUE</p>
-            </div>
-            <h1 className="mt-5 max-w-3xl text-[48px] font-black leading-none tracking-[-0.055em] text-white sm:text-[64px] lg:text-[76px]">
-              Indian Products for International Buyers
-            </h1>
-            <p className="mt-6 max-w-2xl text-[16px] leading-[1.9] text-slate-300 sm:text-[18px]">
-              For international importers, distributors, wholesalers, and food-service buyers reviewing grade, packing, MOQ, destination, and documentation requirements.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/contact" className="rounded-xl bg-[#0E7490] px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-white shadow-lg shadow-cyan-950/30 transition hover:bg-[#0A5A70]">
-                Request Bulk Quote
-              </Link>
-              <a href="https://wa.me/919618991917" target="_blank" rel="noreferrer" className="rounded-xl border border-white/20 bg-white/10 px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-white backdrop-blur transition hover:bg-white/15">
-                International Buyer Desk
-              </a>
-            </div>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-            {[
-              ["Export Products", `${products.length}`, "Catalogue range for spices, rice, produce, pulses, and processed agricultural products"],
-              ["Product Categories", `${categories.length}`, "Grouped for faster buyer review"],
-              ["Specification-Led B2B Enquiries", "RFQ", "Buyer requirements reviewed by product, packing, quantity, and destination"],
-            ].map(([label, value, note]) => (
-              <div key={label} className="rounded-2xl border border-white/15 bg-white/10 p-5 text-white shadow-2xl shadow-cyan-950/20 backdrop-blur">
-                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#9EE7EF]">{label}</p>
-                <p className="mt-2 text-4xl font-black tracking-[-0.04em]">{value}</p>
-                <p className="mt-1 text-sm leading-6 text-slate-300">{note}</p>
-              </div>
-            ))}
+        <div className="relative mx-auto max-w-[1280px] px-6 py-10 sm:px-8 sm:py-12">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#67C9D8]">Export catalogue</p>
+          <h1 className="mt-3 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl">Indian products for international buyers</h1>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">Explore spices, rice and agricultural products. Find your product, review specifications and request an export quote.</p>
+          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+            <span className="text-slate-300">{products.length} products · {categories.length} categories</span>
+            <a href="#catalogue" className="font-bold text-[#9EE7EF] underline underline-offset-4">Browse catalogue ↓</a>
+            <Link href="/contact" className="rounded-lg bg-[#0E7490] px-4 py-2.5 font-semibold text-white hover:bg-[#0A5A70]">Request export quote</Link>
           </div>
         </div>
       </section>
 
       {/* ── GRID WITH FILTERS ────────────────────────────────── */}
-      <section className="mx-auto max-w-[1450px] px-6 py-14 sm:px-8">
+      <section id="catalogue" className="mx-auto max-w-[1280px] px-6 py-8 sm:px-8">
         <ProductsGrid initialProducts={products} />
       </section>
 
