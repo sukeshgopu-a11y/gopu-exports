@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, PackageCheck, Search, Ship, Star, X } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { ArrowRight, Search, Star, X } from "lucide-react";
 import { formatCommercialMoq } from "@/lib/moq";
 
 type Product = {
@@ -53,6 +54,13 @@ function sortCategories(a: string, b: string) {
   return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi) || a.localeCompare(b);
 }
 
+function CategoryFromUrl({ onChange }: { onChange: (category: string) => void }) {
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category") || "All";
+  useEffect(() => { onChange(category); }, [category, onChange]);
+  return null;
+}
+
 export default function ProductsGrid({ initialProducts = [] }: { initialProducts?: Product[] }) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [loading, setLoading] = useState(initialProducts.length === 0);
@@ -95,35 +103,21 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
 
   return (
     <div>
-      <div className="grid gap-4 md:grid-cols-3">
-        {[
-          ["Buyer-ready filters", "Search by product, category, origin, or buyer requirement.", Search],
-          ["Export detail cards", "Review MOQ, origin, lead time, HS code, and packing context.", PackageCheck],
-          ["Fast enquiry path", "Open any product and send a product-specific quote request.", Ship],
-        ].map(([title, text, Icon]) => (
-          <div key={title as string} className="rounded-2xl border border-[#D9E2EC] bg-white p-5 shadow-sm">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E6F4F7] text-[#0E7490]">
-              <Icon size={19} />
-            </div>
-            <h2 className="mt-4 text-[16px] font-black tracking-[-0.02em] text-[#0F172A]">{title as string}</h2>
-            <p className="mt-2 text-[13px] leading-6 text-[#64748B]">{text as string}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-7 rounded-3xl border border-[#D9E2EC] bg-white p-5 shadow-sm">
+      <Suspense fallback={null}><CategoryFromUrl onChange={setActive} /></Suspense>
+      <div className="rounded-xl border border-[#D9E2EC] bg-white p-5 shadow-sm">
         <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
           <div className="relative max-w-xl">
             <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
             <input
-              type="text"
+              type="search"
+              aria-label="Search export products"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search products, categories, origin, or buyer requirement..."
+              placeholder="Search products or origin…"
               className="w-full rounded-xl border border-[#D9E2EC] bg-[#F8FAFC] py-3 pl-10 pr-10 text-sm outline-none focus:border-[#0E7490] focus:ring-2 focus:ring-[#0E7490]/20"
             />
             {query && (
-              <button type="button" onClick={() => setQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#374151]">
+              <button type="button" onClick={() => setQuery("")} aria-label="Clear product search" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#374151]">
                 <X size={14} />
               </button>
             )}
@@ -131,6 +125,7 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
           <button
             type="button"
             onClick={() => setFeaturedOnly((value) => !value)}
+            aria-pressed={featuredOnly}
             className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition ${featuredOnly ? "bg-amber-400 text-[#0F172A]" : "border border-[#D9E2EC] bg-white text-[#374151] hover:border-amber-400"}`}
           >
             <Star size={15} />
@@ -149,12 +144,13 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
           ))}
         </select>
 
-        <div className="mt-4 hidden gap-2 overflow-x-auto pb-1 sm:flex">
+        <div className="mt-4 hidden flex-wrap gap-2 sm:flex">
           {categories.map((cat) => (
             <button
               key={cat}
               type="button"
               onClick={() => setActive(cat)}
+              aria-pressed={active === cat}
               className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-[13px] font-bold transition ${active === cat ? "bg-[#0E7490] text-white" : "border border-[#D9E2EC] bg-white text-[#374151] hover:border-[#0E7490] hover:text-[#0E7490]"}`}
             >
               {cat}
@@ -164,7 +160,7 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
       </div>
 
       <div className="mt-5 flex items-center justify-between text-sm text-[#64748B]">
-        <span><strong className="text-[#0F172A]">{filtered.length}</strong> export products</span>
+        <span role="status" aria-live="polite"><strong className="text-[#0F172A]">{filtered.length}</strong> export products{active !== "All" ? ` in ${active}` : ""}</span>
         {(query || active !== "All" || featuredOnly) && (
           <button type="button" onClick={() => { setQuery(""); setActive("All"); setFeaturedOnly(false); }} className="font-bold text-[#0E7490]">
             Clear filters
@@ -177,13 +173,13 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
           No products found for this search.
         </div>
       ) : (
-        <div className="mt-9 space-y-14">
+        <div className="mt-8 space-y-10">
           {grouped.map(({ category, products: categoryProducts }) => {
             const visible = expanded[category] || query || active !== "All" || featuredOnly ? categoryProducts : categoryProducts.slice(0, 8);
             const hasMore = categoryProducts.length > visible.length;
             return (
               <section key={category} className="scroll-mt-28">
-                <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div className="mb-5 flex flex-col gap-3 border-b border-[#D9E2EC] pb-4 sm:flex-row sm:items-end sm:justify-between">
                   <div>
                     <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#0E7490]">Export category</p>
                     <h2 className="mt-2 text-3xl font-black tracking-[-0.04em] text-[#0F172A]">{category}</h2>
@@ -210,15 +206,14 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
 
 function ProductCard({ product }: { product: Product }) {
   return (
-    <Link href={`/products/${product.slug}`} className="group overflow-hidden rounded-[24px] border border-[#D9E2EC] bg-white shadow-sm transition duration-300 hover:-translate-y-1.5 hover:border-[#A7DCE5] hover:shadow-2xl hover:shadow-slate-200/80">
-      <div className="relative h-60 overflow-hidden bg-[#E6F4F7]">
+    <Link href={`/products/${product.slug}`} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#D9E2EC] bg-white shadow-sm transition duration-300 hover:-translate-y-1.5 hover:border-[#A7DCE5] hover:shadow-2xl hover:shadow-slate-200/80">
+      <div className="relative h-48 overflow-hidden bg-[#E6F4F7]">
         {product.image ? (
           <Image src={product.image} alt={`${product.title} export product photo`} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw" quality={62} className="object-cover transition duration-500 group-hover:scale-105" />
         ) : (
           <div className="flex h-full items-center justify-center px-4 text-center text-sm font-bold text-[#0E7490]">{product.title}</div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#061827]/75 via-[#061827]/10 to-transparent" />
-        <span className="absolute left-3 top-3 rounded-lg bg-white/90 px-2.5 py-1 text-[10px] font-bold tracking-wide text-[#0E7490] backdrop-blur-sm">{product.category.toUpperCase()}</span>
         {product.featured && <span className="absolute right-3 top-3 rounded-lg bg-[#0E7490] px-2.5 py-1 text-[10px] font-bold text-white">FEATURED</span>}
         <div className="absolute bottom-4 left-4 right-4 translate-y-2 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
           <div className="flex items-center justify-between rounded-xl border border-white/20 bg-white/90 px-4 py-3 text-[12px] font-black text-[#0F172A] shadow-xl backdrop-blur">
@@ -227,7 +222,7 @@ function ProductCard({ product }: { product: Product }) {
           </div>
         </div>
       </div>
-      <div className="p-5">
+      <div className="flex flex-1 flex-col p-5">
         <h3 className="text-[19px] font-black tracking-[-0.03em] text-[#0F172A]">{product.title}</h3>
         <p className="mt-2 line-clamp-2 text-[13px] leading-6 text-[#64748B]">{product.tagline || product.description || "Export-ready product for international B2B export enquiries."}</p>
         <div className="mt-4 grid gap-2 rounded-2xl bg-[#F8FAFC] p-3">
@@ -235,15 +230,11 @@ function ProductCard({ product }: { product: Product }) {
           {product.moq && <Row label="MOQ" value={formatCommercialMoq(product)} />}
           {product.lead && <Row label="Lead time" value={product.lead} />}
         </div>
-        <div className="mt-4 flex items-center justify-between gap-3">
+        <div className="mt-auto flex items-center justify-between gap-3 pt-4">
           {product.hs ? <span className="text-[11px] font-semibold text-[#94A3B8]">HS: {product.hs}</span> : <span />}
           <span className="inline-flex items-center gap-1 text-[12px] font-bold text-[#0E7490] group-hover:underline">
             View details <ArrowRight size={13} />
           </span>
-        </div>
-        <div className="mt-4 flex items-center gap-2 border-t border-[#F1F5F9] pt-4 text-[12px] font-semibold text-[#64748B]">
-          <CheckCircle2 size={14} className="text-[#0E7490]" />
-          Specification-led export enquiry
         </div>
       </div>
     </Link>
