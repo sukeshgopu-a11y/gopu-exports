@@ -1,72 +1,74 @@
 import Link from "next/link";
 import { publicMetadata } from "@/lib/seo";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BookOpen, Globe2, Newspaper } from "lucide-react";
 import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
 
 export const metadata = publicMetadata(
-  "Indian Food Export Guides for Importers",
-  "Plan your Indian food imports with guides to export orders, packaging, quality checks, documentation and shipment coordination.",
+  "Export Guides, Markets & Insights for Importers",
+  "Explore Indian food export guides, international markets and buyer insights. Plan orders, packaging, documentation and shipments with GOPU Exports.",
   "/resources",
 );
 
 export default function ResourcesPage() {
   return (
     <main className="bg-[#F5F8FB]">
-      <section className="bg-[#061E14] px-5 py-20 text-white">
+      <section className="bg-[#071624] px-5 py-12 text-white sm:px-8 sm:py-16">
         <div className="mx-auto max-w-6xl">
-          <p className="text-sm font-bold uppercase tracking-[0.24em] text-[#67C9D8]">Buyer resources</p>
-          <h1 className="mt-4 max-w-3xl font-serif text-4xl font-semibold leading-tight sm:text-5xl">
-            Procurement library for international agri-product buyers
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-            Learn how to structure export enquiries, packaging decisions, quality checks, documentation, and shipment coordination for Indian agricultural products.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/contact" className="rounded-xl bg-[#0E7490] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0A5A70]">
-              Request Export Support
-            </Link>
-            <Link href="/products" className="rounded-xl border border-white/20 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/10">
-              View Products
-            </Link>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#67C9D8]">Resources for international buyers</p>
+          <h1 className="mt-3 max-w-3xl font-serif text-4xl font-semibold leading-tight sm:text-5xl">Your guide to importing from India</h1>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">Export guides, market information and practical insights — everything in one place to help you plan your next order.</p>
+          <nav aria-label="Resource sections" className="mt-7 flex flex-wrap gap-3">
+            {[
+              { label: "Export guides", href: "#export-guides", Icon: BookOpen },
+              { label: "Export markets", href: "#export-markets", Icon: Globe2 },
+              { label: "Insights", href: "#insights", Icon: Newspaper },
+            ].map(({ label, href, Icon }) => (
+              <a key={href} href={href} className="inline-flex items-center gap-2 rounded-lg border border-white/25 px-4 py-3 text-sm font-semibold transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+                <Icon className="h-4 w-4 text-[#67C9D8]" aria-hidden="true" />{label}
+              </a>
+            ))}
+          </nav>
+        </div>
+      </section>
+
+      <section id="export-guides" aria-labelledby="guides-title" className="scroll-mt-48 px-5 py-10 sm:px-8 sm:py-12">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-6 flex items-start gap-3">
+            <span className="rounded-xl bg-[#DFF1F4] p-3 text-[#0E7490]"><BookOpen className="h-6 w-6" aria-hidden="true" /></span>
+            <div><h2 id="guides-title" className="text-2xl font-bold text-slate-900">Export guides</h2><p className="mt-1 text-sm leading-6 text-slate-600">Understand the steps from your first enquiry to shipment.</p></div>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {EXPORT_OPERATION_PAGES.map((page) => (
+              <Link key={page.slug} href={`/resources/${page.slug}`} className="group rounded-xl border border-slate-200 bg-white p-5 transition hover:border-[#0E7490] hover:shadow-md focus-visible:outline-2 focus-visible:outline-[#0E7490]">
+                <h3 className="text-lg font-bold text-slate-900">{page.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{page.description}</p>
+                <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#0E7490]">Read guide <ArrowRight className="h-4 w-4" aria-hidden="true" /></span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="px-5 py-14">
-        <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-3">
-          {[
-            { code: "DOC", title: "Documentation-ready", text: "Understand common commercial and product documents before shipment planning." },
-            { code: "PKG", title: "Packing-aware", text: "Review bulk, retail, and commodity-specific packing considerations." },
-            { code: "SHP", title: "Shipment-focused", text: "Clarify logistics, route planning, and buyer-forwarder coordination early." },
-          ].map(({ code, title, text }) => (
-            <div key={title} className="border-t border-[#C9B98E] bg-white p-6 shadow-sm ring-1 ring-slate-200">
-              <p className="font-serif text-2xl text-[#9A6B24]">{code}</p>
-              <h2 className="mt-4 text-lg font-black text-slate-900">{title}</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="px-5 pb-20">
+      <div className="border-t border-slate-200 bg-white px-5 py-10 sm:px-8 sm:py-12">
         <div className="mx-auto grid max-w-6xl gap-5 md:grid-cols-2">
-          {EXPORT_OPERATION_PAGES.map((page) => (
-            <Link
-              key={page.slug}
-              href={`/resources/${page.slug}`}
-              className="group border border-slate-200 bg-white p-6 shadow-sm transition hover:border-[#0B5A3B] hover:shadow-md"
-            >
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#0E7490]">Export operations</p>
-              <h2 className="mt-3 text-2xl font-black text-slate-900">{page.title}</h2>
-              <p className="mt-3 leading-7 text-slate-600">{page.description}</p>
-              <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#0E7490]">
-                Read guide <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-              </span>
-            </Link>
-          ))}
+          <section id="export-markets" aria-labelledby="markets-title" className="scroll-mt-48 rounded-2xl border border-[#CDE8ED] bg-[#F0F9FA] p-6 sm:p-8">
+            <Globe2 className="h-8 w-8 text-[#0E7490]" aria-hidden="true" />
+            <h2 id="markets-title" className="mt-4 text-2xl font-bold text-slate-900">Export markets</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-600">Explore international destinations and discuss product, packing and documentation requirements for your market.</p>
+            <Link href="/markets" className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#0E7490]">Explore markets <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+          </section>
+          <section id="insights" aria-labelledby="insights-title" className="scroll-mt-48 rounded-2xl border border-amber-200 bg-[#FFFAF0] p-6 sm:p-8">
+            <Newspaper className="h-8 w-8 text-amber-700" aria-hidden="true" />
+            <h2 id="insights-title" className="mt-4 text-2xl font-bold text-slate-900">Insights</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-600">Read articles about Indian agricultural products and practical considerations for international importers and distributors.</p>
+            <Link href="/blog" className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-amber-800">Browse insights <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+          </section>
         </div>
-      </section>
+        <div className="mx-auto mt-8 flex max-w-6xl flex-col gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-slate-600">Ready to discuss a product and destination?</p>
+          <Link href="/contact" className="inline-flex justify-center rounded-lg bg-[#0E7490] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#0A5A70]">Request an export quote</Link>
+        </div>
+      </div>
     </main>
   );
 }
-
