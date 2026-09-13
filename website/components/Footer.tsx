@@ -99,8 +99,8 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
         <div className="grid items-start gap-7 lg:grid-cols-[1fr_1.4fr_1fr] lg:gap-8">
           <div className="min-w-0">
-            <Link href="/" prefetch={false} aria-label="GOPU Exports Home" className="inline-flex rounded-md bg-[#FFF9EF] px-3 py-2">
-              <BrandLogo variant="light" className="h-auto w-[180px]" />
+            <Link href="/" prefetch={false} aria-label="GOPU Exports Home" className="inline-flex w-[180px] max-w-full rounded-md bg-[#FFF9EF] px-3 py-2">
+              <BrandLogo variant="light" className="h-auto w-full" />
             </Link>
             <p className="mt-3 max-w-xs text-[13px] leading-5 text-slate-400">
               Indian spices, rice and agricultural products for international buyers.
