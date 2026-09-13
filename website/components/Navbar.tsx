@@ -12,7 +12,7 @@ type IconComponent = (props: IconProps) => React.ReactElement;
 const MAIN_LINKS = [
   ["Products", "/products"],
   ["Company", "/about"],
-  ["Factory / Operations", "/about#operations"],
+  ["Export Markets", "/markets"],
   ["Quality & Compliance", "/certifications"],
   ["Resources", "/resources"],
   ["Insights", "/blog"],
@@ -154,7 +154,7 @@ export default function Navbar() {
             <WhatsAppIcon />
           </a>
           <Link href="/contact" prefetch={false} className="rounded-xl bg-[#0E7490] px-5 py-3 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-sm transition hover:bg-[#0A5A70] hover:shadow-md">
-            Request Quote
+            Export Quote
           </Link>
         </div>
 
@@ -174,7 +174,7 @@ export default function Navbar() {
           </nav>
           <div className="mt-4 grid gap-3">
             <Link href="/contact" prefetch={false} onClick={() => setMenuOpen(false)} className="rounded-xl bg-[#0E7490] px-5 py-3 text-center text-sm font-bold text-white">
-              Request Quote
+              Export Quote
             </Link>
             <a href={COMPANY.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#22C55E]/40 py-3 text-sm font-bold text-[#16A34A]">
               <WhatsAppIcon /> WhatsApp Inquiry
@@ -185,3 +185,4 @@ export default function Navbar() {
     </header>
   );
 }
+

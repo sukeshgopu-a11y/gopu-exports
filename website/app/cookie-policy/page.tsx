@@ -1,11 +1,6 @@
-import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Cookie Policy",
-  description:
-    "Cookie policy for GOPU Exports covering functional cookies, analytics, session storage, and opt-out contact details.",
-  alternates: { canonical: "/cookie-policy" },
-};
+export const metadata = publicMetadata("Cookie Policy", "Cookie policy for GOPU Exports covering functional cookies, analytics, session storage, and opt-out contact details.", "/cookie-policy");
 
 const rows = [
   ["Functional storage", "Supports basic website behavior, navigation, dashboard sessions, and form experience."],
@@ -54,3 +49,4 @@ export default function CookiePolicyPage() {
     </main>
   );
 }
+

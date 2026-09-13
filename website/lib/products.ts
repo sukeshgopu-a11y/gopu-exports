@@ -406,7 +406,7 @@ export const PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1553279768-865429fa0078?w=800&auto=format&fit=crop",
     tagline: "Alphonso mango enquiries reviewed by season, grade, and route",
     description:
-      "Alphonso mango sourcing enquiries are reviewed by season, grade, packing, cold-chain route, and destination requirements. Origin and product documentation are confirmed during buyer discussions.",
+      "Alphonso mango export enquiries are reviewed by season, grade, packing, cold-chain route, and destination requirements. Origin and product documentation are confirmed during buyer discussions.",
     origin: "Ratnagiri / Devgad, Maharashtra, India",
     moq: "5 MT",
     packaging: "Corrugated carton boxes (3–4 kg per box)",
@@ -546,3 +546,4 @@ export function getRelatedProducts(slugs: string[]): Product[] {
 export function getFeaturedProducts(): Product[] {
   return PRODUCTS.filter((p) => p.featured);
 }
+

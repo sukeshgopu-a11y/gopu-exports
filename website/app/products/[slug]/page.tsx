@@ -158,24 +158,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProduct(slug);
   if (!product) return { title: "Product Not Found" };
-  const commercialMoq = formatCommercialMoq(product);
+  const title = product.metaTitle && /export|import/i.test(product.metaTitle)
+    ? product.metaTitle.replace(/\s*\|\s*GOPU Exports\s*$/i, "")
+    : `${product.title} Exporter from India`;
+  const description = product.metaDescription || `${product.title} from India for international importers and distributors. Review product specifications, packaging and bulk export quotation options.`;
   return {
-    title: product.metaTitle || product.title,
-    description:
-      product.metaDescription ||
-      `${product.title}${product.tagline ? ` - ${product.tagline}` : ""}. Export quality${product.origin ? ` from ${product.origin}` : ""}${product.moq ? `. MOQ: ${commercialMoq}` : ""}${product.hs ? `. HS Code: ${product.hs}` : ""}.`,
+    title,
+    description,
     alternates: { canonical: `/products/${product.slug}` },
     openGraph: {
-      title: product.metaTitle || `${product.title} | GOPU Exports`,
-      description: product.metaDescription || product.description || `Export enquiry details for ${product.title}.`,
+      title: `${title} | GOPU Exports`,
+      description,
       url: `/products/${product.slug}`,
       type: "website",
       images: product.image ? [{ url: product.image, alt: `${product.title} export product` }] : undefined,
     },
     twitter: {
       card: "summary_large_image",
-      title: product.metaTitle || `${product.title} | GOPU Exports`,
-      description: product.metaDescription || product.description || `Export enquiry details for ${product.title}.`,
+      title: `${title} | GOPU Exports`,
+      description,
       images: product.image ? [product.image] : undefined,
     },
   };
@@ -461,3 +462,4 @@ export default async function ProductDetailsPage({ params }: Props) {
     </main>
   );
 }
+

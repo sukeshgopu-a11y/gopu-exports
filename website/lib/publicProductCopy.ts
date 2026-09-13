@@ -1,6 +1,8 @@
 type TextValue = string | undefined;
 
 const REPLACEMENTS: Array<[RegExp, string]> = [
+  [/WFP and government tender ready/gi, "Institutional order requirements reviewed during quotation"],
+  [/\bspice blend sourcing\b/gi, "spice blend export supply"],
   [/Fumigation certificate included/gi, "Fumigation documentation can be arranged where required by product, destination or buyer specification"],
   [/Fumigation certificate available/gi, "Fumigation documentation can be arranged where required by product, destination or buyer specification"],
   [/Fumigation certificate\b/gi, "Fumigation documentation can be arranged where required by product, destination or buyer specification"],
@@ -54,3 +56,4 @@ export function cleanPublicProduct<T extends Record<string, unknown>>(product: T
 
   return next as T;
 }
+

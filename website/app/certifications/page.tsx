@@ -1,16 +1,11 @@
-import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { CheckCircle2, FileText, ShieldCheck } from "lucide-react";
 import { COMPANY } from "@/lib/company";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
-  title: "Certifications & Business Verification",
-  description:
-    "GOPU Exports business verification and currently published certification information for international buyers, including IEC, CIN and GST.",
-  alternates: { canonical: "/certifications" },
-};
+export const metadata = publicMetadata("Certifications & Business Verification", "GOPU Exports business verification and currently published certification information for international buyers, including IEC, CIN and GST.", "/certifications");
 
 export default async function CertificationsPage() {
   return (
@@ -91,3 +86,4 @@ export default async function CertificationsPage() {
     </main>
   );
 }
+

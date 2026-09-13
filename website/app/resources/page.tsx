@@ -1,14 +1,13 @@
 import Link from "next/link";
-import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 import { ArrowRight } from "lucide-react";
 import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
 
-export const metadata: Metadata = {
-  title: "Export Buyer Resources",
-  description:
-    "Practical export buyer resources for Indian agricultural products, packaging, documentation, logistics, private label, and bulk sourcing.",
-  alternates: { canonical: "/resources" },
-};
+export const metadata = publicMetadata(
+  "Indian Food Export Guides for Importers",
+  "Plan your Indian food imports with guides to export orders, packaging, quality checks, documentation and shipment coordination.",
+  "/resources",
+);
 
 export default function ResourcesPage() {
   return (
@@ -20,7 +19,7 @@ export default function ResourcesPage() {
             Procurement library for international agri-product buyers
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-            Learn how to structure sourcing enquiries, packaging decisions, quality checks, documentation, and shipment coordination for Indian agricultural products.
+            Learn how to structure export enquiries, packaging decisions, quality checks, documentation, and shipment coordination for Indian agricultural products.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/contact" className="rounded-xl bg-[#0E7490] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0A5A70]">
@@ -70,3 +69,4 @@ export default function ResourcesPage() {
     </main>
   );
 }
+

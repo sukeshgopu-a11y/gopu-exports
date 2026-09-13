@@ -1,14 +1,13 @@
-import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { COMPANY } from "@/lib/company";
 
-export const metadata: Metadata = {
-  title: "About Us",
-  description:
-    "Learn about GOPU Exports, company verification details, founder message, sourcing philosophy, export process, quality control, and documentation support.",
-  alternates: { canonical: "/about" },
-};
+export const metadata = publicMetadata(
+  "About Our Indian Agricultural Export Company",
+  "GOPU Exports is a Hyderabad-based Indian agricultural exporter supplying spices, rice and food products to international importers and distributors.",
+  "/about",
+);
 
 const STRENGTHS = [
   {
@@ -19,7 +18,7 @@ const STRENGTHS = [
   {
     icon: "SN",
     title: "Reliable Supplier Network",
-    desc: "Supplier relationships are managed to support consistent sourcing across agricultural categories.",
+    desc: "Supplier relationships are managed to support consistent export supply across agricultural categories.",
   },
   {
     icon: "PK",
@@ -38,8 +37,8 @@ const STRENGTHS = [
   },
   {
     icon: "FS",
-    title: "Flexible Product Sourcing",
-    desc: "The sourcing process supports standard catalogue items as well as specific buyer requirements.",
+    title: "Buyer-Specific Export Supply",
+    desc: "Our export range covers standard catalogue items as well as specific buyer requirements.",
   },
   {
     icon: "BC",
@@ -73,13 +72,13 @@ export default function AboutPage() {
             <p className="text-[11px] font-black tracking-[0.26em] text-white/60">ABOUT GOPU EXPORTS</p>
           </div>
           <h1 className="mt-5 max-w-3xl text-[48px] font-black leading-[0.92] tracking-[-0.05em] text-white lg:text-[64px]">
-            Indian agricultural sourcing<br />
-            <span className="text-[#67C9D8]">with export discipline.</span>
+            Indian agricultural exports<br />
+            <span className="text-[#67C9D8]">for international buyers.</span>
           </h1>
           <p className="mt-6 max-w-xl text-[17px] leading-[1.8] text-slate-300">
             GOPU Exports is a Hyderabad-headquartered agricultural export company supporting
             buyer enquiries for spices, rice, fresh produce, and agricultural commodities,
-            with specification-led sourcing, documentation planning, and logistics coordination.
+            with buyer-specification export supply, documentation planning, and logistics coordination.
           </p>
 
         </div>
@@ -89,10 +88,10 @@ export default function AboutPage() {
         <div className="mx-auto max-w-[1450px] px-6 sm:px-8">
           <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
             <div className="rounded-3xl bg-[#071624] p-8 text-white">
-              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#67C9D8]">FOUNDER MESSAGE</p>
-              <h2 className="mt-4 text-3xl font-black tracking-[-0.04em]">Built for careful buyers, not quick claims.</h2>
+              <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#67C9D8]">CEO MESSAGE</p>
+              <h2 className="mt-4 text-3xl font-black tracking-[-0.04em]">Indian products. Clear export commitments.</h2>
               <p className="mt-5 text-sm leading-7 text-slate-300">
-                Our sourcing philosophy is simple: understand the buyer requirement first, confirm what can be supplied responsibly, and communicate documentation and shipment assumptions clearly before the order moves forward.
+                Our export approach is simple: understand the buyer requirement first, confirm what can be supplied responsibly, and communicate documentation and shipment assumptions clearly before the order moves forward.
               </p>
               <p className="mt-5 text-sm font-semibold text-white">{COMPANY.contactPerson}</p>
               <p className="text-sm font-semibold text-slate-300">{COMPANY.contactTitle}</p>
@@ -104,7 +103,7 @@ export default function AboutPage() {
               <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#0E7490]">OUR VISION</p>
               <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-[#0F172A]">A process-driven Indian export partner.</h2>
               <p className="mt-5 text-sm leading-7 text-[#64748B]">
-                GOPU Exports builds buyer confidence through practical documentation support, quality-focused sourcing, and disciplined communication from enquiry to dispatch.
+                GOPU Exports builds buyer confidence through practical documentation support, quality-focused export supply, and disciplined communication from enquiry to dispatch.
               </p>
               <Link href="/company-verification" className="mt-6 inline-flex rounded-xl bg-[#0E7490] px-5 py-3 text-sm font-bold text-white">
                 View Company Verification
@@ -124,15 +123,15 @@ export default function AboutPage() {
                 Built on Trust, Quality<br />and Trade Expertise
               </h2>
               <p className="mt-5 text-[15px] leading-[1.9] text-[#64748B]">
-                GOPU Exports was established to help international buyers source Indian
+                GOPU Exports was established to help international buyers import Indian
                 agricultural products with practical communication, clear specifications,
                 and realistic export documentation support. The company focuses on
                 structured enquiry handling rather than generic commodity promises.
               </p>
               <p className="mt-4 text-[15px] leading-[1.9] text-[#64748B]">
                 Each buyer discussion starts with product type, grade, packing, quantity,
-                destination, and document requirements. This helps the team review sourcing
-                feasibility, prepare relevant options, and coordinate the next commercial step.
+                destination, and document requirements. This helps the team confirm product
+                availability, prepare relevant options, and coordinate the next commercial step.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
@@ -180,13 +179,13 @@ export default function AboutPage() {
                 End-to-End Export<br />Management
               </h2>
               <p className="mt-5 text-[15px] leading-[1.9] text-slate-400">
-                We coordinate key export steps from supplier sourcing and quality checks
+                We coordinate key export steps from Indian supply-chain coordination and product checks
                 to packaging, documentation, logistics communication, and buyer updates.
               </p>
               <ul className="mt-7 space-y-3">
                 {[
                   "Farm-level quality grading and moisture testing",
-                  "Quality-focused sourcing and product checks",
+                  "Quality-focused export supply and product checks",
                   "Packaging guidance based on buyer requirements",
                   "Export documentation planning and support",
                   "Shipment coordination with logistics partners",
@@ -258,7 +257,7 @@ export default function AboutPage() {
               Partner with GOPU Exports
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-[16px] leading-[1.8] text-white/80">
-              Ready to source Indian agricultural commodities? Send product, packing,
+              Ready to import Indian agricultural commodities? Send product, packing,
               destination, and document requirements for review.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
@@ -282,3 +281,4 @@ export default function AboutPage() {
     </main>
   );
 }
+

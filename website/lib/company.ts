@@ -41,7 +41,8 @@ export const COMPANY = {
   ],
   social: {
     linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL ?? "https://www.linkedin.com/company/gopu-exports/",
-    facebook: process.env.NEXT_PUBLIC_FACEBOOK_URL ?? "https://www.facebook.com/search/top?q=gopu%20exports",
+    facebook: process.env.NEXT_PUBLIC_FACEBOOK_URL ?? "",
     instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL ?? "https://www.instagram.com/gopu_exports/",
   },
 };
+

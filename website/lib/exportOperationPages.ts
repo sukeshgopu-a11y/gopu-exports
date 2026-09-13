@@ -14,12 +14,12 @@ export const EXPORT_OPERATION_PAGES: ExportOperationPage[] = [
     description: "A practical overview of how GOPU Exports handles buyer enquiries, product matching, documentation, packing, and shipment coordination.",
     keywords: ["Indian export process", "agricultural export process", "bulk food export India"],
     sections: [
-      { heading: "Buyer requirement review", body: "Every enquiry starts with product type, target destination, packing preference, quantity, documentation needs, and shipment timeline. This helps the sourcing team quote realistic options instead of generic stock messages." },
+      { heading: "Buyer requirement review", body: "Every enquiry starts with product type, target destination, packing preference, quantity, documentation needs, and shipment timeline. This helps the export team quote realistic options instead of generic stock messages." },
       { heading: "Product confirmation", body: "Samples, specifications, packaging options, and quality expectations are clarified before commercial confirmation. For agricultural commodities, seasonal availability and grade consistency are discussed upfront." },
       { heading: "Documentation and shipment coordination", body: "The export workflow includes invoice, packing list, certificate support, origin details, and logistics coordination with buyer-appointed or recommended freight partners." },
     ],
     faq: [
-      { question: "Can buyers request multiple products in one enquiry?", answer: "Yes. Buyers can send a combined sourcing requirement and the team will respond with product-wise availability and next steps." },
+      { question: "Can buyers request multiple products in one enquiry?", answer: "Yes. Buyers can send a combined import requirement and the team will respond with product-wise availability and next steps." },
       { question: "Does GOPU Exports support buyer-specific packing?", answer: "Packing options can be discussed for bulk, retail, and private-label requirements depending on product type and order quantity." },
     ],
   },
@@ -44,7 +44,7 @@ export const EXPORT_OPERATION_PAGES: ExportOperationPage[] = [
     description: "How agricultural export buyers can structure quality expectations, inspection points, and product specifications.",
     keywords: ["export quality control", "Indian spice quality", "agricultural commodity inspection"],
     sections: [
-      { heading: "Specification-led sourcing", body: "Clear specification sheets reduce misunderstandings. Typical parameters include variety, grade, moisture, size, purity, processing style, packaging, and shelf-life expectations." },
+      { heading: "Buyer-specification export supply", body: "Clear specification sheets reduce misunderstandings. Typical parameters include variety, grade, moisture, size, purity, processing style, packaging, and shelf-life expectations." },
       { heading: "Inspection readiness", body: "Buyer-appointed inspection, lab reports, and product photos can be coordinated where required. Requirements should be stated before order confirmation." },
       { heading: "Traceable communication", body: "Product changes, substitutions, grade limits, and seasonal constraints should be documented during the enquiry and quotation stage." },
     ],
@@ -56,7 +56,7 @@ export const EXPORT_OPERATION_PAGES: ExportOperationPage[] = [
   {
     slug: "logistics-shipping",
     title: "Logistics & Shipping",
-    description: "Shipment coordination considerations for global buyers sourcing agricultural products from India.",
+    description: "Shipment coordination considerations for global buyers importing agricultural products from India.",
     keywords: ["export logistics India", "agri commodity shipping", "Indian food products shipment"],
     sections: [
       { heading: "Route planning", body: "Shipping plans depend on destination port, container type, cargo weight, documentation needs, and required delivery timeline." },
@@ -86,7 +86,7 @@ export const EXPORT_OPERATION_PAGES: ExportOperationPage[] = [
   {
     slug: "buyer-faq",
     title: "Buyer FAQ",
-    description: "Common questions from international buyers sourcing rice, spices, millets, pulses, fruits, vegetables, and Indian agri commodities.",
+    description: "Common questions from international buyers importing rice, spices, millets, pulses, fruits, vegetables, and Indian agri commodities.",
     keywords: ["Indian agri exporter FAQ", "bulk food import questions", "GOPU Exports buyer questions"],
     sections: [
       { heading: "Starting an enquiry", body: "Share product name, quantity, destination country, packing preference, target delivery timeline, and any inspection or document requirements." },
@@ -95,7 +95,7 @@ export const EXPORT_OPERATION_PAGES: ExportOperationPage[] = [
     ],
     faq: [
       { question: "Is a small trial order possible?", answer: "Trial order feasibility depends on product, packing, destination, and shipping economics. Buyers can request available options." },
-      { question: "Can GOPU Exports source products not listed online?", answer: "Yes. The team can review flexible sourcing requests for suitable Indian agricultural products." },
+      { question: "Can GOPU Exports export products not listed online?", answer: "Yes. The team can review additional export product requests for suitable Indian agricultural products." },
     ],
   },
   {
@@ -116,7 +116,7 @@ export const EXPORT_OPERATION_PAGES: ExportOperationPage[] = [
   {
     slug: "bulk-orders",
     title: "Bulk Orders",
-    description: "Bulk procurement guidance for importers sourcing Indian agricultural commodities and food products.",
+    description: "Bulk procurement guidance for importers importing Indian agricultural commodities and food products.",
     keywords: ["bulk agri products India", "bulk spice exporter", "bulk rice supplier India"],
     sections: [
       { heading: "Commercial clarity", body: "Bulk quotes are more accurate when buyers share quantity, destination, packing, grade, Incoterms, and target shipment window." },
@@ -131,22 +131,22 @@ export const EXPORT_OPERATION_PAGES: ExportOperationPage[] = [
   {
     slug: "global-supply-network",
     title: "Global Supply Network",
-    description: "How GOPU Exports approaches reliable sourcing across Indian agricultural product categories.",
-    keywords: ["Indian agricultural supply network", "global food supply India", "agri sourcing India"],
+    description: "How GOPU Exports approaches export supply across Indian agricultural product categories.",
+    keywords: ["Indian agricultural supply network", "global food supply India", "agricultural exporter India"],
     sections: [
-      { heading: "Category-led sourcing", body: "Sourcing is organized around practical categories including rice, millets, spices, pulses, fruits, vegetables, and selected processed agricultural products." },
-      { heading: "Supplier coordination", body: "A reliable sourcing process checks product availability, packing readiness, inspection expectations, and communication discipline." },
+      { heading: "Category-led export supply", body: "Export supply is organized around practical categories including rice, millets, spices, pulses, fruits, vegetables, and selected processed agricultural products." },
+      { heading: "Indian supply chain", body: "Our export supply process checks product availability, packing readiness, inspection expectations, and communication discipline." },
       { heading: "Buyer fit", body: "The strongest results come when product choice, quality level, packing, documentation, and budget are aligned early." },
     ],
     faq: [
-      { question: "Does the website list every possible product?", answer: "No. Buyers can request products beyond the visible catalog, and the team will review sourcing feasibility." },
+      { question: "Does the website list every possible product?", answer: "No. Buyers can request products beyond the visible catalog, and the team will review export availability." },
       { question: "Can GOPU Exports support long-term supply discussions?", answer: "Yes. Long-term discussions work best when specifications, forecast volumes, and destination requirements are clear." },
     ],
   },
   {
     slug: "inquiry-procurement-support",
     title: "Inquiry & Procurement Support",
-    description: "A buyer-focused guide to submitting complete sourcing enquiries and receiving practical export responses.",
+    description: "A buyer-focused guide to submitting complete export enquiries and receiving practical export responses.",
     keywords: ["export inquiry support", "procurement support India", "agri products quote request"],
     sections: [
       { heading: "Complete requirement capture", body: "A strong enquiry includes product, grade, volume, destination, packing, target price context if available, and any document requirements." },
@@ -163,3 +163,4 @@ export const EXPORT_OPERATION_PAGES: ExportOperationPage[] = [
 export function getExportOperationPage(slug: string) {
   return EXPORT_OPERATION_PAGES.find((page) => page.slug === slug);
 }
+

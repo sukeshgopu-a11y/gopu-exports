@@ -1,11 +1,6 @@
-import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Terms & Conditions",
-  description:
-    "Terms and conditions for using the GOPU Exports website, submitting enquiries, and reviewing export product information.",
-  alternates: { canonical: "/terms-and-conditions" },
-};
+export const metadata = publicMetadata("Terms & Conditions", "Terms and conditions for using the GOPU Exports website, submitting enquiries, and reviewing export product information.", "/terms-and-conditions");
 
 const terms = [
   {
@@ -14,7 +9,7 @@ const terms = [
   },
   {
     title: "Enquiries and Quotes",
-    body: "Submitting an enquiry or quote request does not create a binding sales contract. GOPU Exports may contact you using the email, phone, WhatsApp, company, country, product, quantity, and message details you provide to discuss sourcing and quotation requirements.",
+    body: "Submitting an enquiry or quote request does not create a binding sales contract. GOPU Exports may contact you using the email, phone, WhatsApp, company, country, product, quantity, and message details you provide to discuss export quotation requirements.",
   },
   {
     title: "Analytics and Website Improvement",
@@ -63,3 +58,4 @@ export default function TermsPage() {
     </main>
   );
 }
+

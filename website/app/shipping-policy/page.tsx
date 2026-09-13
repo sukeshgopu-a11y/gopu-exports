@@ -1,11 +1,6 @@
-import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Shipping Policy",
-  description:
-    "Shipping and logistics policy for GOPU Exports buyer enquiries, export packing, documentation, and shipment coordination.",
-  alternates: { canonical: "/shipping-policy" },
-};
+export const metadata = publicMetadata("Shipping Policy", "Shipping and logistics policy for GOPU Exports buyer enquiries, export packing, documentation, and shipment coordination.", "/shipping-policy");
 
 const items = [
   {
@@ -34,7 +29,7 @@ export default function ShippingPolicyPage() {
           <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#67C9D8]">Buyer Support</p>
           <h1 className="mt-4 text-4xl font-black tracking-[-0.04em] sm:text-5xl">Shipping Policy</h1>
           <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-300">
-            Practical shipping information for international buyers discussing Indian agricultural product sourcing.
+            Practical shipping information for international buyers discussing Indian agricultural product supply.
           </p>
         </div>
       </section>
@@ -52,3 +47,4 @@ export default function ShippingPolicyPage() {
     </main>
   );
 }
+

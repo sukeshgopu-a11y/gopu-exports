@@ -29,28 +29,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/shipping-policy",
   ].map((path) => ({
     url: `${BASE_URL}${path}`,
-    lastModified: STATIC_LAST_MODIFIED,
+
     changeFrequency: path === "" ? "weekly" : "monthly",
     priority: path === "" ? 1 : 0.7,
   }));
 
   const resourceRoutes: MetadataRoute.Sitemap = EXPORT_OPERATION_PAGES.map((page) => ({
     url: `${BASE_URL}/resources/${page.slug}`,
-    lastModified: STATIC_LAST_MODIFIED,
+
     changeFrequency: "monthly",
     priority: 0.65,
   }));
 
   const categoryRoutes: MetadataRoute.Sitemap = CATEGORY_LANDING_PAGES.map((page) => ({
     url: `${BASE_URL}/export/${page.slug}`,
-    lastModified: STATIC_LAST_MODIFIED,
+
     changeFrequency: "monthly",
     priority: 0.75,
   }));
 
-  const supabase = createPublicClient();
   let products: Pick<ProductRow, "slug" | "updated_at">[] = [];
   try {
+    const supabase = createPublicClient();
     const { data } = await supabase
       .from("products")
       .select("slug,updated_at")
@@ -88,3 +88,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [...staticRoutes, ...categoryRoutes, ...resourceRoutes, ...productRoutes, ...blogRoutes];
 }
+

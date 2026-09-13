@@ -1,12 +1,7 @@
-import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description:
-    "Privacy policy for GOPU Exports covering enquiry data, passive analytics, cookies, and buyer communication.",
-  alternates: { canonical: "/privacy-policy" },
-};
+export const metadata = publicMetadata("Privacy Policy", "Privacy policy for GOPU Exports covering enquiry data, passive analytics, cookies, and buyer communication.", "/privacy-policy");
 
 const sections = [
   {
@@ -19,7 +14,7 @@ const sections = [
   {
     title: "How We Use Information",
     body: [
-      "We use enquiry and quote information to respond to buyer requests, prepare product discussions, coordinate sourcing conversations, and improve our export communication process.",
+      "We use enquiry and quote information to respond to buyer requests, prepare product discussions, coordinate export order discussions, and improve our export communication process.",
       "Analytics information is used in aggregate or session-level form to understand which products, guides, and contact options are useful to visitors. We do not use analytics to collect passwords, payment details, or private form message contents.",
     ],
   },
@@ -83,3 +78,4 @@ export default function PrivacyPolicyPage() {
     </main>
   );
 }
+

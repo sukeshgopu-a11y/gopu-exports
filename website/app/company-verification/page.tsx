@@ -1,13 +1,9 @@
-import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Building2, CheckCircle2, FileCheck2, Mail, Phone, ShieldCheck } from "lucide-react";
 import { COMPANY } from "@/lib/company";
 
-export const metadata: Metadata = {
-  title: "Company Verification",
-  description: "Verify GOPU Exports company identifiers including IEC, CIN, GST, contact details, and document request process for international buyers.",
-  alternates: { canonical: "/company-verification" },
-};
+export const metadata = publicMetadata("Company Verification", "Verify GOPU Exports company identifiers including IEC, CIN, GST, contact details, and document request process for international buyers.", "/company-verification");
 
 export default function CompanyVerificationPage() {
   return (
@@ -130,3 +126,4 @@ export default function CompanyVerificationPage() {
     </main>
   );
 }
+
