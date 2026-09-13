@@ -177,7 +177,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
         heading: "Use a professional enquiry format",
         body: [
           "A strong enquiry should include product name, grade, required quantity, destination port, preferred incoterm, packaging, required documents, target delivery month, and whether private label is required. Sharing photos of current packaging or a target specification sheet is also useful.",
-          "GOPU Exports product pages include product-specific enquiry CTAs so buyers can request quotes with context. Visit /products for current product listings or /contact for a bulk sourcing request."
+          "GOPU Exports product pages include product-specific enquiry CTAs so buyers can request quotes with context. Visit /products for current product listings or /contact for a bulk imports request."
         ],
       },
     ],
@@ -268,7 +268,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
       {
         heading: "How GOPU Exports handles APEDA-style enquiries",
         body: [
-          "GOPU Exports structures product discussions around category, specification, packing, and documentation. Buyers can browse /products for active product listings or use /contact for custom sourcing across APEDA-type agricultural categories.",
+          "GOPU Exports structures product discussions around category, specification, packing, and documentation. Buyers can browse /products for active product listings or use /contact for additional export products across APEDA-type agricultural categories.",
           "When the required product is not listed, buyers should select Others in the enquiry form and describe the exact requirement."
         ],
       },
@@ -276,7 +276,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     faqs: [
       { question: "Does APEDA cover rice?", answer: "APEDA covers cereal and cereal products, and basmati rice is separately included in APEDA’s statutory scope." },
       { question: "Are APEDA categories the same as import permissions?", answer: "No. APEDA categories help classify Indian export products. Import permissions and documents depend on the destination country." },
-      { question: "Can buyers ask for unlisted APEDA products?", answer: "Yes. Buyers can submit a custom sourcing enquiry with product details, quantity, destination, and documents required." },
+      { question: "Can buyers ask for unlisted APEDA products?", answer: "Yes. Buyers can submit a additional export products enquiry with product details, quantity, destination, and documents required." },
     ],
   }),
   post({
@@ -606,3 +606,4 @@ export const DEFAULT_BLOGS: BlogPost[] = [
 export function getDefaultBlogBySlug(slug: string) {
   return DEFAULT_BLOGS.find((post) => post.slug === slug && post.published) ?? null;
 }
+

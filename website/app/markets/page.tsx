@@ -1,12 +1,11 @@
-import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Export Markets",
-  description:
-    "GOPU Exports supports international buyer enquiries for Indian agricultural commodities with practical product, documentation, and shipment planning.",
-  alternates: { canonical: "/markets" },
-};
+export const metadata = publicMetadata(
+  "Indian Food Exports for International Buyers",
+  "Discuss Indian spice, rice and agricultural imports with GOPU Exports. Product eligibility, documents and freight are confirmed for your destination.",
+  "/markets",
+);
 
 const markets = [
   {
@@ -33,7 +32,7 @@ const markets = [
     region: "Europe",
     color: "bg-[#EFF6FF] text-[#1D4ED8]",
     countries: [
-      { name: "Germany", flag: "🇩🇪", products: ["Spices", "Organic Produce"] },
+      { name: "Germany", flag: "🇩🇪", products: ["Spices", "Rice"] },
       { name: "United Kingdom", flag: "🇬🇧", products: ["Spices", "Rice", "Pulses"] },
       { name: "Netherlands", flag: "🇳🇱", products: ["Fresh Produce", "Spices"] },
       { name: "France", flag: "🇫🇷", products: ["Spices", "Oilseeds"] },
@@ -60,7 +59,7 @@ const markets = [
 const requirements = [
   {
     title: "Phytosanitary Certificate",
-    desc: "Required for all fresh produce and agricultural commodity exports.",
+    desc: "Requirements depend on the product and destination. Confirm the applicable plant-health documents before ordering.",
   },
   {
     title: "Certificate of Origin",
@@ -72,7 +71,7 @@ const requirements = [
   },
   {
     title: "Fumigation Certificate",
-    desc: "Required for rice, pulses, and grains for pest-free export.",
+    desc: "Treatment and documentation depend on the commodity, packing and destination requirements. Confirm the agreed scope before shipment.",
   },
 ];
 
@@ -97,13 +96,13 @@ export default function MarketsPage() {
             </p>
           </div>
           <h1 className="text-[48px] lg:text-[62px] font-black leading-[1.05] text-white">
-            Our Export Markets
+            International Buyer Destinations
             <span className="text-[#0E7490]">.</span>
           </h1>
           <p className="mt-5 text-[15px] leading-7 text-slate-300 max-w-[580px]">
             GOPU Exports supports importers, distributors, and wholesale buyers
             reviewing Indian agricultural commodities with practical product,
-            documentation, and logistics planning.
+            documentation, and logistics planning. These are enquiry destinations; each product and route is confirmed before an order is accepted.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
@@ -150,7 +149,7 @@ export default function MarketsPage() {
               Buyer Enquiry Planning
             </p>
             <h2 className="mt-3 text-[32px] font-black tracking-[-0.04em] text-[#0F172A]">
-              Regional Planning References
+              Discuss your destination with us
             </h2>
           </div>
 
@@ -250,3 +249,4 @@ export default function MarketsPage() {
     </main>
   );
 }
+

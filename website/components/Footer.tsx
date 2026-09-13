@@ -16,10 +16,10 @@ const NAVIGATION = [
 ];
 
 const PRODUCT_LINKS = [
-  ["Spices", "/products?category=Spices"],
-  ["Rice", "/products?category=Rice%20%26%20Grains"],
+  ["Spices", "/export/spice-exporters-from-india"],
+  ["Rice", "/export/rice-exporters-from-india"],
   ["Pulses", "/products?category=Pulses"],
-  ["Millets", "/products?category=Millets"],
+  ["Millets", "/export/millet-suppliers-india"],
   ["Fresh Produce", "/products?category=Fresh%20Fruits"],
 ];
 
@@ -27,7 +27,7 @@ const RESOURCE_LINKS = [
   ["Request Quote", "/contact"],
   ["Resources", "/resources"],
   ["Packaging Standards", "/resources/packaging-standards"],
-  ["Contact", "/contact"],
+  ["Export Markets", "/markets"],
   ["Insights", "/blog"],
 ];
 
@@ -223,3 +223,4 @@ export default function Footer() {
     </footer>
   );
 }
+

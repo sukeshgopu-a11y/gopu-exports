@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -8,12 +8,11 @@ import {
 
 export const revalidate = 30;
 
-export const metadata: Metadata = {
-  title: "Export Insights",
-  description:
-    "GOPU Exports insights on Indian agricultural exports, spices, rice, grains, documentation, and B2B sourcing.",
-  alternates: { canonical: "/blog" },
-};
+export const metadata = publicMetadata(
+  "Indian Agricultural Export Insights for Buyers",
+  "Practical articles for international buyers importing Indian spices, rice and agricultural products, including product specifications and shipment planning.",
+  "/blog",
+);
 
 async function getPosts() {
   try {
@@ -94,3 +93,4 @@ export default async function BlogPage() {
     </main>
   );
 }
+

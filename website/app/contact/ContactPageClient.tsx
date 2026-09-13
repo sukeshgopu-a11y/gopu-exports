@@ -43,14 +43,6 @@ function getInitialForm() {
   };
 }
 
-function TrustCard({ title, label }: { title: string; label: string }) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur px-4 py-4">
-      <div className="text-white text-[15px] font-black leading-tight">{title}</div>
-      <div className="mt-2 text-white/60 text-[12px] leading-5">{label}</div>
-    </div>
-  );
-}
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -312,82 +304,11 @@ export default function ContactPageClient() {
   return (
     <main className="bg-[#F5F7FA] min-h-screen text-[#0F172A]">
 
-      {/* HERO */}
-      <section className="relative overflow-hidden bg-[#081b2e]">
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right,white 1px,transparent 1px),linear-gradient(to bottom,white 1px,transparent 1px)",
-            backgroundSize: "72px 72px",
-          }}
-        />
-        <div className="max-w-[1400px] mx-auto px-8 pt-20 pb-10 relative z-10">
-          <div className="grid xl:grid-cols-2 gap-8 items-center">
-            {/* LEFT */}
-            <div>
-              <div className="flex items-center gap-3 mb-5">
-                <div className="h-[2px] w-8 bg-[#0E7490]" />
-                <p className="text-xs font-black tracking-[0.2em] text-white uppercase">
-                  Export Enquiries
-                </p>
-              </div>
-              <h1 className="text-white text-[42px] lg:text-[54px] font-black leading-[1.05] tracking-[-0.04em]">
-                Agricultural
-                <br />
-                Export
-                <br />
-                Solutions.
-              </h1>
-              <p className="mt-5 max-w-xl text-[15px] leading-7 text-white/70">
-                International sourcing and export operations for spices, rice,
-                vegetables and agricultural commodities from India to global markets.
-              </p>
-              <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <TrustCard title="Quality-Focused" label="Export sourcing" />
-                <TrustCard title="Compliant" label="Packaging support" />
-                <TrustCard title="Buyer-Centric" label="Communication" />
-                <TrustCard title="Flexible" label="Product sourcing" />
-              </div>
-            </div>
-
-            {/* RIGHT PANEL */}
-            <div className="relative rounded-[24px] border border-white/10 bg-white/[0.06] backdrop-blur-xl p-5 shadow-2xl">
-              <div className="flex items-center justify-between mb-5">
-                <div>
-                  <div className="text-[10px] font-black uppercase tracking-[0.18em] text-[#67C9D8]">
-                    International Trade
-                  </div>
-                  <div className="mt-2 text-white text-[24px] font-black leading-none">
-                    Export Operations
-                  </div>
-                </div>
-                <div className="w-14 h-14 rounded-[18px] bg-[#0E7490]/20 flex items-center justify-center border border-[#0E7490]/20 text-2xl">
-                  🚢
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                {[["Requirements","Product review"],["Packaging","Private Label"],["Updates","Order & Shipment Updates"],["Logistics","International Shipment Coordination"]].map(([t,v]) => (
-                  <div key={t} className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-4">
-                    <div className="text-[9px] uppercase tracking-[0.16em] font-bold text-white/40">{t}</div>
-                    <div className="mt-2 text-white text-[15px] font-bold">{v}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                <div className="text-[10px] uppercase tracking-[0.16em] font-bold text-white/40 mb-3">
-                  Export Coverage
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {["Company verification","Product specification","Packaging review","Document checklist","Quote preparation","Shipment planning"].map((c) => (
-                    <div key={c} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white text-[11px] font-medium">
-                      {c}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+      <section className="bg-[#081b2e] text-white">
+        <div className="mx-auto max-w-[1400px] px-6 py-10 sm:px-8">
+          <p className="text-sm font-bold uppercase tracking-widest text-[#9EE7EF]">International buyer enquiries</p>
+          <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">Request an export quote</h1>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-200">Buying Indian spices, rice or agricultural products? Send your company details, product, quantity and destination. Our export team will confirm availability and quotation requirements.</p>
         </div>
       </section>
 
@@ -554,7 +475,7 @@ export default function ContactPageClient() {
                   </div>
                 </FormSection>
 
-                <FormSection title="Step 3 - Requirement" note="Tell us what you need to source.">
+                <FormSection title="Step 3 - Requirement" note="Tell us what you want to import from India.">
                   <Field label="Product required *">
                     <Select value={form.product} onChange={set("product") as (e: React.ChangeEvent<HTMLSelectElement>) => void}>
                       <option value="">Select product</option>
@@ -719,3 +640,4 @@ export default function ContactPageClient() {
     </main>
   );
 }
+

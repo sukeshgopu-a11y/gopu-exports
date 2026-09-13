@@ -104,7 +104,7 @@ const organizationJsonLd = {
       availableLanguage: ["English"],
     },
   ],
-  sameAs: Object.values(COMPANY.social),
+  sameAs: Object.values(COMPANY.social).filter(Boolean),
 };
 
 export default function RootLayout({
@@ -127,3 +127,4 @@ export default function RootLayout({
     </html>
   );
 }
+

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 import ProductsGrid from "@/components/ProductsGrid";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
@@ -9,12 +9,11 @@ import Link from "next/link";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: "Products",
-  description:
-    "Browse GOPU Exports agricultural product catalogue for rice, spices, fresh produce, millets, pulses, and bulk export enquiries from international importers and distributors.",
-  alternates: { canonical: "/products" },
-};
+export const metadata = publicMetadata(
+  "Indian Spices, Rice & Agricultural Export Products",
+  "Explore Indian spices, rice, millets, pulses and produce for international bulk orders. Review specifications and request an export quote from GOPU Exports.",
+  "/products",
+);
 
 type PublicProduct = {
   _id: string;
@@ -66,7 +65,7 @@ export default async function ProductsPage() {
               <p className="text-[11px] font-black tracking-[0.26em] text-[#67C9D8]">EXPORT CATALOGUE</p>
             </div>
             <h1 className="mt-5 max-w-3xl text-[48px] font-black leading-none tracking-[-0.055em] text-white sm:text-[64px] lg:text-[76px]">
-              Indian Agri Products for Bulk Buyers
+              Indian Products for International Buyers
             </h1>
             <p className="mt-6 max-w-2xl text-[16px] leading-[1.9] text-slate-300 sm:text-[18px]">
               For international importers, distributors, wholesalers, and food-service buyers reviewing grade, packing, MOQ, destination, and documentation requirements.
@@ -82,8 +81,8 @@ export default async function ProductsPage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
             {[
-              ["40+ Export Products", "40+", "Catalogue range for spices, rice, produce, pulses, and processed agricultural products"],
-              ["9 Product Categories", `${Math.max(categories.length, 9)}`, "Grouped for faster buyer review"],
+              ["Export Products", `${products.length}`, "Catalogue range for spices, rice, produce, pulses, and processed agricultural products"],
+              ["Product Categories", `${categories.length}`, "Grouped for faster buyer review"],
               ["Specification-Led B2B Enquiries", "RFQ", "Buyer requirements reviewed by product, packing, quantity, and destination"],
             ].map(([label, value, note]) => (
               <div key={label} className="rounded-2xl border border-white/15 bg-white/10 p-5 text-white shadow-2xl shadow-cyan-950/20 backdrop-blur">
@@ -152,3 +151,4 @@ export default async function ProductsPage() {
     </main>
   );
 }
+

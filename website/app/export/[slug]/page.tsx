@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
+import { cleanPublicProduct } from "@/lib/publicProductCopy";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CATEGORY_LANDING_PAGES, getCategoryLandingPage } from "@/lib/categoryLandingPages";
@@ -19,18 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = getCategoryLandingPage(slug);
   if (!page) return { title: "Export Category Not Found" };
 
-  return {
-    title: page.title,
-    description: page.description,
-    keywords: page.keywords,
-    alternates: { canonical: `/export/${page.slug}` },
-    openGraph: {
-      title: page.title,
-      description: page.description,
-      url: `/export/${page.slug}`,
-      type: "website",
-    },
-  };
+  return publicMetadata(page.title, page.description, `/export/${page.slug}`);
 }
 
 async function getProducts(category?: string): Promise<ProductCard[]> {
@@ -46,7 +37,7 @@ async function getProducts(category?: string): Promise<ProductCard[]> {
       .limit(8)
       .returns<ProductRow[]>();
     if (error) return [];
-    return (data ?? []).map(productToApi) as ProductCard[];
+    return ((data ?? []).map(productToApi) as ProductCard[]).map(cleanPublicProduct);
   } catch {
     return [];
   }
@@ -93,6 +84,8 @@ export default async function ExportCategoryPage({ params }: Props) {
       </section>
 
       <section className="mx-auto max-w-[1180px] px-6 py-14 sm:px-8">
+        <nav aria-label="Breadcrumb" className="mb-8 flex flex-wrap gap-2 text-sm text-[#475569]"><Link href="/">Home</Link><span>/</span><Link href="/products">Export products</Link><span>/</span><span aria-current="page">{page.title}</span></nav>
+        {page.relatedProducts && <div className="mb-8"><h2 className="text-2xl font-bold">Explore the products</h2><div className="mt-4 flex flex-wrap gap-3">{page.relatedProducts.map((product) => <Link key={product.slug} href={`/products/${product.slug}`} className="rounded-lg border border-[#D9E2EC] bg-white px-5 py-3 font-bold text-[#0E7490]">{product.title} →</Link>)}</div></div>}
         <div className="grid gap-6 md:grid-cols-2">
           {page.sections.map((section) => (
             <div key={section.heading} className="rounded-2xl border border-[#D9E2EC] bg-white p-7 shadow-sm">
@@ -127,7 +120,7 @@ export default async function ExportCategoryPage({ params }: Props) {
         <div className="mt-14 rounded-2xl bg-[#071624] p-8 text-white">
           <h2 className="text-[28px] font-black tracking-[-0.03em]">Need a product not listed here?</h2>
           <p className="mt-3 max-w-2xl text-[15px] leading-8 text-slate-300">
-            Send your exact requirement, packing preference, destination port, and document checklist. Select Others in the enquiry form for custom sourcing.
+            Send your exact requirement, packing preference, destination port, and document checklist. For additional products, select Others in the export enquiry form.
           </p>
           <Link href="/contact" className="mt-6 inline-block rounded-lg bg-[#0E7490] px-6 py-3.5 text-[13px] font-bold text-white">
             Send Bulk Inquiry
@@ -137,3 +130,4 @@ export default async function ExportCategoryPage({ params }: Props) {
     </main>
   );
 }
+

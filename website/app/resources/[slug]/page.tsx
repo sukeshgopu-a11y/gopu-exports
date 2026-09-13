@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { EXPORT_OPERATION_PAGES, getExportOperationPage } from "@/lib/exportOperationPages";
 
@@ -15,18 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = getExportOperationPage(slug);
   if (!page) return {};
 
-  return {
-    title: `${page.title} | Export Buyer Resources`,
-    description: page.description,
-    keywords: page.keywords,
-    alternates: { canonical: `/resources/${page.slug}` },
-    openGraph: {
-      title: `${page.title} | GOPU Exports`,
-      description: page.description,
-      url: `https://gopuexports.com/resources/${page.slug}`,
-      type: "article",
-    },
-  };
+  return publicMetadata(`${page.title} | Export Buyer Resources`, page.description, `/resources/${page.slug}`);
 }
 
 export default async function ResourceDetailPage({ params }: Props) {
@@ -107,3 +97,4 @@ export default async function ResourceDetailPage({ params }: Props) {
     </main>
   );
 }
+

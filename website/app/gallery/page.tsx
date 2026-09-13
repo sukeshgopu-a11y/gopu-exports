@@ -1,16 +1,15 @@
-import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { createPublicClient } from "@/src/lib/supabase/public";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
-  title: "Gallery",
-  alternates: { canonical: "/gallery" },
-  description:
-    "View GOPU Exports' product gallery — premium spices, basmati rice, fresh fruits and vegetables ready for global export.",
-};
+export const metadata = publicMetadata(
+  "GOPU Exports Product & Operations Gallery",
+  "View published product and operations images from GOPU Exports. Contact our Hyderabad team for buyer verification and export enquiries.",
+  "/gallery",
+);
 
 type GalleryImage = {
   id: string;
@@ -117,3 +116,4 @@ export default async function GalleryPage() {
     </main>
   );
 }
+

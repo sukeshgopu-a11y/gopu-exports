@@ -209,7 +209,7 @@ For urgent requirements, you can also reach us directly:
 Email: admin@gopuexports.com
 Phone / WhatsApp: +91 9618991917
 
-Thank you again for considering GOPU Exports. We look forward to assisting you with your sourcing and export requirements.
+Thank you again for considering GOPU Exports. We look forward to assisting you with your import requirements.
 
 Regards,
 GOPU Exports Team`;
@@ -226,7 +226,7 @@ function autoReplyHtml(payload: LeadEmailPayload) {
         <p>We usually respond within <strong>24-48 business hours</strong>.</p>
         <p>For urgent requirements, you can also reach us directly:</p>
         <p><strong>Email:</strong> admin@gopuexports.com<br/><strong>Phone / WhatsApp:</strong> +91 9618991917</p>
-        <p>Thank you again for considering GOPU Exports. We look forward to assisting you with your sourcing and export requirements.</p>
+        <p>Thank you again for considering GOPU Exports. We look forward to assisting you with your import requirements.</p>
         <p style="margin-top:24px">Regards,<br/><strong>GOPU Exports Team</strong></p>
       </div>
     </div>
@@ -304,3 +304,4 @@ export async function sendTestEmail() {
     idempotencyKey: `gopu-test-${Date.now()}`,
   });
 }
+

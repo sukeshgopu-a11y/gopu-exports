@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { publicMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -26,16 +27,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (error) return { title: "Article Unavailable" };
   if (!post) notFound();
 
+  const title = (post.metaTitle || post.title).replace(/\s*\|\s*GOPU Exports\s*$/i, "");
+  const description = post.metaDescription || post.excerpt || "GOPU Exports article.";
+  const metadata = publicMetadata(title, description, `/blog/${post.slug}`);
   return {
-    title: post.metaTitle || post.title,
-    description: post.metaDescription || post.excerpt || "GOPU Exports article.",
-    alternates: { canonical: `/blog/${post.slug}` },
-    openGraph: {
-      type: "article",
-      title: post.metaTitle || post.title,
-      description: post.metaDescription || post.excerpt || "GOPU Exports article.",
-      images: [{ url: post.image || DEFAULT_BLOG_IMAGE }],
-    },
+    ...metadata,
+    openGraph: { ...metadata.openGraph, type: "article", images: [{ url: post.image || DEFAULT_BLOG_IMAGE }] },
+    twitter: { ...metadata.twitter, card: "summary_large_image", images: [post.image || DEFAULT_BLOG_IMAGE] },
   };
 }
 
@@ -169,3 +167,4 @@ export default async function BlogPostPage({ params }: Props) {
     </main>
   );
 }
+
