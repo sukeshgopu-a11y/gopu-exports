@@ -12,12 +12,51 @@ type IconComponent = (props: IconProps) => React.ReactElement;
 const MAIN_LINKS = [
   ["Products", "/products"],
   ["Company", "/about"],
-  ["Export Markets", "/markets"],
   ["Quality & Compliance", "/certifications"],
   ["Resources", "/resources"],
-  ["Insights", "/blog"],
   ["Contact", "/contact"],
 ];
+
+const RESOURCE_LINKS = [
+  { label: "All resources", href: "/resources", description: "Start here for buyer information" },
+  { label: "Export guides", href: "/resources#export-guides", description: "Orders, packing and documentation" },
+  { label: "Export markets", href: "/markets", description: "Explore international destinations" },
+  { label: "Insights", href: "/blog", description: "Articles for international buyers" },
+];
+
+function ResourceNavigation({ active, mobile = false, onNavigate }: { active: boolean; mobile?: boolean; onNavigate?: () => void }) {
+  return (
+    <details
+      className="group relative"
+      onKeyDown={(event) => {
+        if (event.key === "Escape") {
+          event.currentTarget.open = false;
+          event.currentTarget.querySelector("summary")?.focus();
+        }
+      }}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) event.currentTarget.open = false;
+      }}
+    >
+      <summary className={`flex cursor-pointer list-none items-center justify-between gap-2 rounded-lg px-3 py-3 text-[13px] font-semibold transition [&::-webkit-details-marker]:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0E7490] ${active ? "bg-[#E8F5F7] text-[#0E7490]" : "text-slate-700 hover:bg-slate-100"}`}>
+        Resources
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="transition group-open:rotate-180"><path d="m6 9 6 6 6-6" /></svg>
+      </summary>
+      <div className={mobile ? "mb-2 ml-3 border-l-2 border-[#CDE8ED] pl-2" : "absolute right-0 top-full z-50 mt-2 w-72 rounded-xl border border-slate-200 bg-white p-2 shadow-xl"}>
+        {RESOURCE_LINKS.map(({ label, href, description }) => (
+          <Link key={href} href={href} prefetch={false} onClick={(event) => {
+            const details = event.currentTarget.closest("details");
+            if (details) details.open = false;
+            onNavigate?.();
+          }} className="block rounded-lg px-3 py-2.5 transition hover:bg-[#F0F9FA] focus-visible:outline-2 focus-visible:outline-[#0E7490]">
+            <span className="block text-[13px] font-semibold text-slate-900">{label}</span>
+            <span className="mt-0.5 block text-xs leading-5 text-slate-500">{description}</span>
+          </Link>
+        ))}
+      </div>
+    </details>
+  );
+}
 
 const SOCIAL_LINKS = [
   { label: "LinkedIn", href: COMPANY.social.linkedin, icon: LinkedinIcon },
@@ -88,7 +127,11 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  const isActive = (href: string) => href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+  const isActive = (href: string) => {
+    if (href === "/resources") return ["/resources", "/markets", "/blog"].some((section) => pathname === section || pathname.startsWith(`${section}/`));
+    if (href === "/products" && pathname.startsWith("/export/")) return true;
+    return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-[#D9E2EC] bg-white/95 shadow-sm backdrop-blur">
@@ -132,16 +175,19 @@ export default function Navbar() {
           <BrandLogo priority className="h-12 w-auto" />
         </Link>
 
-        <nav className="hidden items-center gap-1 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC]/80 p-1 shadow-sm lg:ml-auto lg:flex">
-          {MAIN_LINKS.map(([label, href]) => (
+        <nav aria-label="Main navigation" className="hidden items-center gap-2 lg:ml-auto lg:flex">
+          {MAIN_LINKS.map(([label, href]) => href === "/resources" ? (
+            <ResourceNavigation key={href} active={isActive(href)} />
+          ) : (
             <Link
               key={href}
               href={href}
               prefetch={false}
-              className={`rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.12em] transition ${
+              aria-current={pathname === href ? "page" : undefined}
+              className={`rounded-lg px-3 py-3 text-[13px] font-semibold transition ${
                 isActive(href)
-                  ? "bg-white text-[#0E7490] shadow-sm ring-1 ring-[#D9E2EC]"
-                  : "text-slate-600 hover:bg-white hover:text-[#0E7490] hover:shadow-sm"
+                  ? "bg-[#E8F5F7] text-[#0E7490]"
+                  : "text-slate-700 hover:bg-slate-100 hover:text-[#0E7490]"
               }`}
             >
               {label}
@@ -158,16 +204,18 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <button type="button" onClick={() => setMenuOpen((value) => !value)} aria-label={menuOpen ? "Close menu" : "Open menu"} className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-2 text-slate-700 transition hover:bg-slate-100 lg:hidden">
+        <button type="button" onClick={() => setMenuOpen((value) => !value)} aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} aria-controls="mobile-navigation" className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-2 text-slate-700 transition hover:bg-slate-100 lg:hidden">
           {menuOpen ? <XIcon size={24} /> : <MenuIcon size={24} />}
         </button>
       </div>
 
       {menuOpen && (
-        <div className="border-t border-[#E2E8F0] bg-white px-5 py-5 shadow-xl lg:hidden">
-          <nav className="grid gap-1">
-            {MAIN_LINKS.map(([label, href]) => (
-              <Link key={href} href={href} prefetch={false} onClick={() => setMenuOpen(false)} className="rounded-xl px-3 py-3 text-[12px] font-black uppercase tracking-[0.12em] text-slate-800 hover:bg-[#F0F9FA] hover:text-[#0E7490]">
+        <div id="mobile-navigation" className="max-h-[70dvh] overflow-y-auto border-t border-[#E2E8F0] bg-white px-5 py-4 shadow-xl lg:hidden">
+          <nav aria-label="Mobile navigation" className="grid gap-1">
+            {MAIN_LINKS.map(([label, href]) => href === "/resources" ? (
+              <ResourceNavigation key={href} active={isActive(href)} mobile onNavigate={() => setMenuOpen(false)} />
+            ) : (
+              <Link key={href} href={href} prefetch={false} onClick={() => setMenuOpen(false)} aria-current={pathname === href ? "page" : undefined} className={`rounded-lg px-3 py-3 text-[13px] font-semibold ${isActive(href) ? "bg-[#E8F5F7] text-[#0E7490]" : "text-slate-800 hover:bg-[#F0F9FA] hover:text-[#0E7490]"}`}>
                 {label}
               </Link>
             ))}
