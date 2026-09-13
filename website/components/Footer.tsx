@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import BrandLogo from "./BrandLogo";
-import PublicCertificationBadges from "./PublicCertificationBadges";
 import { COMPANY } from "@/lib/company";
 
 type IconProps = { size?: number; className?: string };
@@ -60,10 +59,6 @@ function PhoneIcon(props: IconProps) {
   return <SvgIcon {...props}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.32 1.77.59 2.61a2 2 0 0 1-.45 2.11L8 9.69a16 16 0 0 0 6 6l1.25-1.25a2 2 0 0 1 2.11-.45c.84.27 1.72.47 2.61.59A2 2 0 0 1 22 16.92Z" /></SvgIcon>;
 }
 
-function ShieldCheckIcon(props: IconProps) {
-  return <SvgIcon {...props}><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z" /><path d="m9 12 2 2 4-4" /></SvgIcon>;
-}
-
 function FacebookIcon({ size = 18, className = "" }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
@@ -92,21 +87,7 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
   );
 }
 
-function AddressBlock({ title, lines }: { title: string; lines: string[] }) {
-  return (
-    <div className="rounded-md border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-[11px] font-black uppercase tracking-[0.2em] text-amber-300">{title}</p>
-      <address className="mt-3 not-italic text-[13px] leading-6 text-slate-300">
-        {lines.map((line) => <span key={line} className="block">{line}</span>)}
-      </address>
-    </div>
-  );
-}
-
 export default function Footer() {
-  const hqLines = COMPANY.hq.address.split(", ");
-  const factoryLines = COMPANY.factory.address.split(", ");
-
   return (
     <footer className="relative overflow-hidden bg-[#071624] text-slate-300">
       <a href={`${COMPANY.whatsapp}?text=Hi%2C%20I%27m%20an%20international%20buyer%20interested%20in%20GOPU%20Exports.`} target="_blank" rel="noreferrer" aria-label="Chat with GOPU Exports on WhatsApp" className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl shadow-green-900/30 transition hover:scale-105">
@@ -115,107 +96,72 @@ export default function Footer() {
         </svg>
       </a>
 
-      <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[1.15fr_0.75fr_0.75fr_0.9fr_1.2fr]">
-        <div>
-          <Link
-            href="/"
-            prefetch={false}
-            aria-label="GOPU Exports Home"
-            className="inline-flex max-w-[245px] rounded-md border border-amber-200/20 bg-[#FFF9EF] px-4 py-3 shadow-sm"
-          >
-            <BrandLogo variant="light" className="h-auto w-[210px]" />
-          </Link>
-          <p className="mt-5 text-[13px] leading-6 text-slate-400">
-            Professional Indian agricultural export company supplying buyer-specified products with documentation support and shipment coordination for international B2B buyers.
-          </p>
-          <div className="mt-5 grid gap-2 text-[12px] text-slate-400">
-            <span>IEC: <strong className="text-slate-200">{COMPANY.iec}</strong></span>
-            <span>CIN: <strong className="text-slate-200">{COMPANY.cin}</strong></span>
-            <span>GST: <strong className="text-slate-200">{COMPANY.gst}</strong></span>
-          </div>
-          <div className="mt-5">
-            <PublicCertificationBadges variant="footer" limit={5} />
-          </div>
-        </div>
-
-        <nav aria-label="Footer navigation">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Company</h3>
-          <ul className="mt-5 grid gap-3">
-            {NAVIGATION.map(([label, href]) => <li key={href}><FooterLink href={href}>{label}</FooterLink></li>)}
-          </ul>
-        </nav>
-
-        <nav aria-label="Footer product links">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Products</h3>
-          <ul className="mt-5 grid gap-3">
-            {PRODUCT_LINKS.map(([label, href]) => <li key={href}><FooterLink href={href}>{label}</FooterLink></li>)}
-          </ul>
-        </nav>
-
-        <nav aria-label="Footer buyer links">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Buyers</h3>
-          <ul className="mt-5 grid gap-3">
-            {RESOURCE_LINKS.map(([label, href]) => <li key={href}><FooterLink href={href}>{label}</FooterLink></li>)}
-          </ul>
-        </nav>
-
-        <div className="grid gap-3">
-          <AddressBlock title="Head Office" lines={hqLines} />
-          <AddressBlock title="Our Factory" lines={factoryLines} />
-        </div>
-
-        <div>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.22em] text-white">Contact Us</h3>
-          <div className="mt-5 grid gap-3 text-[13px]">
-            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300">
-              <p className="text-xs uppercase tracking-[0.16em] text-amber-300">Responsible contact</p>
-              <p className="mt-1 font-bold text-slate-100">{COMPANY.contactPerson}</p>
-              <p className="text-xs font-bold text-slate-300">{COMPANY.contactTitle}</p>
-            </div>
-            <a href={`mailto:${COMPANY.email}`} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300 transition hover:border-amber-400/40">
-              <MailIcon size={17} className="text-amber-300" />
-              {COMPANY.email}
-            </a>
-            <a href={COMPANY.phoneHref} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300 transition hover:border-amber-400/40">
-              <PhoneIcon size={17} className="text-amber-300" />
-              {COMPANY.phone}
-            </a>
-            <Link href="/company-verification" prefetch={false} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-slate-300 transition hover:border-amber-400/40">
-              <ShieldCheckIcon size={17} className="text-amber-300" />
-              Request verification documents
+      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
+        <div className="grid items-start gap-7 lg:grid-cols-[1fr_1.4fr_1fr] lg:gap-8">
+          <div className="min-w-0">
+            <Link href="/" prefetch={false} aria-label="GOPU Exports Home" className="inline-flex rounded-md bg-[#FFF9EF] px-3 py-2">
+              <BrandLogo variant="light" className="h-auto w-[180px]" />
             </Link>
-          </div>
-          <Link href="/contact" prefetch={false} className="mt-5 inline-flex w-full justify-center rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 px-5 py-3 text-sm font-bold text-slate-900 transition hover:from-amber-300 hover:to-amber-400">
-            Send Export Enquiry
-          </Link>
-          <div className="mt-5">
-            <p className="text-[12px] leading-5 text-slate-400">
-              Follow GOPU Exports for product updates, buyer guidance, and export documentation insights.
+            <p className="mt-3 max-w-xs text-[13px] leading-5 text-slate-400">
+              Indian spices, rice and agricultural products for international buyers.
             </p>
             {SOCIAL_LINKS.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-3 flex gap-2">
                 {SOCIAL_LINKS.map(({ label, href, icon: Icon }: { label: string; href: string; icon: IconComponent }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={label}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-300 transition hover:border-amber-400/40 hover:text-amber-300"
-                  >
+                  <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-slate-300 transition hover:text-amber-300">
                     <Icon size={16} />
                   </a>
                 ))}
               </div>
             )}
           </div>
+
+          <div className="grid grid-cols-2 gap-x-5 gap-y-5 sm:grid-cols-3">
+            {[
+              { title: "Company", links: NAVIGATION },
+              { title: "Products", links: PRODUCT_LINKS },
+              { title: "Buyers", links: RESOURCE_LINKS },
+            ].map(({ title, links }) => (
+              <nav key={title} aria-label={`Footer ${title.toLowerCase()} links`} className={title === "Buyers" ? "col-span-2 sm:col-span-1" : ""}>
+                <h3 className="text-[11px] font-bold uppercase tracking-[0.16em] text-white">{title}</h3>
+                <ul className={title === "Buyers" ? "mt-2 grid grid-cols-2 gap-x-5 sm:grid-cols-1" : "mt-2 grid"}>
+                  {links.map(([label, href]) => <li key={href} className="py-1"><FooterLink href={href}>{label}</FooterLink></li>)}
+                </ul>
+              </nav>
+            ))}
+          </div>
+
+          <div className="min-w-0">
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.16em] text-white">Export enquiries</h3>
+            <div className="mt-2 grid gap-1 text-[13px]">
+              <a href={`mailto:${COMPANY.email}`} className="flex items-center gap-2 py-1 hover:text-amber-300">
+                <MailIcon size={16} className="shrink-0 text-amber-300" /><span className="break-all">{COMPANY.email}</span>
+              </a>
+              <a href={COMPANY.phoneHref} className="flex items-center gap-2 py-1 hover:text-amber-300">
+                <PhoneIcon size={16} className="shrink-0 text-amber-300" />{COMPANY.phone}
+              </a>
+            </div>
+            <Link href="/contact" prefetch={false} className="mt-3 inline-flex rounded-md bg-amber-400 px-4 py-2.5 text-[13px] font-bold text-slate-900 transition hover:bg-amber-300">
+              Request an export quote
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-3 border-t border-white/10 pt-4 text-[12px] leading-5 text-slate-400 md:grid-cols-2 md:gap-8">
+          <address className="not-italic"><span className="font-semibold text-slate-300">Head Office: </span>{COMPANY.hq.address}</address>
+          <address className="not-italic"><span className="font-semibold text-slate-300">Our Factory: </span>{COMPANY.factory.address}</address>
+        </div>
+        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 break-all text-[11px] text-slate-400">
+          <span>IEC: {COMPANY.iec}</span>
+          <span>CIN: {COMPANY.cin}</span>
+          <span>GST: {COMPANY.gst}</span>
         </div>
       </div>
 
       <div className="relative border-t border-white/[0.08]">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-5 text-[12px] text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-3 text-[12px] text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-8">
           <p>© 2026 <span className="font-semibold text-slate-300">Gopu Exports Private Limited</span>. All rights reserved.</p>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
             {POLICY_LINKS.map(([label, href]) => <FooterLink key={href} href={href}>{label}</FooterLink>)}
           </div>
         </div>
