@@ -10,6 +10,7 @@ type IconProps = { size?: number; className?: string };
 type IconComponent = (props: IconProps) => React.ReactElement;
 
 const MAIN_LINKS = [
+  ["Home", "/"],
   ["Products", "/products"],
   ["Company", "/about"],
   ["Quality & Compliance", "/certifications"],
@@ -38,7 +39,7 @@ function ResourceNavigation({ active, mobile = false, onNavigate }: { active: bo
         if (!event.currentTarget.contains(event.relatedTarget)) event.currentTarget.open = false;
       }}
     >
-      <summary className={`flex cursor-pointer list-none items-center justify-between gap-2 rounded-lg px-3 py-3 text-[13px] font-semibold transition [&::-webkit-details-marker]:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0E7490] ${active ? "bg-[#E8F5F7] text-[#0E7490]" : "text-slate-700 hover:bg-slate-100"}`}>
+      <summary className={`flex cursor-pointer list-none items-center justify-between gap-2 rounded-lg px-2.5 py-3 text-[13px] font-semibold transition [&::-webkit-details-marker]:hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0E7490] ${active ? "bg-[#E8F5F7] text-[#0E7490]" : "text-slate-700 hover:bg-slate-100"}`}>
         Resources
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="transition group-open:rotate-180"><path d="m6 9 6 6 6-6" /></svg>
       </summary>
@@ -134,7 +135,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#D9E2EC] bg-white/95 shadow-sm backdrop-blur">
+    <header className="public-header sticky top-0 z-50 border-b border-[#D9E2EC] bg-white/95 shadow-sm backdrop-blur">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-[#0E7490] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white">
         Skip to main content
       </a>
@@ -170,12 +171,12 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-[1450px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:py-4">
+      <div className="mx-auto flex max-w-[1450px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:py-3">
         <Link href="/" prefetch={false} aria-label="GOPU Exports Home" className="shrink-0">
           <BrandLogo priority className="h-12 w-auto" />
         </Link>
 
-        <nav aria-label="Main navigation" className="hidden items-center gap-2 lg:ml-auto lg:flex">
+        <nav aria-label="Main navigation" className="hidden items-center gap-1 lg:ml-auto lg:flex">
           {MAIN_LINKS.map(([label, href]) => href === "/resources" ? (
             <ResourceNavigation key={href} active={isActive(href)} />
           ) : (
