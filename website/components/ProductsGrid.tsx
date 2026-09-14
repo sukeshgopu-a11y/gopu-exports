@@ -36,7 +36,7 @@ const CATEGORY_ORDER = [
 
 const CATEGORY_COPY: Record<string, string> = {
   "Rice & Grains": "Rice and grain options for importers, wholesalers, food-service buyers, and private-label packing discussions.",
-  "Spices": "Whole spices and herbs for bulk spice buyers, processors, wholesalers, and food-service markets.",
+  "Spices": "Whole Indian spices for international importers, processors, wholesalers, and food-service buyers.",
   "Spice Powders & Blends": "Ground spices and blends for bulk supply, private-label projects, seasoning manufacturers, and retail packing.",
   Millets: "Indian millet options for health-food brands, grain wholesalers, ingredient buyers, and retail packing.",
   Pulses: "Pulses and lentils for wholesalers, millers, retail packers, and food manufacturing buyers.",
@@ -243,7 +243,7 @@ function ProductCard({ product }: { product: Product }) {
         </div>
         <div className="mt-4 flex items-center gap-2 border-t border-[#F1F5F9] pt-4 text-[12px] font-semibold text-[#64748B]">
           <CheckCircle2 size={14} className="text-[#0E7490]" />
-          Specification-led export enquiry
+          Buyer-specification export enquiry
         </div>
       </div>
     </Link>
