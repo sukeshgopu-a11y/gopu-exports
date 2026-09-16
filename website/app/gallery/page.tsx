@@ -1,7 +1,7 @@
 import { publicMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
-import { createPublicClient } from "@/src/lib/supabase/public";
+import { createPublicClient, hasPublicSupabaseConfig } from "@/src/lib/supabase/public";
 
 export const revalidate = 60;
 
@@ -19,6 +19,8 @@ type GalleryImage = {
 };
 
 async function getGalleryImages() {
+  if (!hasPublicSupabaseConfig()) return [];
+
   const supabase = createPublicClient();
   const { data } = await supabase
     .from("gallery_images")

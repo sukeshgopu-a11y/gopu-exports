@@ -4,7 +4,7 @@ import { cache } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ArrowRight, CheckCircle2, ClipboardCheck, FileText, PackageCheck, Ship } from "lucide-react";
-import { createPublicClient } from "@/src/lib/supabase/public";
+import { createPublicClient, hasPublicSupabaseConfig } from "@/src/lib/supabase/public";
 import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
 import { getProductBySlug, PRODUCTS } from "@/lib/products";
 import { formatCommercialMoq } from "@/lib/moq";
@@ -110,6 +110,11 @@ function SpecTable({ title, rows }: { title: string; rows: Spec[] }) {
 }
 
 const getProduct = cache(async (slug: string): Promise<Product | null> => {
+  if (!hasPublicSupabaseConfig()) {
+    const fallback = getProductBySlug(slug);
+    return fallback ? cleanPublicProduct({ ...fallback, _id: fallback.slug } as Product) : null;
+  }
+
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("products")
@@ -126,6 +131,13 @@ const getProduct = cache(async (slug: string): Promise<Product | null> => {
 
 const getRelated = cache(async (slugs: string[]): Promise<Product[]> => {
   if (!slugs.length) return [];
+  if (!hasPublicSupabaseConfig()) {
+    return slugs
+      .map(getProductBySlug)
+      .filter((product): product is NonNullable<typeof product> => Boolean(product))
+      .map((product) => cleanPublicProduct({ ...product, _id: product.slug } as Product));
+  }
+
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("products")
@@ -138,18 +150,21 @@ const getRelated = cache(async (slugs: string[]): Promise<Product[]> => {
 });
 
 export async function generateStaticParams() {
-  const supabase = createPublicClient();
-  const { data } = await supabase
-    .from("products")
-    .select("slug")
-    .eq("is_active", true)
-    .returns<Array<{ slug: string }>>();
-
   const slugs = new Set<string>();
   PRODUCTS.forEach((product) => slugs.add(product.slug));
-  (data ?? []).forEach((product) => {
-    if (product.slug) slugs.add(product.slug);
-  });
+
+  if (hasPublicSupabaseConfig()) {
+    const supabase = createPublicClient();
+    const { data } = await supabase
+      .from("products")
+      .select("slug")
+      .eq("is_active", true)
+      .returns<Array<{ slug: string }>>();
+
+    (data ?? []).forEach((product) => {
+      if (product.slug) slugs.add(product.slug);
+    });
+  }
 
   return Array.from(slugs).map((slug) => ({ slug }));
 }

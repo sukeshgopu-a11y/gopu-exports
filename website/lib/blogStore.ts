@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import type { BlogFaq, BlogSection } from "@/lib/blogs";
-import { createPublicClient } from "@/src/lib/supabase/public";
+import { createPublicClient, hasPublicSupabaseConfig } from "@/src/lib/supabase/public";
 import { slugify } from "@/src/lib/supabase/data";
 
 export const BLOG_REVALIDATE_SECONDS = 30;
@@ -230,6 +230,8 @@ export async function getDashboardBlogPosts(supabase: SupabaseClient) {
 }
 
 export async function getPublicBlogPosts() {
+  if (!hasPublicSupabaseConfig()) return [];
+
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("blog_posts")
@@ -244,6 +246,8 @@ export async function getPublicBlogPosts() {
 }
 
 export async function getPublicBlogPostBySlug(slug: string) {
+  if (!hasPublicSupabaseConfig()) return null;
+
   const supabase = createPublicClient();
   const normalizedSlug = slugify(slug);
   const { data, error } = await supabase
