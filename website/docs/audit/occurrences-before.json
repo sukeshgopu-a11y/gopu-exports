@@ -1,0 +1,380 @@
+[
+  {
+    "file": "lib\\publicProductCopy.ts",
+    "line": 5,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "[/\\bspice blend sourcing\\b/gi, \"spice blend export supply\"],"
+  },
+  {
+    "file": "lib\\publicProductCopy.ts",
+    "line": 12,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "[/King of Spices\\s*[—-]\\s*World-Class Export Quality/gi, \"Whole black pepper available for bulk and food-service procurement\"],"
+  },
+  {
+    "file": "lib\\publicProductCopy.ts",
+    "line": 14,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "[/World-Class Export Quality/gi, \"Bulk export procurement\"],"
+  },
+  {
+    "file": "lib\\publicProductCopy.ts",
+    "line": 17,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "[/Specification-led sourcing/gi, \"Buyer-specification export supply\"],"
+  },
+  {
+    "file": "lib\\publicProductCopy.ts",
+    "line": 21,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "[/\\bspice sourcing\\b/gi, \"spice export supply\"],"
+  },
+  {
+    "file": "lib\\publicProductCopy.ts",
+    "line": 22,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "[/\\boilseed sourcing\\b/gi, \"oilseed export supply\"],"
+  },
+  {
+    "file": "lib\\publicProductCopy.ts",
+    "line": 23,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "[/\\bmillet sourcing\\b/gi, \"millet export supply\"],"
+  },
+  {
+    "file": "lib\\publicProductCopy.ts",
+    "line": 24,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "[/\\bingredient sourcing\\b/gi, \"ingredient export supply\"],"
+  },
+  {
+    "file": "lib\\publicProductCopy.ts",
+    "line": 25,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "[/\\bpulses sourcing\\b/gi, \"pulses export supply\"],"
+  },
+  {
+    "file": "lib\\products.ts",
+    "line": 42,
+    "classification": "REVIEW supply-chain context",
+    "text": "\"Whole green cardamom pods sourced for bulk food-service, processing, and wholesale procurement. Grade, colour, size, packing, and documentation requirements are confirmed with the buyer before quotation.\","
+  },
+  {
+    "file": "lib\\products.ts",
+    "line": 78,
+    "classification": "CHANGE public positioning",
+    "text": "tagline: \"Whole black pepper available for bulk and food-service procurement\","
+  },
+  {
+    "file": "lib\\products.ts",
+    "line": 113,
+    "classification": "CHANGE public positioning",
+    "text": "\"Turmeric powder processed for bulk food, ingredient, and private-label procurement. Curcumin, mesh size, colour, packing, and testing requirements are confirmed against the buyer-approved specification.\","
+  },
+  {
+    "file": "lib\\products.ts",
+    "line": 145,
+    "classification": "CHANGE public positioning",
+    "text": "tagline: \"Whole red chilli for bulk spice and food processing procurement\","
+  },
+  {
+    "file": "lib\\products.ts",
+    "line": 147,
+    "classification": "REVIEW supply-chain context",
+    "text": "\"Whole red chillies sourced for spice processors, seasoning manufacturers, wholesalers, and food-service buyers. ASTA, SHU, moisture, stem, packing, and documentation requirements are confirmed before order finalisation.\","
+  },
+  {
+    "file": "lib\\products.ts",
+    "line": 179,
+    "classification": "CHANGE public positioning",
+    "text": "tagline: \"Cumin seeds for bulk spice and ingredient procurement\","
+  },
+  {
+    "file": "lib\\products.ts",
+    "line": 181,
+    "classification": "REVIEW supply-chain context",
+    "text": "\"Machine-cleaned cumin seeds sourced for spice blending, food processing, wholesale, and ingredient buyers. Aroma, purity, moisture, packing, and testing requirements are reviewed before quotation.\","
+  },
+  {
+    "file": "lib\\products.ts",
+    "line": 212,
+    "classification": "CHANGE public positioning",
+    "text": "tagline: \"Coriander seeds for bulk spice procurement\","
+  },
+  {
+    "file": "lib\\products.ts",
+    "line": 243,
+    "classification": "CHANGE public positioning",
+    "text": "tagline: \"Whole cloves for food manufacturing and wholesale procurement\","
+  },
+  {
+    "file": "lib\\products.ts",
+    "line": 245,
+    "classification": "CHANGE public positioning",
+    "text": "\"Whole cloves available for food manufacturing, spice blending, and wholesale procurement. Grade, eugenol range, moisture, packing, and documentation requirements are reviewed before quotation.\","
+  },
+  {
+    "file": "lib\\products.ts",
+    "line": 274,
+    "classification": "CHANGE public positioning",
+    "text": "tagline: \"Cinnamon sticks and powder for bulk procurement\","
+  },
+  {
+    "file": "lib\\products.ts",
+    "line": 305,
+    "classification": "CHANGE public positioning",
+    "text": "tagline: \"Fennel seeds for culinary, tea, and ingredient procurement\","
+  },
+  {
+    "file": "lib\\products.ts",
+    "line": 307,
+    "classification": "CHANGE public positioning",
+    "text": "\"Sweet aromatic fennel seeds available for culinary, tea, wholesale, and ingredient procurement. Grade, colour, purity, packing, and testing requirements are confirmed by buyer specification.\","
+  },
+  {
+    "file": "lib\\exportOperationPages.ts",
+    "line": 119,
+    "classification": "CHANGE public positioning",
+    "text": "description: \"Bulk procurement guidance for importers importing Indian agricultural commodities and food products.\","
+  },
+  {
+    "file": "lib\\exportOperationPages.ts",
+    "line": 147,
+    "classification": "CHANGE public positioning",
+    "text": "slug: \"inquiry-procurement-support\","
+  },
+  {
+    "file": "lib\\exportOperationPages.ts",
+    "line": 148,
+    "classification": "CHANGE public positioning",
+    "text": "title: \"Inquiry & Procurement Support\","
+  },
+  {
+    "file": "lib\\exportOperationPages.ts",
+    "line": 150,
+    "classification": "CHANGE public positioning",
+    "text": "keywords: [\"export inquiry support\", \"procurement support India\", \"agri products quote request\"],"
+  },
+  {
+    "file": "lib\\exportOperationPages.ts",
+    "line": 154,
+    "classification": "CHANGE public positioning",
+    "text": "{ heading: \"Procurement next steps\", body: \"Once requirements are clear, buyers can proceed with sample discussion, commercial quote, documentation mapping, and shipment planning.\" },"
+  },
+  {
+    "file": "lib\\email.ts",
+    "line": 131,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "[\"Source Page URL\", payload.sourceUrl],"
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 57,
+    "classification": "CHANGE public positioning",
+    "text": "excerpt: \"A current market note for global buyers reviewing Indian rice, cereals, spices, oil seeds, and processed agricultural sourcing in 2026.\","
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 59,
+    "classification": "CHANGE public positioning",
+    "text": "metaDescription: \"Current 2026 India import-export signals for buyers sourcing agricultural products, rice, spices, cereals, oil seeds, and processed food products.\","
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 67,
+    "classification": "CHANGE public positioning",
+    "text": "\"For agricultural importers, the practical message is not only that India remains a large sourcing market. The real takeaway is that product-level clarity, packaging discussions, documentation planning, and destination-country compliance need to be handled before price comparison.\""
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 87,
+    "classification": "CHANGE public positioning",
+    "text": "\"Begin with a specification-led conversation. Share the product, destination, quantity, packing, intended use, shipment timeline, and document checklist. This allows the supplier to respond with realistic sourcing, packaging, and shipment planning instead of a generic stock message.\","
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 88,
+    "classification": "CHANGE public positioning",
+    "text": "\"As of 21 May 2026, India's export story remains positive, but the best procurement outcomes will come from structured enquiries and careful documentation before cargo moves.\""
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 94,
+    "classification": "CHANGE public positioning",
+    "text": "{ question: \"Are rice and cereals still relevant for India sourcing in 2026?\", answer: \"Yes. Recent trade updates show positive signals for cereals, while APEDA continues to highlight rice and agricultural products in export promotion activity.\" },"
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 103,
+    "classification": "CHANGE public positioning",
+    "text": "excerpt: \"A practical checklist for importers sourcing Indian rice, spices, spice powders, blended masalas, and private-label food products.\","
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 105,
+    "classification": "CHANGE public positioning",
+    "text": "metaDescription: \"Import checklist for buyers sourcing Indian rice and spices in 2026, including specifications, packing, MOQ, documents, and shipment planning.\","
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 149,
+    "classification": "CHANGE public positioning",
+    "text": "excerpt: \"A practical sourcing guide for importers buying Indian spices in wholesale quantities, from product selection to documentation and shipment planning.\","
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 173,
+    "classification": "CHANGE public positioning",
+    "text": "\"For the first order, many buyers request smaller trial quantities. For ongoing supply, a monthly or quarterly schedule gives the exporter better room to plan sourcing, cleaning, testing, packing, and vessel booking.\""
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 195,
+    "classification": "CHANGE public positioning",
+    "text": "excerpt: \"Understand basmati and non-basmati rice sourcing, packing choices, quality checks, and buyer questions before requesting an export quotation.\","
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 243,
+    "classification": "CHANGE public positioning",
+    "text": "metaDescription: \"Understand APEDA product categories, buyer documentation, and sourcing questions for Indian agricultural exports.\","
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 244,
+    "classification": "CHANGE public positioning",
+    "text": "tags: [\"APEDA products\", \"agricultural exports\", \"India sourcing\"],"
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 317,
+    "classification": "CHANGE public positioning",
+    "text": "\"Repeat spice buying works best when the buyer shares forecast volumes and quality tolerance in advance. This allows better sourcing, cleaning, grading, testing, and packing decisions.\","
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 336,
+    "classification": "CHANGE public positioning",
+    "text": "tags: [\"agricultural exporter\", \"India sourcing\", \"buyer checklist\"],"
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 449,
+    "classification": "CHANGE public positioning",
+    "text": "\"For repeat supply, buyers should provide expected monthly or quarterly quantity so sourcing and cleaning can be planned.\""
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 453,
+    "classification": "CHANGE public positioning",
+    "text": "heading: \"How to request millet sourcing\","
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 461,
+    "classification": "REVIEW supply-chain context",
+    "text": "{ question: \"Which millets can be sourced from India?\", answer: \"Common discussions include pearl millet, finger millet, foxtail millet, little millet, barnyard millet, kodo millet, proso millet, and sorghum.\" },"
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 517,
+    "classification": "CHANGE public positioning",
+    "text": "excerpt: \"A practical document checklist for importers sourcing Indian food products, agricultural commodities, spices, rice, and fresh produce.\","
+  },
+  {
+    "file": "lib\\blogs.ts",
+    "line": 563,
+    "classification": "CHANGE public positioning",
+    "text": "excerpt: \"How importers and retail brands can plan private label spice sourcing from India with packaging, labels, compliance, and product development steps.\","
+  },
+  {
+    "file": "components\\WhyChooseUs.tsx",
+    "line": 10,
+    "classification": "CHANGE public positioning",
+    "text": "title: \"Reliable Sourcing\","
+  },
+  {
+    "file": "components\\WhyChooseUs.tsx",
+    "line": 12,
+    "classification": "REVIEW supply-chain context",
+    "text": "\"Carefully sourced agricultural products selected for quality and international trade readiness.\","
+  },
+  {
+    "file": "components\\TrustSection.tsx",
+    "line": 14,
+    "classification": "REVIEW supply-chain context",
+    "text": "\"Products sourced and processed with strict quality inspection to meet international buyer standards.\","
+  },
+  {
+    "file": "components\\ProductCategories.tsx",
+    "line": 17,
+    "classification": "REVIEW supply-chain context",
+    "text": "\"Carefully sourced spices suitable for wholesale global distribution.\","
+  },
+  {
+    "file": "app\\terms-and-conditions\\page.tsx",
+    "line": 16,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "body: \"The website uses passive, privacy-conscious analytics and performance measurement to understand viewed pages, product interest, session activity, device type, referral source, CTA clicks, enquiry activity, and Core Web Vitals. This helps improve the buyer journey and dashboard visibility without collecting passwords or payment details.\","
+  },
+  {
+    "file": "app\\company-verification\\page.tsx",
+    "line": 67,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "[\"Source\", \"ABN Lookup\"],"
+  },
+  {
+    "file": "app\\blog\\page.tsx",
+    "line": 41,
+    "classification": "CHANGE public positioning",
+    "text": "Practical updates for importers sourcing Indian spices, rice, grains, and agricultural commodities."
+  },
+  {
+    "file": "app\\privacy-policy\\page.tsx",
+    "line": 11,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "\"We also collect limited technical information such as viewed pages, product views, CTA clicks, WhatsApp/email/phone clicks, browser type, device type, referral source, approximate session activity, and scroll depth. This data is used to understand buyer interest and improve website performance and enquiry flow.\","
+  },
+  {
+    "file": "app\\cookie-policy\\page.tsx",
+    "line": 7,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "[\"Anonymous analytics\", \"Measures page views, viewed products, CTA clicks, scroll depth, device type, browser type, and referral source.\"],"
+  },
+  {
+    "file": "app\\about\\page.tsx",
+    "line": 205,
+    "classification": "REVIEW supply-chain context",
+    "text": "{ label: \"Quality Inspection\", icon: ShieldCheck, desc: \"Multi-point checks at source, packing, and pre-shipment stages.\" },"
+  },
+  {
+    "file": "app\\api\\inquiries\\route.ts",
+    "line": 104,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "sourceUrl ? `Source URL: ${sourceUrl}` : \"\","
+  },
+  {
+    "file": "app\\products\\[slug]\\page.tsx",
+    "line": 409,
+    "classification": "CHANGE public positioning",
+    "text": "<p className=\"text-[13px] font-black uppercase tracking-[0.16em] text-[#0E7490]\">Procurement checklist</p>"
+  },
+  {
+    "file": "app\\api\\products\\[id]\\specification\\route.ts",
+    "line": 92,
+    "classification": "CHANGE public positioning",
+    "text": "notes.push(\"Product-specific packing, shelf-life, and handling requirements should be confirmed during procurement discussion.\");"
+  },
+  {
+    "file": "app\\api\\products\\[id]\\specification\\route.ts",
+    "line": 206,
+    "classification": "CHANGE public positioning",
+    "text": "page.drawText(\"Indian Agricultural Export Sourcing\", { x: MARGIN, y: PAGE_HEIGHT - 63, size: 9.5, font, color: rgb(0.78, 0.87, 0.92) });"
+  },
+  {
+    "file": "app\\api\\quotes\\route.ts",
+    "line": 98,
+    "classification": "LEAVE technical/provenance or defensive matcher",
+    "text": "sourceUrl ? `Source URL: ${sourceUrl}` : \"\","
+  }
+]

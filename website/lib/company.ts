@@ -1,3 +1,7 @@
+function publicProfileUrl(value: string, host: string) {
+  try { const url = new URL(value); return url.protocol === "https:" && [host, "www." + host].includes(url.hostname) && !/^\/(search|searches)(\/|$)/i.test(url.pathname) && url.pathname !== "/" ? url.toString() : ""; } catch { return ""; }
+}
+
 export const COMPANY = {
   name: "GOPU Exports",
   legalName: "Gopu Exports Private Limited",
@@ -21,9 +25,9 @@ export const COMPANY = {
       "Gopu Exports Private Limited, 2nd Floor, Surya Arcade, Door No. 1-9-388, Kushaiguda Road, ECIL, Hyderabad - 500062, Telangana, India",
   },
   factory: {
-    label: "Factory",
+    label: "Partner Operations",
     address:
-      "Gopu Exports Factory, Kanchanpally Village, Raghunathpally Mandal, Jangaon District, Telangana - 506244, India",
+      "Kanchanpally Village, Raghunathpally Mandal, Jangaon District, Telangana - 506244, India",
   },
   australia: {
     entityName: "GOPU GROUP PTY LTD",
@@ -40,9 +44,9 @@ export const COMPANY = {
     { label: "GST", value: "36AAMCG8793P1ZE", status: "Verified" },
   ],
   social: {
-    linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL ?? "https://www.linkedin.com/company/gopu-exports/",
-    facebook: process.env.NEXT_PUBLIC_FACEBOOK_URL ?? "",
-    instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL ?? "https://www.instagram.com/gopu_exports/",
+    linkedin: publicProfileUrl(process.env.NEXT_PUBLIC_LINKEDIN_URL ?? "https://www.linkedin.com/company/gopu-exports/", "linkedin.com"),
+    facebook: publicProfileUrl(process.env.NEXT_PUBLIC_FACEBOOK_URL ?? "", "facebook.com"),
+    instagram: publicProfileUrl(process.env.NEXT_PUBLIC_INSTAGRAM_URL ?? "https://www.instagram.com/gopu_exports/", "instagram.com"),
   },
 };
 

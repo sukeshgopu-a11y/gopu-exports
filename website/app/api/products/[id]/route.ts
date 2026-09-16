@@ -1,3 +1,4 @@
+import { getPublicProducts } from "@/lib/publicCatalogue";
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { createAdminClient } from "@/src/lib/supabase/admin";
@@ -35,9 +36,13 @@ export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const adminClient = await requireAdminClient();
-  const supabase = getServerReadClient();
+  const adminClient = await requireAdminClient().catch(() => null);
   const { id } = await params;
+  if (!adminClient) {
+    const product = (await getPublicProducts()).find(item => item.slug === id || item._id === id);
+    return product ? NextResponse.json(product, { headers: { "Cache-Control": "no-store" } }) : NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+  const supabase = getServerReadClient();
 
   let query = /^[0-9a-fA-F-]{36}$/.test(id)
     ? supabase.from("products").select("*").eq("id", id)

@@ -7,9 +7,9 @@ export default function WhyChooseUs() {
         "Professional support for invoices, export documents, compliance, and shipment coordination.",
     },
     {
-      title: "Reliable Sourcing",
+      title: "Indian Export Supply",
       description:
-        "Carefully sourced agricultural products selected for quality and international trade readiness.",
+        "Indian agricultural export supply with grade, packing and availability confirmed for each buyer.",
     },
     {
       title: "Global Logistics Support",

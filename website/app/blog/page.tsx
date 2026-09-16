@@ -38,7 +38,7 @@ export default async function BlogPage() {
             Insights
           </h1>
           <p className="mt-4 max-w-2xl text-[17px] leading-[1.8] text-[#64748B]">
-            Practical updates for importers sourcing Indian spices, rice, grains, and agricultural commodities.
+            Practical updates for importers importing Indian spices, rice, grains, and agricultural commodities.
           </p>
         </div>
       </section>

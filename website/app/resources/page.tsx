@@ -15,12 +15,12 @@ export default function ResourcesPage() {
       <section className="bg-[#071624] px-5 py-12 text-white sm:px-8 sm:py-16">
         <div className="mx-auto max-w-6xl">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#67C9D8]">Resources for international buyers</p>
-          <h1 className="mt-3 max-w-3xl font-serif text-4xl font-semibold leading-tight sm:text-5xl">Your guide to importing from India</h1>
+          <h1 className="mt-3 max-w-3xl font-serif text-4xl font-semibold leading-tight sm:text-5xl">Export Guide Library for International Buyers</h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">Export guides, market information and practical insights — everything in one place to help you plan your next order.</p>
           <nav aria-label="Resource sections" className="mt-7 flex flex-wrap gap-3">
             {[
               { label: "Export guides", href: "#export-guides", Icon: BookOpen },
-              { label: "Export markets", href: "#export-markets", Icon: Globe2 },
+              { label: "Markets we support", href: "#export-markets", Icon: Globe2 },
               { label: "Insights", href: "#insights", Icon: Newspaper },
             ].map(({ label, href, Icon }) => (
               <a key={href} href={href} className="inline-flex items-center gap-2 rounded-lg border border-white/25 px-4 py-3 text-sm font-semibold transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
@@ -66,7 +66,7 @@ export default function ResourcesPage() {
         </div>
         <div className="mx-auto mt-8 flex max-w-6xl flex-col gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-slate-600">Ready to discuss a product and destination?</p>
-          <Link href="/contact" className="inline-flex justify-center rounded-lg bg-[#0E7490] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#0A5A70]">Request an export quote</Link>
+          <Link href="/contact" className="inline-flex justify-center rounded-lg bg-[#0E7490] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#0A5A70]">REQUEST EXPORT QUOTE</Link>
         </div>
       </div>
     </main>

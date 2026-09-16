@@ -54,9 +54,9 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     date: "2026-05-21T00:00:00.000Z",
     title: "India Agri Export Outlook 2026: What Importers Should Watch",
     slug: "india-agri-export-outlook-2026-importers",
-    excerpt: "A current market note for global buyers reviewing Indian rice, cereals, spices, oil seeds, and processed agricultural sourcing in 2026.",
+    excerpt: "A current market note for global buyers reviewing Indian rice, cereals, spices, oil seeds, and processed agricultural exports in 2026.",
     metaTitle: "India Agri Export Outlook 2026 | Importer Market Update",
-    metaDescription: "Current 2026 India import-export signals for buyers sourcing agricultural products, rice, spices, cereals, oil seeds, and processed food products.",
+    metaDescription: "Current 2026 India import-export signals for buyers importing agricultural products, rice, spices, cereals, oil seeds, and processed food products.",
     tags: ["India exports 2026", "agri exports", "import export news"],
     image: "/blog/india-agri-export-outlook-2026.svg",
     sections: [
@@ -64,7 +64,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
         heading: "India trade signals as of 21 May 2026",
         body: [
           "India's import and export environment in May 2026 is active, but serious buyers should look beyond headline growth. The Ministry of Commerce and Industry reported that India's total merchandise and services exports for April 2026 were estimated at US$80.80 billion, compared with US$71.13 billion in April 2025. Merchandise exports were reported at US$43.56 billion, while merchandise imports were US$71.94 billion.",
-          "For agricultural importers, the practical message is not only that India remains a large sourcing market. The real takeaway is that product-level clarity, packaging discussions, documentation planning, and destination-country compliance need to be handled before price comparison."
+          "For agricultural importers, the practical message is not only that India remains a major agricultural export market. The real takeaway is that product-level clarity, packaging discussions, documentation planning, and destination-country compliance need to be handled before price comparison."
         ],
       },
       {
@@ -84,14 +84,14 @@ export const DEFAULT_BLOGS: BlogPost[] = [
       {
         heading: "How GOPU Exports recommends buyers proceed",
         body: [
-          "Begin with a specification-led conversation. Share the product, destination, quantity, packing, intended use, shipment timeline, and document checklist. This allows the supplier to respond with realistic sourcing, packaging, and shipment planning instead of a generic stock message.",
-          "As of 21 May 2026, India's export story remains positive, but the best procurement outcomes will come from structured enquiries and careful documentation before cargo moves."
+          "Begin with a specification-led conversation. Share the product, destination, quantity, packing, intended use, shipment timeline, and document checklist. This allows the supplier to respond with realistic export supply, packaging, and shipment planning instead of a generic stock message.",
+          "As of 21 May 2026, India's export story remains positive, but the best import-order outcomes will come from structured enquiries and careful documentation before cargo moves."
         ],
       },
     ],
     faqs: [
       { question: "What should importers ask before comparing prices?", answer: "Ask for product specification, packing, quantity, destination, document requirements, inspection options, and shipment timing before comparing price." },
-      { question: "Are rice and cereals still relevant for India sourcing in 2026?", answer: "Yes. Recent trade updates show positive signals for cereals, while APEDA continues to highlight rice and agricultural products in export promotion activity." },
+      { question: "Are rice and cereals still relevant for imports from India in 2026?", answer: "Yes. Recent trade updates show positive signals for cereals, while APEDA continues to highlight rice and agricultural products in export promotion activity." },
       { question: "Can buyers request unlisted agricultural products?", answer: "Yes. Buyers can use the contact form and select Others to describe exact product, quantity, destination, and documentation needs." },
     ],
   }),
@@ -100,9 +100,9 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     date: "2026-05-21T00:00:00.000Z",
     title: "Rice and Spice Import Checklist 2026 for Global Buyers",
     slug: "rice-spice-import-checklist-2026",
-    excerpt: "A practical checklist for importers sourcing Indian rice, spices, spice powders, blended masalas, and private-label food products.",
+    excerpt: "A practical checklist for importers importing Indian rice, spices, spice powders, blended masalas, and private-label food products.",
     metaTitle: "Rice and Spice Import Checklist 2026 | Buyer Guide",
-    metaDescription: "Import checklist for buyers sourcing Indian rice and spices in 2026, including specifications, packing, MOQ, documents, and shipment planning.",
+    metaDescription: "Import checklist for buyers importing Indian rice and spices in 2026, including specifications, packing, MOQ, documents, and shipment planning.",
     tags: ["rice imports", "spice imports", "buyer checklist"],
     image: "/blog/rice-spice-import-checklist-2026.svg",
     sections: [
@@ -146,7 +146,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     date: "2026-05-18T00:00:00.000Z",
     title: "How to Import Indian Spices in Bulk: Complete Buyer Guide",
     slug: "how-to-import-indian-spices-in-bulk",
-    excerpt: "A practical sourcing guide for importers buying Indian spices in wholesale quantities, from product selection to documentation and shipment planning.",
+    excerpt: "A practical import guide for importers buying Indian spices in wholesale quantities, from product selection to documentation and shipment planning.",
     metaTitle: "How to Import Indian Spices in Bulk | Buyer Guide",
     metaDescription: "Learn how to import Indian spices in bulk, compare grades, request documents, plan packaging, and place professional export enquiries.",
     tags: ["Indian spices", "bulk import", "spice export"],
@@ -170,7 +170,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
         heading: "Compare packaging and shipment options",
         body: [
           "Spices can be shipped in PP bags, jute bags, cartons, laminated pouches, vacuum packs, or private label retail packs depending on product type and buyer requirement. Bulk industrial buyers usually prioritise container utilisation and moisture protection. Retail buyers focus on shelf-ready packaging, barcode requirements, label language, and carton strength.",
-          "For the first order, many buyers request smaller trial quantities. For ongoing supply, a monthly or quarterly schedule gives the exporter better room to plan sourcing, cleaning, testing, packing, and vessel booking."
+          "For the first order, many buyers request smaller trial quantities. For ongoing supply, a monthly or quarterly schedule gives the exporter better room to plan export supply, cleaning, testing, packing, and vessel booking."
         ],
       },
       {
@@ -192,7 +192,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     date: "2026-05-17T00:00:00.000Z",
     title: "Rice Export from India: Varieties, Packaging, and Buyer Checklist",
     slug: "rice-export-from-india-varieties-packaging-buyer-checklist",
-    excerpt: "Understand basmati and non-basmati rice sourcing, packing choices, quality checks, and buyer questions before requesting an export quotation.",
+    excerpt: "Understand basmati and non-basmati rice export supply, packing choices, quality checks, and buyer questions before requesting an export quotation.",
     metaTitle: "Rice Export from India | Varieties and Packaging Guide",
     metaDescription: "Buyer checklist for importing rice from India, including basmati, non-basmati, packaging, specifications, and documentation.",
     tags: ["rice export", "basmati rice", "Indian rice"],
@@ -240,8 +240,8 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     slug: "apeda-products-export-guide-international-buyers",
     excerpt: "A buyer-focused overview of APEDA product categories and how importers can structure enquiries for Indian agricultural and processed food products.",
     metaTitle: "APEDA Products Export Guide for International Buyers",
-    metaDescription: "Understand APEDA product categories, buyer documentation, and sourcing questions for Indian agricultural exports.",
-    tags: ["APEDA products", "agricultural exports", "India sourcing"],
+    metaDescription: "Understand APEDA product categories, buyer documentation, and buyer questions for Indian agricultural exports.",
+    tags: ["APEDA products", "agricultural exports", "Indian exports"],
     image: "/blog/apeda-products-guide.webp",
     sections: [
       {
@@ -276,7 +276,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     faqs: [
       { question: "Does APEDA cover rice?", answer: "APEDA covers cereal and cereal products, and basmati rice is separately included in APEDA’s statutory scope." },
       { question: "Are APEDA categories the same as import permissions?", answer: "No. APEDA categories help classify Indian export products. Import permissions and documents depend on the destination country." },
-      { question: "Can buyers ask for unlisted APEDA products?", answer: "Yes. Buyers can submit a additional export products enquiry with product details, quantity, destination, and documents required." },
+      { question: "Can buyers ask for unlisted APEDA products?", answer: "Yes. Buyers can submit an enquiry for additional export products with product details, quantity, destination, and documents required." },
     ],
   }),
   post({
@@ -314,7 +314,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
       {
         heading: "Building a repeat supply relationship",
         body: [
-          "Repeat spice buying works best when the buyer shares forecast volumes and quality tolerance in advance. This allows better sourcing, cleaning, grading, testing, and packing decisions.",
+          "Repeat spice buying works best when the buyer shares forecast volumes and quality tolerance in advance. This allows better product selection, cleaning, grading, testing, and packing decisions.",
           "Use GOPU Exports product pages for product-specific enquiries or send a bulk spice requirement through /contact."
         ],
       },
@@ -333,7 +333,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     excerpt: "A B2B buyer checklist for evaluating Indian agricultural exporters before placing trial or repeat orders.",
     metaTitle: "How to Choose a Reliable Agricultural Exporter from India",
     metaDescription: "Evaluate Indian agricultural exporters using product clarity, documentation, communication, packaging, and shipment readiness.",
-    tags: ["agricultural exporter", "India sourcing", "buyer checklist"],
+    tags: ["agricultural exporter", "Indian exports", "buyer checklist"],
     image: "/blog/reliable-agri-exporter.webp",
     sections: [
       {
@@ -446,11 +446,11 @@ export const DEFAULT_BLOGS: BlogPost[] = [
         heading: "Packaging and shelf-life planning",
         body: [
           "Millets can be packed in bulk bags, retail pouches, cartons, or private label packs. Moisture control is important because grain quality can deteriorate if packing and storage are unsuitable.",
-          "For repeat supply, buyers should provide expected monthly or quarterly quantity so sourcing and cleaning can be planned."
+          "For repeat supply, buyers should provide expected monthly or quarterly quantity so product availability and cleaning can be planned."
         ],
       },
       {
-        heading: "How to request millet sourcing",
+        heading: "How to request millet export supply",
         body: [
           "If a millet product is not listed in the public catalogue, select Others in the enquiry form and provide variety, form, packing, quantity, destination, and required documents.",
           "Start at /contact or review product categories at /products."
@@ -458,7 +458,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
       },
     ],
     faqs: [
-      { question: "Which millets can be sourced from India?", answer: "Common discussions include pearl millet, finger millet, foxtail millet, little millet, barnyard millet, kodo millet, proso millet, and sorghum." },
+      { question: "Which millets can GOPU Exports supply from India?", answer: "Common discussions include pearl millet, finger millet, foxtail millet, little millet, barnyard millet, kodo millet, proso millet, and sorghum." },
       { question: "Can millets be supplied as flour?", answer: "Yes, subject to milling, packing, shelf-life, and buyer specification requirements." },
       { question: "Do millet exports need special documents?", answer: "Documents depend on product form and destination. Buyers should verify import rules with local advisors." },
     ],
@@ -514,7 +514,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     date: "2026-05-10T00:00:00.000Z",
     title: "Documents Required for Importing Food Products from India",
     slug: "documents-required-importing-food-products-from-india",
-    excerpt: "A practical document checklist for importers sourcing Indian food products, agricultural commodities, spices, rice, and fresh produce.",
+    excerpt: "A practical document checklist for importers importing Indian food products, agricultural commodities, spices, rice, and fresh produce.",
     metaTitle: "Documents Required for Importing Food Products from India",
     metaDescription: "Importer checklist for Indian food product documents including invoice, packing list, COA, COO, phytosanitary and fumigation documents.",
     tags: ["export documents", "food import", "India export"],
@@ -560,7 +560,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     date: "2026-05-09T00:00:00.000Z",
     title: "Private Label Spice Manufacturing and Export Opportunities from India",
     slug: "private-label-spice-manufacturing-export-opportunities-india",
-    excerpt: "How importers and retail brands can plan private label spice sourcing from India with packaging, labels, compliance, and product development steps.",
+    excerpt: "How importers and retail brands can plan private-label spice export supply from India with packaging, labels, compliance, and product development steps.",
     metaTitle: "Private Label Spice Manufacturing and Export from India",
     metaDescription: "Guide for importers planning private label spice products from India, including formulations, packaging, labels and export documentation.",
     tags: ["private label spices", "spice manufacturing", "export opportunities"],
@@ -606,4 +606,3 @@ export const DEFAULT_BLOGS: BlogPost[] = [
 export function getDefaultBlogBySlug(slug: string) {
   return DEFAULT_BLOGS.find((post) => post.slug === slug && post.published) ?? null;
 }
-

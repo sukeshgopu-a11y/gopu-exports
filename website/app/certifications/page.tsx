@@ -5,7 +5,7 @@ import { COMPANY } from "@/lib/company";
 
 export const revalidate = 60;
 
-export const metadata = publicMetadata("Certifications & Business Verification", "GOPU Exports business verification and currently published certification information for international buyers, including IEC, CIN and GST.", "/certifications");
+export const metadata = publicMetadata("Company Identifiers & Export Documents", "Verify GOPU Exports using IEC, CIN and GST. Review the separate product-testing and shipment-document requirements for your export order.", "/certifications");
 
 export default async function CertificationsPage() {
   return (
@@ -18,11 +18,11 @@ export default async function CertificationsPage() {
             <p className="text-[11px] font-black tracking-[0.26em] text-white/60">BUYER VERIFICATION</p>
           </div>
           <h1 className="mt-5 max-w-3xl text-[44px] font-black leading-[0.95] tracking-[-0.05em] text-white lg:text-[62px]">
-            Certifications &<br />
-            <span className="text-[#67C9D8]">Business Verification.</span>
+            Company Identifiers &<br />
+            <span className="text-[#67C9D8]">Export Documents.</span>
           </h1>
           <p className="mt-6 max-w-2xl text-[16px] leading-8 text-slate-300">
-            Verified business identifiers and currently published certification details are provided for international buyer due diligence.
+            Corporate identifiers establish company identity. Product testing and shipment documents are separate and depend on the product, destination and agreed order scope.
           </p>
         </div>
       </section>
@@ -74,7 +74,7 @@ export default async function CertificationsPage() {
                 <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#67C9D8]">Buyer Note</p>
               </div>
               <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
-                Relevant registrations and documentation are available for buyer review. NABL lab testing and SGS inspections can be coordinated on request where required by product, destination, or buyer specification. For buyer verification and export enquiries, contact {COMPANY.contactPerson}.
+                IEC, CIN and GST identify the company; they are not product-quality certifications. Share any required laboratory or third-party inspection scope with the buyer desk. Provider availability, cost and documents must be confirmed before an order is accepted. For verification and export enquiries, contact {COMPANY.contactPerson}.
               </p>
             </div>
             <Link href="/contact?verification=true" className="shrink-0 rounded-xl bg-white px-5 py-3 text-sm font-black text-[#071624] transition hover:bg-[#F0F9FA]">

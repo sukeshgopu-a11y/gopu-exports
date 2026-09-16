@@ -7,24 +7,11 @@ import { COMPANY } from "@/lib/company";
 
 export const metadata: Metadata = {
   title: {
-    default: "GOPU Exports | Indian Agricultural Exports, Rice, Spices & Food Products",
+    default: "GOPU Exports | Indian Agricultural & Spice Exporter",
     template: "%s | GOPU Exports",
   },
   description:
-    "GOPU Exports is an Indian food products export company supplying rice, spices, grains, fruits, vegetables, and agri commodities to global B2B buyers.",
-  keywords: [
-    "GOPU Exports",
-    "Indian agricultural exports",
-    "rice exporters from India",
-    "spice exporters from India",
-    "fruits and vegetables exporters from India",
-    "global agri commodity suppliers",
-    "Indian food products export company",
-    "B2B export supplier India",
-    "basmati rice exporters India",
-    "Indian spices supplier",
-    "agricultural commodity exporter",
-  ],
+    "GOPU Exports is a Hyderabad-based Indian agricultural export company supplying spices, rice and selected food products to international importers, distributors and B2B buyers.",
   metadataBase: new URL("https://gopuexports.com"),
   icons: {
     icon: [
@@ -40,9 +27,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://gopuexports.com",
     siteName: "GOPU Exports",
-    title: "GOPU Exports | Indian Agricultural Exports",
+    title: "GOPU Exports | Indian Agricultural & Spice Exporter",
     description:
-      "Indian rice, spices, grains, fruits, vegetables, and food products for global B2B importers.",
+      "GOPU Exports is a Hyderabad-based Indian agricultural export company supplying spices, rice and selected food products to international importers, distributors and B2B buyers.",
     images: [
       {
         url: "/logos/og-image.png",
@@ -54,8 +41,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GOPU Exports | Indian Food Products Export Company",
-    description: "Indian agricultural exports, rice, spices, fruits, vegetables, and agri commodities for global buyers.",
+    title: "GOPU Exports | Indian Agricultural & Spice Exporter",
+    description: "GOPU Exports is a Hyderabad-based Indian agricultural export company supplying spices, rice and selected food products to international importers, distributors and B2B buyers.",
     images: ["/logos/og-image.png"],
   },
   robots: {
@@ -74,7 +61,9 @@ export const metadata: Metadata = {
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: COMPANY.legalName,
+  "@id": "https://gopuexports.com/#organization",
+  name: COMPANY.name,
+  legalName: COMPANY.legalName,
   url: "https://gopuexports.com",
   logo: "https://gopuexports.com/logos/gopu-exports-logo-full.webp",
   email: COMPANY.email,
@@ -86,7 +75,7 @@ const organizationJsonLd = {
     { "@type": "PropertyValue", name: "GST", value: COMPANY.gst },
   ],
   description:
-    "Indian agricultural exports, rice, spices, fruits, vegetables, grains, and food products for global B2B buyers.",
+    "GOPU Exports is a Hyderabad-based Indian agricultural export company supplying spices, rice and selected food products to international importers, distributors and B2B buyers.",
   address: {
     "@type": "PostalAddress",
     streetAddress: COMPANY.registeredAddress,
@@ -104,7 +93,7 @@ const organizationJsonLd = {
       availableLanguage: ["English"],
     },
   ],
-  sameAs: Object.values(COMPANY.social).filter(Boolean),
+  // Add sameAs only after ownership of the official profile URLs is verified.
 };
 
 export default function RootLayout({
@@ -119,7 +108,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           suppressHydrationWarning
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c") }}
         />
         <Analytics />
         <SpeedInsights />

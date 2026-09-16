@@ -4,14 +4,14 @@ export default function TrustSection() {
 
   const items = [
     {
-      title: "Verified Export Documentation",
+      title: "Export Documentation Support",
       description:
-        "Complete export documentation support including invoice, packing list, COO, fumigation, and shipping compliance.",
+        "Invoice, packing list and destination-specific document requirements reviewed for each shipment.",
     },
     {
-      title: "Quality Controlled Products",
+      title: "Buyer Specification Review",
       description:
-        "Products sourced and processed with strict quality inspection to meet international buyer standards.",
+        "Product grade, partner processing and inspection scope agreed against buyer requirements.",
     },
     {
       title: "Global Shipping Support",

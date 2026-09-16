@@ -48,7 +48,7 @@ export default function PublicCertificationBadges({
       <div className="flex flex-wrap items-center justify-center gap-4 lg:gap-8">
         {showLabel && (
           <span className="text-[11px] font-black tracking-[0.22em] text-[#94A3B8]">
-            VISIBLE CERTIFICATIONS:
+            COMPANY IDENTIFIERS:
           </span>
         )}
         {labels.map((label) => (
@@ -60,7 +60,7 @@ export default function PublicCertificationBadges({
           </div>
         ))}
         <Link href="/certifications" prefetch={false} className="text-[12px] font-bold text-[#0E7490] transition hover:text-[#0A5A70]">
-          SEE ALL →
+          VERIFY GOPU EXPORTS →
         </Link>
       </div>
     );

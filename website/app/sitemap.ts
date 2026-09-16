@@ -1,13 +1,14 @@
 import type { MetadataRoute } from "next";
-import { createPublicClient } from "@/src/lib/supabase/public";
-import type { ProductRow } from "@/src/lib/supabase/data";
+import { getPublicProducts } from "@/lib/publicCatalogue";
+
 import { getPublicBlogPosts } from "@/lib/blogStore";
 import { CATEGORY_LANDING_PAGES } from "@/lib/categoryLandingPages";
 import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
-import { PRODUCTS } from "@/lib/products";
+
 
 const BASE_URL = "https://gopuexports.com";
-const STATIC_LAST_MODIFIED = new Date("2026-06-10T00:00:00.000Z");
+// Date of this reviewed content revision; never generated from request time.
+const CONTENT_REVISED = "2026-09-16";
 
 export const revalidate = 30;
 
@@ -36,6 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const resourceRoutes: MetadataRoute.Sitemap = EXPORT_OPERATION_PAGES.map((page) => ({
     url: `${BASE_URL}/resources/${page.slug}`,
+    lastModified: ["export-enquiry-support", "bulk-orders", "global-supply-network"].includes(page.slug) ? CONTENT_REVISED : undefined,
 
     changeFrequency: "monthly",
     priority: 0.65,
@@ -43,33 +45,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const categoryRoutes: MetadataRoute.Sitemap = CATEGORY_LANDING_PAGES.map((page) => ({
     url: `${BASE_URL}/export/${page.slug}`,
+    lastModified: ["spice-powder-exporter-india", "spice-exporters-from-india", "agricultural-exporter-hyderabad-telangana", "apeda-products-exporters-india", "spice-board-products-exporters-india"].includes(page.slug) ? CONTENT_REVISED : undefined,
 
     changeFrequency: "monthly",
     priority: 0.75,
   }));
 
-  let products: Pick<ProductRow, "slug" | "updated_at">[] = [];
-  try {
-    const supabase = createPublicClient();
-    const { data } = await supabase
-      .from("products")
-      .select("slug,updated_at")
-      .eq("is_active", true)
-      .returns<Pick<ProductRow, "slug" | "updated_at">[]>();
-    products = data ?? [];
-  } catch {
-    products = [];
-  }
-
-  const productSource = products.length > 0
-    ? products
-    : PRODUCTS.map((product) => ({ slug: product.slug, updated_at: STATIC_LAST_MODIFIED.toISOString() }));
-
-  const productRoutes: MetadataRoute.Sitemap = productSource.map((product) => ({
-    url: `${BASE_URL}/products/${product.slug}`,
-    lastModified: product.updated_at ? new Date(product.updated_at) : STATIC_LAST_MODIFIED,
+  const productRoutes: MetadataRoute.Sitemap = (await getPublicProducts()).map(product => ({
+    url: BASE_URL + "/products/" + product.slug,
+    lastModified: product.updatedAt && Date.parse(product.updatedAt) > Date.parse(CONTENT_REVISED) ? product.updatedAt : CONTENT_REVISED,
     changeFrequency: "weekly",
-    priority: 0.8,
+    priority: ["red-chilli", "turmeric-powder", "red-chilli-powder"].includes(product.slug) ? 0.9 : 0.7,
   }));
 
   let posts: Awaited<ReturnType<typeof getPublicBlogPosts>> = [];
@@ -81,7 +67,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogRoutes: MetadataRoute.Sitemap = posts
     .map((post) => ({
       url: `${BASE_URL}/blog/${post.slug}`,
-      lastModified: post.createdAt ? new Date(post.createdAt) : STATIC_LAST_MODIFIED,
+      lastModified: post.updatedAt || post.publishedAt || post.createdAt || undefined,
       changeFrequency: "monthly",
       priority: 0.6,
     }));

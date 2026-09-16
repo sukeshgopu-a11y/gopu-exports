@@ -73,8 +73,8 @@ export default function AboutPage() {
             <p className="text-[11px] font-black tracking-[0.26em] text-white/60">ABOUT GOPU EXPORTS</p>
           </div>
           <h1 className="mt-5 max-w-3xl text-4xl font-bold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Indian agricultural exports<br />
-            <span className="text-[#67C9D8]">for international buyers.</span>
+            Indian Agricultural Exports<br />
+            <span className="text-[#67C9D8]">Built Around Buyer Requirements</span>
           </h1>
           <p className="mt-6 max-w-xl text-[17px] leading-[1.8] text-slate-300">
             GOPU Exports is a Hyderabad-headquartered agricultural export company supporting
@@ -107,7 +107,7 @@ export default function AboutPage() {
                 GOPU Exports builds buyer confidence through practical documentation support, quality-focused export supply, and disciplined communication from enquiry to dispatch.
               </p>
               <Link href="/company-verification" className="mt-6 inline-flex rounded-xl bg-[#0E7490] px-5 py-3 text-sm font-bold text-white">
-                View Company Verification
+                VERIFY GOPU EXPORTS
               </Link>
             </div>
           </div>
@@ -139,13 +139,13 @@ export default function AboutPage() {
                   href="/contact"
                   className="rounded-lg bg-[#0E7490] px-7 py-3.5 text-[13px] font-bold tracking-wide text-white transition hover:bg-[#0A5A70]"
                 >
-                  GET A QUOTE →
+                  REQUEST EXPORT QUOTE →
                 </Link>
                 <Link
                   href="/products"
                   className="rounded-lg border border-[#D9E2EC] px-7 py-3.5 text-[13px] font-bold text-[#374151] transition hover:border-[#0E7490] hover:text-[#0E7490]"
                 >
-                  EXPLORE PRODUCTS →
+                  VIEW PRODUCTS →
                 </Link>
               </div>
             </div>
@@ -154,7 +154,7 @@ export default function AboutPage() {
               <div className="overflow-hidden rounded-2xl">
                 <Image
                   src="/images/hero-bg.webp"
-                  alt="GOPU Exports factory and operations"
+                  alt="Cargo ship at an international container terminal"
                   width={700}
                   height={500}
                   className="h-[420px] w-full object-cover"
@@ -163,7 +163,7 @@ export default function AboutPage() {
               {/* floating badge */}
               <div className="absolute bottom-4 left-4 rounded-2xl border border-[#D9E2EC] bg-white p-5 shadow-xl">
                 <p className="text-[22px] font-black leading-none tracking-[-0.03em] text-[#0E7490]">EXPORT</p>
-                <p className="mt-1 text-[13px] font-semibold text-[#374151]">Documentation Ready</p>
+                <p className="mt-1 text-[13px] font-semibold text-[#374151]">Shipment Coordination</p>
               </div>
             </div>
           </div>
@@ -180,13 +180,12 @@ export default function AboutPage() {
                 End-to-End Export<br />Management
               </h2>
               <p className="mt-5 text-[15px] leading-[1.9] text-slate-400">
-                We coordinate key export steps from Indian supply-chain coordination and product checks
-                to packaging, documentation, logistics communication, and buyer updates.
+                GOPU Exports supplies international buyers through Indian partner manufacturing and white-label arrangements in this first phase. Our Hyderabad team manages buyer specifications, packing, documentation and shipment coordination.
               </p>
               <ul className="mt-7 space-y-3">
                 {[
-                  "Farm-level quality grading and moisture testing",
-                  "Quality-focused export supply and product checks",
+                  "Buyer-requested grading and testing scope review",
+                  "Partner processing requirements agreed for each order",
                   "Packaging guidance based on buyer requirements",
                   "Export documentation planning and support",
                   "Shipment coordination with logistics partners",
@@ -202,8 +201,8 @@ export default function AboutPage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               {[
-                { label: "Quality Inspection", icon: ShieldCheck, desc: "Multi-point checks at source, packing, and pre-shipment stages." },
-                { label: "Documentation", icon: FileCheck2, desc: "Phytosanitary, COO, COA, inspection, and fumigation document support." },
+                { label: "Quality Inspection", icon: ShieldCheck, desc: "Inspection scope and provider availability confirmed during quotation." },
+                { label: "Documentation", icon: FileCheck2, desc: "Product and shipment documents reviewed by destination and agreed scope." },
                 { label: "Logistics", icon: Truck, desc: "Shipment planning and coordination with logistics partners." },
                 { label: "Buyer Support", icon: MessageSquare, desc: "Dedicated updates and responsive export communication." },
               ].map((item) => (

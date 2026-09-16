@@ -1,3 +1,5 @@
+import categoryEditorial from "@/lib/categoryEditorial.json";
+import { PRODUCTS } from "@/lib/products";
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { slugify } from "@/src/lib/supabase/data";
@@ -21,7 +23,8 @@ async function saveCategories(supabase: SupabaseClient, categories: unknown[]) {
 }
 
 export async function GET() {
-  return NextResponse.json(await getCategories());
+  const categories = await getCategories().catch(() => Array.from(new Set(PRODUCTS.map(product => product.category))).map(name => ({ name, slug: slugify(name), description: "", active: true })));
+  return NextResponse.json(categories.map(category => ({ ...category, description: (categoryEditorial as Record<string, string>)[category.description] ?? category.description })));
 }
 
 export async function POST(req: NextRequest) {

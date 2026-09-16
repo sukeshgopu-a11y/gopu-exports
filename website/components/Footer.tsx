@@ -9,7 +9,7 @@ type IconComponent = (props: IconProps) => React.ReactElement;
 
 const NAVIGATION = [
   ["About", "/about"],
-  ["Factory", "/about#operations"],
+  ["Export Operations", "/about#operations"],
   ["Company Verification", "/company-verification"],
   ["Quality & Compliance", "/certifications"],
 ];
@@ -23,10 +23,10 @@ const PRODUCT_LINKS = [
 ];
 
 const RESOURCE_LINKS = [
-  ["Request Quote", "/contact"],
+  ["REQUEST EXPORT QUOTE", "/contact"],
   ["Resources", "/resources"],
   ["Packaging Standards", "/resources/packaging-standards"],
-  ["Export Markets", "/markets"],
+  ["Markets We Support", "/markets"],
   ["Insights", "/blog"],
 ];
 
@@ -142,14 +142,14 @@ export default function Footer() {
               </a>
             </div>
             <Link href="/contact" prefetch={false} className="mt-3 inline-flex rounded-md bg-amber-400 px-4 py-2.5 text-[13px] font-bold text-slate-900 transition hover:bg-amber-300">
-              Request an export quote
+              REQUEST EXPORT QUOTE
             </Link>
           </div>
         </div>
 
         <div className="mt-6 grid gap-3 border-t border-white/10 pt-4 text-[12px] leading-5 text-slate-400 md:grid-cols-2 md:gap-8">
           <address className="not-italic"><span className="font-semibold text-slate-300">Head Office: </span>{COMPANY.hq.address}</address>
-          <address className="not-italic"><span className="font-semibold text-slate-300">Our Factory: </span>{COMPANY.factory.address}</address>
+          <address className="not-italic"><span className="font-semibold text-slate-300">Partner Operations: </span>{COMPANY.factory.address}</address>
         </div>
         <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 break-all text-[11px] text-slate-400">
           <span>IEC: {COMPANY.iec}</span>

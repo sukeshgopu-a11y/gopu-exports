@@ -1,3 +1,4 @@
+import { getPublicProducts } from "@/lib/publicCatalogue";
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { createAdminClient } from "@/src/lib/supabase/admin";
@@ -42,7 +43,15 @@ function staticProducts(searchParams: URLSearchParams) {
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const adminClient = await requireAdminClient();
+  const adminClient = await requireAdminClient().catch(() => null);
+  if (!adminClient) {
+    let products = await getPublicProducts();
+    if (searchParams.get("featured") === "true") products = products.filter(product => product.featured);
+    if (searchParams.get("category")) products = products.filter(product => product.category === searchParams.get("category"));
+    const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 250, 1), 250);
+    const offset = Math.max(Number(searchParams.get("offset")) || 0, 0);
+    return NextResponse.json(products.slice(offset, offset + limit), { headers: { "Cache-Control": "no-store" } });
+  }
   const supabase = adminClient ?? getServerReadClient();
 
   let query = supabase

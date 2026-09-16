@@ -44,7 +44,7 @@ export const EXPORT_OPERATION_PAGES: ExportOperationPage[] = [
     description: "How agricultural export buyers can structure quality expectations, inspection points, and product specifications.",
     keywords: ["export quality control", "Indian spice quality", "agricultural commodity inspection"],
     sections: [
-      { heading: "Buyer-specification export supply", body: "Clear specification sheets reduce misunderstandings. Typical parameters include variety, grade, moisture, size, purity, processing style, packaging, and shelf-life expectations." },
+      { heading: "Buyer Specification Review", body: "Clear specification sheets reduce misunderstandings. Typical parameters include variety, grade, moisture, size, purity, processing style, packaging, and shelf-life expectations." },
       { heading: "Inspection readiness", body: "Buyer-appointed inspection, lab reports, and product photos can be coordinated where required. Requirements should be stated before order confirmation." },
       { heading: "Traceable communication", body: "Product changes, substitutions, grade limits, and seasonal constraints should be documented during the enquiry and quotation stage." },
     ],
@@ -116,7 +116,7 @@ export const EXPORT_OPERATION_PAGES: ExportOperationPage[] = [
   {
     slug: "bulk-orders",
     title: "Bulk Orders",
-    description: "Bulk procurement guidance for importers importing Indian agricultural commodities and food products.",
+    description: "Bulk export supply guidance for international importers of Indian agricultural and food products.",
     keywords: ["bulk agri products India", "bulk spice exporter", "bulk rice supplier India"],
     sections: [
       { heading: "Commercial clarity", body: "Bulk quotes are more accurate when buyers share quantity, destination, packing, grade, Incoterms, and target shipment window." },
@@ -130,7 +130,7 @@ export const EXPORT_OPERATION_PAGES: ExportOperationPage[] = [
   },
   {
     slug: "global-supply-network",
-    title: "Global Supply Network",
+    title: "Indian Export Supply Chain",
     description: "How GOPU Exports approaches export supply across Indian agricultural product categories.",
     keywords: ["Indian agricultural supply network", "global food supply India", "agricultural exporter India"],
     sections: [
@@ -144,14 +144,14 @@ export const EXPORT_OPERATION_PAGES: ExportOperationPage[] = [
     ],
   },
   {
-    slug: "inquiry-procurement-support",
-    title: "Inquiry & Procurement Support",
+    slug: "export-enquiry-support",
+    title: "Export Enquiry Support",
     description: "A buyer-focused guide to submitting complete export enquiries and receiving practical export responses.",
-    keywords: ["export inquiry support", "procurement support India", "agri products quote request"],
+    keywords: ["export inquiry support", "export enquiry support India", "agri products quote request"],
     sections: [
       { heading: "Complete requirement capture", body: "A strong enquiry includes product, grade, volume, destination, packing, target price context if available, and any document requirements." },
       { heading: "Fast clarification", body: "When key details are missing, the team may ask follow-up questions before issuing a quote. This avoids inaccurate pricing or unsuitable product suggestions." },
-      { heading: "Procurement next steps", body: "Once requirements are clear, buyers can proceed with sample discussion, commercial quote, documentation mapping, and shipment planning." },
+      { heading: "Export enquiry next steps", body: "Once requirements are clear, buyers can proceed with sample discussion, commercial quote, documentation mapping, and shipment planning." },
     ],
     faq: [
       { question: "What is the fastest way to contact GOPU Exports?", answer: "Use the contact form, product enquiry CTA, email admin@gopuexports.com, or WhatsApp +91 9618991917." },

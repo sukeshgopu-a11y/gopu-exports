@@ -93,7 +93,7 @@ export default async function ResourceDetailPage({ params }: Props) {
           </div>
         </section>
       </article>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd).replace(/</g, "\\u003c") }} />
     </main>
   );
 }

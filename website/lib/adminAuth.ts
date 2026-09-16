@@ -24,6 +24,7 @@ export async function isAdmin(): Promise<boolean> {
 }
 
 export async function requireAdminClient(): Promise<SupabaseClient | null> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) return null;
   const supabase = await createClient();
   const {
     data: { user },

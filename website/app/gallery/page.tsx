@@ -34,7 +34,7 @@ async function getGalleryImages() {
 }
 
 export default async function GalleryPage() {
-  const images = await getGalleryImages();
+  const images = await getGalleryImages().catch(() => []);
 
   return (
     <main className="bg-[#F5F7FA] text-[#0F172A]">
@@ -48,8 +48,7 @@ export default async function GalleryPage() {
             Our Products
           </h1>
           <p className="mt-4 max-w-xl text-[17px] leading-[1.8] text-[#64748B]">
-            Premium Indian agricultural commodities inspected, certified, and
-            ready for global export. Spices, rice, fresh fruits, and vegetables.
+            Explore Indian spices, rice, fruits and vegetables. Product availability, grade and packing are confirmed for each export enquiry.
           </p>
         </div>
       </section>
@@ -110,7 +109,7 @@ export default async function GalleryPage() {
               href="/contact"
               className="rounded-lg border border-white/30 px-8 py-4 text-[13px] font-bold tracking-wide text-white transition hover:bg-white/10"
             >
-              GET A QUOTE
+              REQUEST EXPORT QUOTE
             </Link>
           </div>
         </div>
