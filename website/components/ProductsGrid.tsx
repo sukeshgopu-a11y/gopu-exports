@@ -37,7 +37,7 @@ const CATEGORY_ORDER = [
 
 const CATEGORY_COPY: Record<string, string> = {
   "Rice & Grains": "Rice and grain options for importers, wholesalers, food-service buyers, and private-label packing discussions.",
-  "Spices": "Whole spices and herbs for bulk spice buyers, processors, wholesalers, and food-service markets.",
+  "Spices": "Whole Indian spices for bulk spice buyers, processors, wholesalers, and food-service markets.",
   "Spice Powders & Blends": "Ground spices and blends for bulk supply, private-label projects, seasoning manufacturers, and retail packing.",
   Millets: "Indian millet options for health-food brands, grain wholesalers, ingredient buyers, and retail packing.",
   Pulses: "Pulses and lentils for wholesalers, millers, retail packers, and food manufacturing buyers.",

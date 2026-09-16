@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     const localePattern = "/:locale(ar|zh|es|fr|de|pt|ru|ja|ko|hi|te|tr|it|vi|th|id)";
     return [
+      { source: "/resources/inquiry-procurement-support", destination: "/resources/export-enquiry-support", permanent: true },
       {
         source: "/:path*",
         has: [{ type: "host", value: "www.gopuexports.com" }],

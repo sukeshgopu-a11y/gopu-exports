@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { publicMetadata } from "@/lib/seo";
-import { cleanPublicProduct } from "@/lib/publicProductCopy";
+import { getPublicProducts } from "@/lib/publicCatalogue";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CATEGORY_LANDING_PAGES, getCategoryLandingPage } from "@/lib/categoryLandingPages";
-import { createPublicClient } from "@/src/lib/supabase/public";
-import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
+
+
 
 export const revalidate = 60;
 
@@ -25,22 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 async function getProducts(category?: string): Promise<ProductCard[]> {
-  if (!category) return [];
-  try {
-    const supabase = createPublicClient();
-    const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .eq("is_active", true)
-      .eq("category", category)
-      .order("sort_order", { ascending: true })
-      .limit(8)
-      .returns<ProductRow[]>();
-    if (error) return [];
-    return ((data ?? []).map(productToApi) as ProductCard[]).map(cleanPublicProduct);
-  } catch {
-    return [];
-  }
+  return category ? (await getPublicProducts()).filter(product => product.category === category).slice(0, 8) : [];
 }
 
 export default async function ExportCategoryPage({ params }: Props) {
@@ -61,7 +46,7 @@ export default async function ExportCategoryPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[#F5F7FA] text-[#0F172A]">
-      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }} />
+      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs).replace(/</g, "\\u003c") }} />
       <section className="border-b border-[#E2E8F0] bg-white">
         <div className="mx-auto max-w-[1180px] px-6 py-16 sm:px-8">
           <p className="text-[11px] font-black uppercase tracking-[0.26em] text-[#0E7490]">{page.eyebrow}</p>
@@ -71,13 +56,13 @@ export default async function ExportCategoryPage({ params }: Props) {
           <p className="mt-5 max-w-3xl text-[17px] leading-8 text-[#64748B]">{page.description}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/contact" className="rounded-lg bg-[#0E7490] px-6 py-3.5 text-[13px] font-bold text-white">
-              Request Quote
+              REQUEST EXPORT QUOTE
             </Link>
             <a href="https://wa.me/919618991917" target="_blank" rel="noreferrer" className="rounded-lg border border-[#22C55E]/50 px-6 py-3.5 text-[13px] font-bold text-[#16A34A]">
-              WhatsApp Inquiry
+              WHATSAPP BUYER DESK
             </a>
             <Link href="/products" className="rounded-lg border border-[#D9E2EC] px-6 py-3.5 text-[13px] font-bold text-[#0F172A]">
-              View Catalogue
+              VIEW PRODUCTS
             </Link>
           </div>
         </div>
@@ -85,6 +70,7 @@ export default async function ExportCategoryPage({ params }: Props) {
 
       <section className="mx-auto max-w-[1180px] px-6 py-14 sm:px-8">
         <nav aria-label="Breadcrumb" className="mb-8 flex flex-wrap gap-2 text-sm text-[#475569]"><Link href="/">Home</Link><span>/</span><Link href="/products">Export products</Link><span>/</span><span aria-current="page">{page.title}</span></nav>
+        {page.relatedGuides && <nav aria-label="Related export guides" className="mb-6 flex flex-wrap gap-4">{page.relatedGuides.map(guide => <Link key={guide.href} href={guide.href} className="font-semibold text-[#0E7490] underline underline-offset-4">{guide.title}</Link>)}</nav>}
         {page.relatedProducts && <div className="mb-8"><h2 className="text-2xl font-bold">Explore the products</h2><div className="mt-4 flex flex-wrap gap-3">{page.relatedProducts.map((product) => <Link key={product.slug} href={`/products/${product.slug}`} className="rounded-lg border border-[#D9E2EC] bg-white px-5 py-3 font-bold text-[#0E7490]">{product.title} →</Link>)}</div></div>}
         <div className="grid gap-6 md:grid-cols-2">
           {page.sections.map((section) => (

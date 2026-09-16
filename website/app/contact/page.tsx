@@ -7,7 +7,7 @@ export const metadata = publicMetadata(
   "/contact",
 );
 
-export default function ContactPage() {
-  return <ContactPageClient />;
+export default async function ContactPage({ searchParams }: { searchParams: Promise<{ product?: string; catalogue?: string }> }) {
+  const params = await searchParams;
+  return <ContactPageClient initialProduct={typeof params.product === "string" ? params.product.slice(0, 200) : ""} catalogue={Boolean(params.catalogue)} />;
 }
-

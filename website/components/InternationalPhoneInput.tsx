@@ -148,6 +148,7 @@ export function InternationalPhoneInput({
           <input
             value={displayLocalPhone(localPhone)}
             onChange={(event) => setLocalPhone(cleanLocalPhone(event.target.value))}
+            aria-label="Phone / WhatsApp number"
             inputMode="numeric"
             autoComplete="tel-national"
             placeholder={country ? "Local phone number" : "Select country code first"}

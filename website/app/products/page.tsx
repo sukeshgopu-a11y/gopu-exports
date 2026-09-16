@@ -1,55 +1,22 @@
 import { publicMetadata } from "@/lib/seo";
 import ProductsGrid from "@/components/ProductsGrid";
-import { createPublicClient } from "@/src/lib/supabase/public";
-import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
+import { getPublicProducts } from "@/lib/publicCatalogue";
+
 import { CATEGORY_LANDING_PAGES } from "@/lib/categoryLandingPages";
-import { PRODUCTS } from "@/lib/products";
-import { cleanPublicProduct } from "@/lib/publicProductCopy";
+
+
 import Link from "next/link";
 
 export const revalidate = 300;
 
 export const metadata = publicMetadata(
-  "Indian Spices, Rice & Agricultural Export Products",
+  "Indian Agricultural Export Products",
   "Explore Indian spices, rice, millets, pulses and produce for international bulk orders. Review specifications and request an export quote from GOPU Exports.",
   "/products",
 );
 
-type PublicProduct = {
-  _id: string;
-  slug: string;
-  title: string;
-  tagline?: string;
-  category: string;
-  image: string;
-  description?: string;
-  origin?: string;
-  moq?: string;
-  lead?: string;
-  hs?: string;
-  featured?: boolean;
-};
-
-async function getProducts(): Promise<PublicProduct[]> {
-  try {
-    const supabase = createPublicClient();
-    const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .eq("is_active", true)
-      .order("sort_order", { ascending: true })
-      .order("created_at", { ascending: false })
-      .returns<ProductRow[]>();
-    if (error) return PRODUCTS.map((product) => cleanPublicProduct({ ...product, _id: product.slug } as PublicProduct));
-    const products = ((data ?? []).map(productToApi) as PublicProduct[]).map(cleanPublicProduct);
-    return products.length > 0 ? products : PRODUCTS.map((product) => cleanPublicProduct({ ...product, _id: product.slug } as PublicProduct));
-  } catch {
-    return PRODUCTS.map((product) => cleanPublicProduct({ ...product, _id: product.slug } as PublicProduct));
-  }
-}
-
 export default async function ProductsPage() {
-  const products = await getProducts();
+  const products = await getPublicProducts();
   const categories = Array.from(new Set(products.map((product) => product.category).filter(Boolean)));
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
@@ -60,12 +27,12 @@ export default async function ProductsPage() {
         <div className="absolute right-0 top-0 h-full w-1/2 bg-[linear-gradient(135deg,transparent,rgba(255,255,255,0.08))]" />
         <div className="relative mx-auto max-w-[1280px] px-6 py-10 sm:px-8 sm:py-12">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#67C9D8]">Export catalogue</p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl">Indian products for international buyers</h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">Explore spices, rice and agricultural products. Find your product, review specifications and request an export quote.</p>
+          <h1 className="mt-3 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl">Indian Agricultural Export Products</h1>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">Indian spices, rice and selected agricultural products for international importers, distributors, wholesalers and food-service buyers.</p>
           <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
             <span className="text-slate-300">{products.length} products · {categories.length} categories</span>
             <a href="#catalogue" className="font-bold text-[#9EE7EF] underline underline-offset-4">Browse catalogue ↓</a>
-            <Link href="/contact" className="rounded-lg bg-[#0E7490] px-4 py-2.5 font-semibold text-white hover:bg-[#0A5A70]">Request export quote</Link>
+            <Link href="/contact" className="rounded-lg bg-[#0E7490] px-4 py-2.5 font-semibold text-white hover:bg-[#0A5A70]">REQUEST EXPORT QUOTE</Link>
           </div>
         </div>
       </section>

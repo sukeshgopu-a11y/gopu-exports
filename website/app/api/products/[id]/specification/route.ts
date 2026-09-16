@@ -3,9 +3,9 @@ import sharp from "sharp";
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFImage, type PDFPage, type RGB } from "pdf-lib";
 import { COMPANY } from "@/lib/company";
 import { formatCommercialMoq } from "@/lib/moq";
-import { getProductBySlug } from "@/lib/products";
-import { createPublicClient } from "@/src/lib/supabase/public";
-import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
+import { getPublicProducts } from "@/lib/publicCatalogue";
+
+
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -89,7 +89,7 @@ function defaultBuyerNotes(product: Product) {
   } else if (category.includes("spice")) {
     notes.push("Aroma, granulation, purity, moisture, and packaging expectations should be confirmed before commercial approval.");
   } else {
-    notes.push("Product-specific packing, shelf-life, and handling requirements should be confirmed during procurement discussion.");
+    notes.push("Product-specific packing, shelf-life, and handling requirements should be confirmed during export enquiry.");
   }
 
   return notes;
@@ -144,22 +144,7 @@ function drawTextBlock({
 }
 
 async function getProduct(slug: string): Promise<Product | null> {
-  try {
-    const supabase = createPublicClient();
-    const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .eq("slug", slug)
-      .eq("is_active", true)
-      .maybeSingle<ProductRow>();
-
-    if (!error && data) return productToApi(data) as Product;
-  } catch (error) {
-    console.error("Product PDF Supabase fetch failed", error);
-  }
-
-  const fallback = getProductBySlug(slug);
-  return fallback ? ({ ...fallback, _id: fallback.slug } as Product) : null;
+  return (await getPublicProducts()).find(product => product.slug === slug) ?? null;
 }
 
 async function embedProductImage(pdf: PDFDocument, imageSrc: string | undefined, origin: string) {
@@ -203,7 +188,7 @@ async function embedProductImage(pdf: PDFDocument, imageSrc: string | undefined,
 function addHeader(page: PDFPage, bold: PDFFont, font: PDFFont) {
   page.drawRectangle({ x: 0, y: PAGE_HEIGHT - 92, width: PAGE_WIDTH, height: 92, color: NAVY });
   page.drawText("GOPU EXPORTS", { x: MARGIN, y: PAGE_HEIGHT - 43, size: 22, font: bold, color: WHITE });
-  page.drawText("Indian Agricultural Export Sourcing", { x: MARGIN, y: PAGE_HEIGHT - 63, size: 9.5, font, color: rgb(0.78, 0.87, 0.92) });
+  page.drawText("Indian Agricultural & Spice Exports", { x: MARGIN, y: PAGE_HEIGHT - 63, size: 9.5, font, color: rgb(0.78, 0.87, 0.92) });
   page.drawText(`${COMPANY.email} | ${COMPANY.phone} | gopuexports.com`, {
     x: MARGIN,
     y: PAGE_HEIGHT - 80,
@@ -389,7 +374,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
   const documentationNotes = [
     certifications.length ? `Referenced certifications / documents: ${certifications.join(", ")}.` : "Available certification references and document copies can be shared with verified buyers on request.",
     "Product specification, packing assumptions, inspection requirements, certificate needs, destination port, and shipment terms should be confirmed before final quote preparation.",
-    "NABL lab testing, SGS or third-party inspection coordination can be discussed on request where suitable for buyer and destination requirements.",
+    "Testing and third-party inspection scope, provider availability and costs must be confirmed during quotation. No product certification is implied.",
   ];
   for (const note of documentationNotes) {
     ensureSpace(36);

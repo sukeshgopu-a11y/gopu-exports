@@ -92,11 +92,11 @@ export default function MarketsPage() {
           <div className="flex items-center gap-3 mb-5">
             <div className="h-[2px] w-8 bg-[#0E7490]" />
             <p className="text-xs font-black tracking-[0.2em] text-white uppercase">
-              Global Reach
+              International Buyer Information
             </p>
           </div>
           <h1 className="text-[48px] lg:text-[62px] font-black leading-[1.05] text-white">
-            International Buyer Destinations
+            Markets We Support
             <span className="text-[#0E7490]">.</span>
           </h1>
           <p className="mt-5 text-[15px] leading-7 text-slate-300 max-w-[580px]">
@@ -109,7 +109,7 @@ export default function MarketsPage() {
               href="/contact"
               className="rounded-md bg-[#0E7490] px-8 py-4 text-sm font-bold tracking-wide text-white transition hover:bg-[#0A5A70]"
             >
-              ENQUIRE NOW →
+              REQUEST EXPORT QUOTE →
             </Link>
             <Link
               href="/products"
@@ -240,7 +240,7 @@ export default function MarketsPage() {
               href="/contact"
               className="shrink-0 px-8 py-4 rounded-lg bg-[#0E7490] text-white text-sm font-black hover:bg-[#0A6178] transition"
             >
-              GET A QUOTE →
+              REQUEST EXPORT QUOTE →
             </Link>
           </div>
         </div>

@@ -153,7 +153,7 @@ export default function Navbar() {
             </a>
           </div>
           {SOCIAL_LINKS.length > 0 && (
-            <div className="flex items-center gap-2">
+            <div className="hidden items-center gap-2 min-[560px]:flex">
               {SOCIAL_LINKS.map(({ label, href, icon: Icon }: { label: string; href: string; icon: IconComponent }) => (
                 <a
                   key={label}
@@ -171,12 +171,12 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-[1450px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:py-3">
+      <div className="mx-auto flex max-w-[1450px] items-center justify-between gap-4 px-4 py-3 sm:px-6 xl:py-3">
         <Link href="/" prefetch={false} aria-label="GOPU Exports Home" className="shrink-0">
           <BrandLogo priority className="h-12 w-auto" />
         </Link>
 
-        <nav aria-label="Main navigation" className="hidden items-center gap-1 lg:ml-auto lg:flex">
+        <nav aria-label="Main navigation" className="hidden items-center gap-1 xl:ml-auto xl:flex">
           {MAIN_LINKS.map(([label, href]) => href === "/resources" ? (
             <ResourceNavigation key={href} active={isActive(href)} />
           ) : (
@@ -196,22 +196,22 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden items-center gap-2 xl:flex">
           <a href={COMPANY.whatsapp} target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#22C55E]/40 bg-[#F0FDF4] text-[#16A34A] transition hover:bg-[#DCFCE7]">
             <WhatsAppIcon />
           </a>
           <Link href="/contact" prefetch={false} className="rounded-xl bg-[#0E7490] px-5 py-3 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-sm transition hover:bg-[#0A5A70] hover:shadow-md">
-            Export Quote
+            REQUEST EXPORT QUOTE
           </Link>
         </div>
 
-        <button type="button" onClick={() => setMenuOpen((value) => !value)} aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} aria-controls="mobile-navigation" className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-2 text-slate-700 transition hover:bg-slate-100 lg:hidden">
+        <button type="button" onClick={() => setMenuOpen((value) => !value)} aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} aria-controls="mobile-navigation" className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-2 text-slate-700 transition hover:bg-slate-100 xl:hidden">
           {menuOpen ? <XIcon size={24} /> : <MenuIcon size={24} />}
         </button>
       </div>
 
       {menuOpen && (
-        <div id="mobile-navigation" className="max-h-[70dvh] overflow-y-auto border-t border-[#E2E8F0] bg-white px-5 py-4 shadow-xl lg:hidden">
+        <div id="mobile-navigation" className="max-h-[70dvh] overflow-y-auto border-t border-[#E2E8F0] bg-white px-5 py-4 shadow-xl xl:hidden">
           <nav aria-label="Mobile navigation" className="grid gap-1">
             {MAIN_LINKS.map(([label, href]) => href === "/resources" ? (
               <ResourceNavigation key={href} active={isActive(href)} mobile onNavigate={() => setMenuOpen(false)} />
@@ -223,10 +223,10 @@ export default function Navbar() {
           </nav>
           <div className="mt-4 grid gap-3">
             <Link href="/contact" prefetch={false} onClick={() => setMenuOpen(false)} className="rounded-xl bg-[#0E7490] px-5 py-3 text-center text-sm font-bold text-white">
-              Export Quote
+              REQUEST EXPORT QUOTE
             </Link>
             <a href={COMPANY.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#22C55E]/40 py-3 text-sm font-bold text-[#16A34A]">
-              <WhatsAppIcon /> WhatsApp Inquiry
+              <WhatsAppIcon /> WHATSAPP BUYER DESK
             </a>
           </div>
         </div>

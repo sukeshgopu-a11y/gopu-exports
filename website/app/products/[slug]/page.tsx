@@ -4,11 +4,8 @@ import { cache } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ArrowRight, CheckCircle2, ClipboardCheck, FileText, PackageCheck, Ship } from "lucide-react";
-import { createPublicClient } from "@/src/lib/supabase/public";
-import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
-import { getProductBySlug, PRODUCTS } from "@/lib/products";
+import { getPublicProducts } from "@/lib/publicCatalogue";
 import { formatCommercialMoq } from "@/lib/moq";
-import { cleanPublicProduct } from "@/lib/publicProductCopy";
 
 export const revalidate = 300;
 
@@ -68,7 +65,7 @@ function compactMoq(product: Product, commercialMoq: string) {
 }
 
 const SPECIFICATION_DISCLAIMER =
-  "Final specifications are confirmed against the buyer-approved specification and commercial agreement before order confirmation.";
+  "Catalogue values are indicative reference data, not batch guarantees. Grade, test results, packing, MOQ, shelf life, loading and lead time must be confirmed in the buyer-approved specification and quotation. Listed destinations indicate enquiry coverage, not shipment history.";
 
 function BuyerStep({ icon: Icon, title, text }: { icon: typeof ClipboardCheck; title: string; text: string }) {
   return (
@@ -92,7 +89,7 @@ function SpecTable({ title, rows }: { title: string; rows: Spec[] }) {
           <thead className="bg-[#0F172A] text-white">
             <tr>
               <th className="px-5 py-3 font-black">Parameter</th>
-              <th className="px-5 py-3 font-black">Specification / Range</th>
+              <th className="px-5 py-3 font-black">Reference / confirm on request</th>
             </tr>
           </thead>
           <tbody>
@@ -109,50 +106,9 @@ function SpecTable({ title, rows }: { title: string; rows: Spec[] }) {
   );
 }
 
-const getProduct = cache(async (slug: string): Promise<Product | null> => {
-  const supabase = createPublicClient();
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("slug", slug)
-    .eq("is_active", true)
-    .maybeSingle<ProductRow>();
-  if (error || !data) {
-    const fallback = getProductBySlug(slug);
-    return fallback ? cleanPublicProduct({ ...fallback, _id: fallback.slug } as Product) : null;
-  }
-  return cleanPublicProduct(productToApi(data) as Product);
-});
-
-const getRelated = cache(async (slugs: string[]): Promise<Product[]> => {
-  if (!slugs.length) return [];
-  const supabase = createPublicClient();
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .in("slug", slugs)
-    .eq("is_active", true)
-    .returns<ProductRow[]>();
-  if (error) return [];
-  return ((data ?? []).map(productToApi) as Product[]).map(cleanPublicProduct);
-});
-
-export async function generateStaticParams() {
-  const supabase = createPublicClient();
-  const { data } = await supabase
-    .from("products")
-    .select("slug")
-    .eq("is_active", true)
-    .returns<Array<{ slug: string }>>();
-
-  const slugs = new Set<string>();
-  PRODUCTS.forEach((product) => slugs.add(product.slug));
-  (data ?? []).forEach((product) => {
-    if (product.slug) slugs.add(product.slug);
-  });
-
-  return Array.from(slugs).map((slug) => ({ slug }));
-}
+const getProduct = cache(async (slug: string): Promise<Product | null> => (await getPublicProducts()).find(product => product.slug === slug) ?? null);
+const getRelated = cache(async (slugs: string[]): Promise<Product[]> => (await getPublicProducts()).filter(product => slugs.includes(product.slug)));
+export async function generateStaticParams() { return (await getPublicProducts()).map(({ slug }) => ({ slug })); }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -195,7 +151,6 @@ export default async function ProductDetailsPage({ params }: Props) {
   const exportPorts = product.exportPorts ?? [];
   const commercialMoq = formatCommercialMoq(product);
   const heroMoq = compactMoq(product, commercialMoq);
-  const midpoint = Math.ceil(specs.length / 2);
   const productUrl = `${SITE_URL}/products/${product.slug}`;
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -221,19 +176,7 @@ export default async function ProductDetailsPage({ params }: Props) {
     category: product.category,
     sku: product.slug,
     url: productUrl,
-    additionalProperty: [
-      product.hs ? { "@type": "PropertyValue", name: "HS Code", value: product.hs } : null,
-      product.origin ? { "@type": "PropertyValue", name: "Origin", value: product.origin } : null,
-      commercialMoq ? { "@type": "PropertyValue", name: "MOQ", value: commercialMoq } : null,
-      product.packaging ? { "@type": "PropertyValue", name: "Packaging", value: product.packaging } : null,
-      product.shelfLife ? { "@type": "PropertyValue", name: "Shelf Life", value: product.shelfLife } : null,
-      product.lead ? { "@type": "PropertyValue", name: "Lead Time", value: product.lead } : null,
-      ...specs.slice(0, 12).map((spec) => ({
-        "@type": "PropertyValue",
-        name: spec.label,
-        value: spec.value,
-      })),
-    ].filter(Boolean),
+    // Reference catalogue ranges are not verified batch guarantees; keep them out of machine-readable claims.
     potentialAction: {
       "@type": "CommunicateAction",
       name: "Request product quotation",
@@ -243,8 +186,8 @@ export default async function ProductDetailsPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
-      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
+      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema).replace(/</g, "\\u003c") }} />
+      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema).replace(/</g, "\\u003c") }} />
 
       <div className="border-b border-[#E2E8F0] bg-white">
         <div className="mx-auto max-w-[1450px] px-6 py-3 sm:px-8">
@@ -292,7 +235,7 @@ export default async function ProductDetailsPage({ params }: Props) {
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href={`/contact?product=${encodeURIComponent(product.title)}`} className="inline-flex items-center gap-2 rounded-xl bg-[#0E7490] px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-white transition hover:bg-[#0A5A70]">
-                  Product Enquiry <ArrowRight size={15} />
+                  REQUEST EXPORT QUOTE <ArrowRight size={15} />
                 </Link>
                 <a href={`/api/products/${product.slug}/specification`} download className="inline-flex items-center gap-2 rounded-xl border border-[#D9E2EC] bg-white px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-[#0F172A] transition hover:border-[#0E7490] hover:text-[#0E7490]">
                   Download Specification <FileText size={15} />
@@ -344,7 +287,7 @@ export default async function ProductDetailsPage({ params }: Props) {
                 {[
                   ["Container Loading", product.containerCapacity],
                   ["Loading Ports", exportPorts.length ? exportPorts.join(", ") : undefined],
-                  ["Export Destinations", exportCountries.length ? exportCountries.join(", ") : undefined],
+                  ["Destination enquiries", exportCountries.length ? exportCountries.join(", ") : undefined],
                   ["Applications", applications.length ? applications.join(", ") : undefined],
                 ].map(([label, value]) => value && (
                   <div key={label} className="rounded-2xl border border-[#D9E2EC] bg-white p-4">
@@ -373,15 +316,9 @@ export default async function ProductDetailsPage({ params }: Props) {
           </div>
 
           {specs.length > 0 && (
-            <div id="product-specifications" className="grid gap-8 px-6 pb-6 sm:px-8 sm:pb-8 lg:grid-cols-2 lg:px-10">
-              <SpecTable title="Physical / Quality Specifications" rows={specs.slice(0, midpoint)} />
-              <SpecTable
-                title="Commercial Specifications"
-                rows={specs.slice(midpoint).map((spec) => ({
-                  ...spec,
-                  value: spec.label.toLowerCase() === "moq" ? commercialMoq : spec.value,
-                }))}
-              />
+            <div id="product-specifications" className="px-6 pb-6 sm:px-8 sm:pb-8 lg:px-10">
+              <p className="mb-4 text-sm leading-6 text-[#475569]">The following catalogue values are for preliminary discussion. The offered grade and numerical parameters are buyer-specific and confirmed on request for the batch.</p>
+              <SpecTable title="Buyer Specification Review" rows={specs.map(spec => ({ ...spec, value: spec.label.toLowerCase() === "moq" ? commercialMoq : spec.value }))} />
             </div>
           )}
 
@@ -397,16 +334,16 @@ export default async function ProductDetailsPage({ params }: Props) {
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link href={`/contact?product=${encodeURIComponent(product.title)}`} className="rounded-xl bg-[#0E7490] px-6 py-3 text-[13px] font-bold text-white transition hover:bg-[#0A5A70]">
-                  Request Quote
+                  REQUEST EXPORT QUOTE
                 </Link>
                 <a href={`https://wa.me/919618991917?text=Hi%2C%20I%27m%20interested%20in%20${encodeURIComponent(product.title)}%20from%20GOPU%20Exports.`} target="_blank" rel="noreferrer" className="rounded-xl border border-[#22C55E]/50 bg-[#F0FDF4] px-6 py-3 text-[13px] font-bold text-[#16A34A] transition hover:bg-[#DCFCE7]">
-                  WhatsApp Enquiry
+                  WHATSAPP BUYER DESK
                 </a>
               </div>
             </div>
 
             <div className="rounded-2xl border border-[#D9E2EC] bg-[#F8FAFC] p-5">
-              <p className="text-[13px] font-black uppercase tracking-[0.16em] text-[#0E7490]">Procurement checklist</p>
+              <p className="text-[13px] font-black uppercase tracking-[0.16em] text-[#0E7490]">EXPORT ENQUIRY CHECKLIST</p>
               <div className="mt-4 grid gap-3">
                 {[
                   "Product grade or variety",
@@ -426,6 +363,15 @@ export default async function ProductDetailsPage({ params }: Props) {
         </div>
       </section>
 
+      {["red-chilli", "turmeric-powder", "turmeric-fingers", "red-chilli-powder"].includes(product.slug) && <section className="mx-auto max-w-[1280px] px-6 pb-12 sm:px-8">
+        <h2 className="text-2xl font-bold">Buyer questions about {product.title}</h2>
+        <div className="mt-5 divide-y divide-slate-200">
+          <details className="py-4"><summary className="cursor-pointer font-semibold">Which specifications should I include?</summary><p className="mt-3 leading-7 text-slate-600">{product.slug.includes("chilli") ? "For chilli, include variety, SHU heat, ASTA colour, moisture, stem preference for whole chilli, and mesh for powder." : "For turmeric, include variety or origin preference, curcumin, moisture, purity and mesh for powder."} Share your target values; the quotation must confirm what is available for the offered batch.</p></details>
+          <details className="py-4"><summary className="cursor-pointer font-semibold">Can I request testing or an inspection?</summary><p className="mt-3 leading-7 text-slate-600">Include your destination, required test panel and inspection stage in the enquiry. Provider availability, scope, charges and turnaround are confirmed before order acceptance. Ask for documentation specific to the offered batch.</p></details>
+          <details className="py-4"><summary className="cursor-pointer font-semibold">How are packing, MOQ and loading confirmed?</summary><p className="mt-3 leading-7 text-slate-600">Send your pack size, total quantity, destination port and delivery terms. Packing material, minimum quantity, shelf life and container loading depend on the product and shipment; catalogue figures are reference information.</p></details>
+        </div>
+        <nav aria-label="Spice export guides" className="mt-6 flex flex-wrap gap-5 font-semibold text-[#0E7490]"><Link href="/export/spice-exporters-from-india">Indian spice exports</Link><Link href="/export/spice-powder-exporter-india">Spice powders and blends</Link><Link href="/contact">REQUEST EXPORT QUOTE</Link></nav>
+      </section>}
       {related.length > 0 && (
         <section className="py-16">
           <div className="mx-auto max-w-[1450px] px-6 sm:px-8">

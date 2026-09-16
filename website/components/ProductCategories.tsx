@@ -14,7 +14,7 @@ export default function ProductCategories() {
       title: "Indian Spices",
       image: "/products/red-chilli.webp",
       description:
-        "Carefully sourced spices suitable for wholesale global distribution.",
+        "Indian spices for international importers, distributors and wholesale buyers.",
     },
     {
       title: "Turmeric Products",

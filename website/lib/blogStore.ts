@@ -1,3 +1,4 @@
+import { cleanPublicBlog } from "@/lib/publicBlogCopy";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import type { BlogFaq, BlogSection } from "@/lib/blogs";
@@ -230,6 +231,7 @@ export async function getDashboardBlogPosts(supabase: SupabaseClient) {
 }
 
 export async function getPublicBlogPosts() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) return [];
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("blog_posts")
@@ -240,10 +242,11 @@ export async function getPublicBlogPosts() {
     .order("created_at", { ascending: false });
 
   assertBlogTableError(error, "read public blog posts");
-  return ((data ?? []) as BlogPostRow[]).map(rowToBlogPost);
+  return ((data ?? []) as BlogPostRow[]).map(rowToBlogPost).map(cleanPublicBlog);
 }
 
 export async function getPublicBlogPostBySlug(slug: string) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) return null;
   const supabase = createPublicClient();
   const normalizedSlug = slugify(slug);
   const { data, error } = await supabase
@@ -255,7 +258,7 @@ export async function getPublicBlogPostBySlug(slug: string) {
     .maybeSingle();
 
   assertBlogTableError(error, "read public blog post");
-  return data ? rowToBlogPost(data as BlogPostRow) : null;
+  return data ? cleanPublicBlog(rowToBlogPost(data as BlogPostRow)) : null;
 }
 
 export async function getDashboardBlogPost(supabase: SupabaseClient, identifier: string) {

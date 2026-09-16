@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { createContext, useContext, useCallback, useState } from "react";
 import { InternationalPhoneInput, type InternationalPhoneValue } from "@/components/InternationalPhoneInput";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { COMPANY } from "@/lib/company";
@@ -24,32 +24,21 @@ const EMPTY_FORM = {
   product: "",
   productOther: "",
   quantity: "",
+  specification: "",
+  packing: "",
   frequency: "",
   frequencyOther: "",
   notes: "",
 };
 
-function getInitialForm() {
-  if (typeof window === "undefined") return EMPTY_FORM;
-  const params = new URLSearchParams(window.location.search);
-  const product = params.get("product");
-  const catalogue = params.get("catalogue");
-  if (!product) return EMPTY_FORM;
-  return {
-    ...EMPTY_FORM,
-    product: OTHER,
-    productOther: product,
-    notes: catalogue ? `Please share the product catalogue and quote details for ${product}.` : "",
-  };
-}
-
+const FieldLabel = createContext("");
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div>
+    <FieldLabel.Provider value={label}><div>
       <div className="text-[12px] font-semibold text-[#475569] mb-2">{label}</div>
       {children}
-    </div>
+    </div></FieldLabel.Provider>
   );
 }
 
@@ -60,8 +49,10 @@ function FieldError({ message }: { message?: string }) {
 
 function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
   const { className = "", ...inputProps } = props;
+  const label = useContext(FieldLabel);
   return (
     <input
+      aria-label={label}
       {...inputProps}
       className={`w-full rounded-xl border border-[#D9E2EC] bg-[#F8FAFC] px-4 py-2.5 text-sm outline-none transition focus:border-[#0E7490] focus:ring-2 focus:ring-[#0E7490]/10 ${className}`}
     />
@@ -69,8 +60,9 @@ function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
 }
 
 function Select({ children, value, onChange }: { children: React.ReactNode; value?: string; onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void }) {
+  const label = useContext(FieldLabel);
   return (
-    <select
+    <select aria-label={label}
       value={value}
       onChange={onChange}
       className="w-full rounded-xl border border-[#D9E2EC] bg-[#F8FAFC] px-4 py-2.5 text-sm outline-none focus:border-[#0E7490] focus:ring-2 focus:ring-[#0E7490]/10 transition"
@@ -154,7 +146,7 @@ function OfficeCard({
   );
 }
 
-export default function ContactPageClient() {
+export default function ContactPageClient({ initialProduct = "", catalogue = false }: { initialProduct?: string; catalogue?: boolean }) {
   const [selectedInco, setSelectedInco] = useState("FOB");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -165,7 +157,7 @@ export default function ContactPageClient() {
   const [turnstileResetKey, setTurnstileResetKey] = useState(0);
   const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? "";
 
-  const [form, setForm] = useState(getInitialForm);
+  const [form, setForm] = useState(() => ({ ...EMPTY_FORM, product: initialProduct ? OTHER : "", productOther: initialProduct, notes: initialProduct && catalogue ? `Please share the product catalogue and quote details for ${initialProduct}.` : "" }));
 
   const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
       const value = e.target.value;
@@ -258,6 +250,8 @@ export default function ContactPageClient() {
             product ? `Product: ${product}` : "",
             form.quantity ? `Quantity: ${form.quantity}` : "",
             form.port ? `Destination port / city: ${form.port}` : "",
+            form.specification ? `Grade / specification: ${form.specification}` : "",
+            form.packing ? `Required packing: ${form.packing}` : "",
             form.notes,
             frequency ? `Frequency: ${frequency}` : "",
             selectedInco ? `Incoterm: ${selectedInco}` : "",
@@ -307,7 +301,7 @@ export default function ContactPageClient() {
       <section className="bg-[#081b2e] text-white">
         <div className="mx-auto max-w-[1400px] px-6 py-10 sm:px-8">
           <p className="text-sm font-bold uppercase tracking-widest text-[#9EE7EF]">International buyer enquiries</p>
-          <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">Request an export quote</h1>
+          <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">Request an Export Quote</h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-slate-200">Buying Indian spices, rice or agricultural products? Send your company details, product, quantity and destination. Our export team will confirm availability and quotation requirements.</p>
         </div>
       </section>
@@ -496,6 +490,8 @@ export default function ContactPageClient() {
                     <FieldError message={fieldErrors.product} />
                     <FieldError message={fieldErrors.productOther} />
                   </Field>
+                  <Field label="Grade / specification (optional)"><Input placeholder="Variety, grade or required parameters" value={form.specification} onChange={set("specification")} /></Field>
+                  <Field label="Required packing (optional)"><Input placeholder="Bag size, bulk or retail format" value={form.packing} onChange={set("packing")} /></Field>
                   <Field label="Quantity required *">
                     <Input required placeholder="e.g. 5 MT, 1 FCL, 500 kg" value={form.quantity} onChange={set("quantity")} />
                     <FieldError message={fieldErrors.quantity} />
@@ -504,7 +500,7 @@ export default function ContactPageClient() {
                     <div className="text-[12px] font-semibold text-[#475569] mb-2">
                       Quality notes / specific requirements
                     </div>
-                    <textarea
+                    <textarea aria-label="Quality notes / specific requirements"
                       placeholder="e.g. moisture %, colour grade, phytosanitary requirements…"
                       rows={4}
                       value={form.notes}
@@ -518,6 +514,8 @@ export default function ContactPageClient() {
                   {[
                     ["Product", reviewProduct || "Not selected"],
                     ["Quantity", form.quantity || "Not entered"],
+                    ["Grade / specification", form.specification || "To discuss"],
+                    ["Packing", form.packing || "To discuss"],
                     ["Destination", reviewCountry || "Not selected"],
                     ["Port / city", form.port || "Not entered"],
                     ["Incoterm", selectedInco],
@@ -559,7 +557,7 @@ export default function ContactPageClient() {
                   disabled={loading}
                   className="w-full mt-5 rounded-xl bg-[#0E7490] hover:bg-[#0A5A70] disabled:opacity-60 transition text-white py-3 text-[14px] font-bold"
                 >
-                  {loading ? "Sending…" : "Send Export Enquiry →"}
+                  {loading ? "Sending…" : "REQUEST EXPORT QUOTE →"}
                 </button>
               </form>
             )}
@@ -604,8 +602,8 @@ export default function ContactPageClient() {
             <OfficeCard
               map="https://maps.app.goo.gl/hakZVt1CE2Rg42Bm9?g_st=ic"
               flag="IN"
-              title="Our Factory"
-              lines={["Gopu Exports Factory", COMPANY.factory.address]}
+              title="Partner Operations"
+              lines={["Visits by prior arrangement; confirm the operating location with our team.", COMPANY.factory.address]}
             />
             <OfficeCard
               map="https://maps.google.com/?q=Surya+Arcade+Kushaiguda+Road+ECIL+Hyderabad+500062"

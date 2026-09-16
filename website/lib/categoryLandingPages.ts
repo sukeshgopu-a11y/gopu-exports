@@ -5,13 +5,31 @@ export type CategoryLandingPage = {
   description: string;
   keywords: string[];
   productCategory?: string;
+  relatedGuides?: { title: string; href: string }[];
   relatedProducts?: { title: string; slug: string }[];
   sections: { heading: string; body: string }[];
 };
 
 export const CATEGORY_LANDING_PAGES: CategoryLandingPage[] = [
   {
+    slug: "spice-powder-exporter-india",
+    title: "Spice Powder Exporter from India",
+    eyebrow: "Ground spices and blends for international buyers",
+    description: "Indian chilli powder, turmeric powder and spice blends for importers and B2B food businesses. Review mesh, ingredients, packing and export requirements.",
+    productCategory: "Spice Powders & Blends",
+    keywords: ["Indian spice powder exporter", "chilli powder exporter India", "turmeric powder exporter India"],
+    relatedProducts: [{ title: "Red Chilli Powder", slug: "red-chilli-powder" }, { title: "Turmeric Powder", slug: "turmeric-powder" }, { title: "Garam Masala", slug: "garam-masala" }, { title: "Coriander Powder", slug: "coriander-powder" }],
+    relatedGuides: [{ title: "Whole Indian spices", href: "/export/spice-exporters-from-india" }, { title: "Company verification", href: "/company-verification" }],
+    sections: [
+      { heading: "Match the powder to its food application", body: "Chilli powder enquiries should state heat, colour and mesh requirements. Turmeric powder enquiries should identify curcumin, colour, moisture and mesh requirements. For coriander powder, specify aroma, fineness and purity expectations. These are buyer-requested parameters, not guaranteed catalogue values; the offered batch must be confirmed against an agreed specification." },
+      { heading: "Agree blend composition before packing", body: "For garam masala and other blends, provide a recipe or target ingredient list, intended use and allergen requirements. GOPU Exports works through partner processing and white-label arrangements. Recipe approval, ingredient declarations, samples and minimum production quantities must be agreed before an order proceeds." },
+      { heading: "Bulk bags or buyer-brand packs", body: "Provide the net pack weight, liner or barrier requirements, label language and artwork responsibilities. Bulk and retail formats have different filling, labelling and order-quantity requirements. Shelf life, storage instructions and loading plans are confirmed for the product and packaging offered." },
+      { heading: "Testing, documentation and quotation", body: "Send the destination country, port and requested laboratory panel or inspection scope to our Hyderabad buyer desk. Testing provider availability, sample needs, charges and turnaround must be confirmed in the quotation. Company identifiers do not certify product quality, and a generic report cannot replace documentation for the agreed batch." },
+    ],
+  },
+  {
     slug: "agricultural-exporter-hyderabad-telangana",
+    relatedGuides: [{ title: "Indian spice exports", href: "/export/spice-exporters-from-india" }, { title: "Spice powders for your market", href: "/export/spice-powder-exporter-india" }, { title: "Verify GOPU Exports", href: "/company-verification" }],
     title: "Agricultural Exporter in Hyderabad, Telangana",
     eyebrow: "Hyderabad head office · International B2B exports",
     description: "GOPU Exports is an agricultural export company in Hyderabad, Telangana, supplying Indian spices, turmeric, rice and millets to international buyers.",
@@ -54,6 +72,8 @@ export const CATEGORY_LANDING_PAGES: CategoryLandingPage[] = [
   },
   {
     slug: "spice-exporters-from-india",
+    relatedProducts: [{ title: "Red Chilli", slug: "red-chilli" }, { title: "Turmeric", slug: "turmeric-powder" }, { title: "Chilli Powder", slug: "red-chilli-powder" }],
+    relatedGuides: [{ title: "Spice powders and blends", href: "/export/spice-powder-exporter-india" }, { title: "Our Hyderabad export office", href: "/export/agricultural-exporter-hyderabad-telangana" }],
     title: "Spice Exporters from India",
     eyebrow: "Indian Spice Supply",
     productCategory: "Spices",
@@ -102,24 +122,24 @@ export const CATEGORY_LANDING_PAGES: CategoryLandingPage[] = [
   },
   {
     slug: "apeda-products-exporters-india",
-    title: "APEDA Products Exporters India",
+    title: "Agricultural Product Categories: APEDA Buyer Guide",
     eyebrow: "APEDA Category Products",
     description: "Indian agricultural and processed food export categories: product selection and documentation information for international buyers.",
     keywords: ["APEDA products exporters India", "APEDA product catalogue", "Indian agri product exporters"],
     sections: [
       { heading: "APEDA product category alignment", body: "APEDA official categories include fruits and vegetables and their products, cereal and cereal products, groundnuts and nuts, pickles, papads and chutneys, guar gum, herbal and medicinal plants, floriculture, and other processed food categories." },
-      { heading: "Buyer-ready enquiries", body: "Use APEDA categories as a starting point, then provide product-specific details such as variety, grade, packing, quantity, destination, and document checklist." },
+      { heading: "Buyer-ready enquiries", body: "This is a product category guide, not a claim that GOPU Exports holds APEDA registration. Verify any registration needed for the proposed order separately. Use APEDA categories as a starting point, then provide product-specific details such as variety, grade, packing, quantity, destination, and document checklist." },
     ],
   },
   {
     slug: "spice-board-products-exporters-india",
-    title: "Spice Board Products Exporters India",
+    title: "Indian Spice Categories: Buyer Guide",
     eyebrow: "Spice Board Product Scope",
     productCategory: "Spices",
     description: "Import Indian spice products with specification-led discussions for global importers, processors, and private label buyers.",
     keywords: ["Spice Board products exporters India", "Spices Board India products", "Indian spice suppliers"],
     sections: [
-      { heading: "Spice product scope", body: "Spices Board India references a wide spice scope including chilli, turmeric, pepper, cumin, coriander, cardamom, ginger, fennel, fenugreek, cinnamon, clove, nutmeg, mace, and other spice products." },
+      { heading: "Spice product scope", body: "This guide does not claim that GOPU Exports holds Spices Board registration or product certification. Confirm applicable registrations and shipment documents before ordering. Spices Board India references a wide spice scope including chilli, turmeric, pepper, cumin, coriander, cardamom, ginger, fennel, fenugreek, cinnamon, clove, nutmeg, mace, and other spice products." },
       { heading: "Trade-ready spice quotes", body: "A professional spice quote should include grade, form, quality values, packing, quantity, destination, and testing requirements where applicable." },
     ],
   },
