@@ -421,7 +421,7 @@ export default async function ProductDetailsPage({ params }: Props) {
             </div>
 
             <div className="rounded-2xl border border-[#D9E2EC] bg-[#F8FAFC] p-5">
-              <p className="text-[13px] font-black uppercase tracking-[0.16em] text-[#0E7490]">Procurement checklist</p>
+              <p className="text-[13px] font-black uppercase tracking-[0.16em] text-[#0E7490]">Export Enquiry Checklist</p>
               <div className="mt-4 grid gap-3">
                 {[
                   "Product grade or variety",
