@@ -33,6 +33,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid event" }, { status: 400 });
   }
 
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return NextResponse.json({ success: false, disabled: true }, { status: 202 });
+  }
+
   const supabase = createPublicClient();
   const country = cleanText(req.headers.get("x-vercel-ip-country"), 4);
   const city = cleanText(req.headers.get("x-vercel-ip-city"), 120);

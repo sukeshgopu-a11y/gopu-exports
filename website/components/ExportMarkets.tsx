@@ -24,22 +24,21 @@ export default function ExportMarkets() {
 
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#0E7490]">
 
-                Global Export Markets
+                Markets We Support
 
               </p>
 
               <h2 className="mt-5 text-5xl font-black leading-tight tracking-tight text-[#0F172A]">
 
-                Serving Buyers Across International Trade Regions
+                Supporting Buyer Enquiries Across International Trade Regions
 
               </h2>
 
               <p className="mt-6 text-lg leading-9 text-[#64748B]">
 
-                GOPU Exports focuses on supplying
-                agricultural commodities to growing
-                international markets with reliable
-                export coordination and buyer support.
+                These regions represent buyer enquiry destinations. Product
+                availability, documentation and shipment feasibility are
+                confirmed for each order and destination.
 
               </p>
 

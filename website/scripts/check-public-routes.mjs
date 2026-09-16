@@ -28,5 +28,7 @@ const redirect=await fetch(base+'/resources/inquiry-procurement-support',{redire
 for(const path of links){if(routes.includes(path))continue;const r=await fetch(base+path);assert(r.status<400,'Broken internal link '+path);}
 const products=await (await fetch(base+'/api/products')).json();assert(products.length>0);for(const p of products)assert.doesNotMatch(JSON.stringify(p),/\b(sourcing|procurement)\b/i);
 const unknown=await fetch(base+'/products/not-a-real-product'); const unknownHtml = await unknown.text(); assert(unknown.status === 404 || (unknown.status === 200 && /name="robots" content="noindex"/.test(unknownHtml)), 'Unknown product must be 404 or streamed noindex');
+const robotsResponse=await fetch(base+'/robots.txt'); const robots=await robotsResponse.text(); assert.equal(robotsResponse.status,200); assert.match(robots,/Allow: \/(?:\r?\n|$)/); assert.match(robots,/Disallow: \/admin/); assert.match(robots,/Disallow: \/dashboard/); assert.match(robots,/Disallow: \/api/); assert.match(robots,/Sitemap: https:\/\/gopuexports\.com\/sitemap\.xml/);
+results.sort((a,b)=>a.path.localeCompare(b.path));
 fs.writeFileSync('docs/audit/route-check.json',JSON.stringify({base,routes:results,internalLinks:links.size,redirect:308,publicProducts:products.length,unknownProduct:unknown.status,unknownProductNoindex:unknownHtml.includes('content="noindex"')},null,2));
-console.log(`PASS: ${results.length} sitemap routes, ${links.size} internal paths, metadata/schema/identity, public products, 308 redirect and unknown-product noindex.`);
+console.log(`PASS: ${results.length} sitemap routes, ${links.size} internal paths, metadata/schema/identity, robots, public products, 308 redirect and unknown-product noindex.`);

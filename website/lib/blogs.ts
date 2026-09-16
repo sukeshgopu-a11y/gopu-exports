@@ -276,7 +276,7 @@ export const DEFAULT_BLOGS: BlogPost[] = [
     faqs: [
       { question: "Does APEDA cover rice?", answer: "APEDA covers cereal and cereal products, and basmati rice is separately included in APEDA’s statutory scope." },
       { question: "Are APEDA categories the same as import permissions?", answer: "No. APEDA categories help classify Indian export products. Import permissions and documents depend on the destination country." },
-      { question: "Can buyers ask for unlisted APEDA products?", answer: "Yes. Buyers can submit a additional export products enquiry with product details, quantity, destination, and documents required." },
+      { question: "Can buyers ask for unlisted APEDA products?", answer: "Yes. Buyers can submit an enquiry for additional export products with product details, quantity, destination, and documents required." },
     ],
   }),
   post({
@@ -606,4 +606,3 @@ export const DEFAULT_BLOGS: BlogPost[] = [
 export function getDefaultBlogBySlug(slug: string) {
   return DEFAULT_BLOGS.find((post) => post.slug === slug && post.published) ?? null;
 }
-

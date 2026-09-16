@@ -20,10 +20,10 @@
       ]
     },
     {
-      "path": "/markets",
+      "path": "/blog",
       "status": 200,
-      "title": "Indian Food Exports for International Buyers | GOPU Exports",
-      "canonical": "https://gopuexports.com/markets",
+      "title": "Indian Agricultural Export Insights for Buyers | GOPU Exports",
+      "canonical": "https://gopuexports.com/blog",
       "schemas": [
         "Organization"
       ]
@@ -33,15 +33,6 @@
       "status": 200,
       "title": "Company Identifiers &amp; Export Documents | GOPU Exports",
       "canonical": "https://gopuexports.com/certifications",
-      "schemas": [
-        "Organization"
-      ]
-    },
-    {
-      "path": "/products",
-      "status": 200,
-      "title": "Indian Agricultural Export Products | GOPU Exports",
-      "canonical": "https://gopuexports.com/products",
       "schemas": [
         "Organization"
       ]
@@ -65,55 +56,10 @@
       ]
     },
     {
-      "path": "/blog",
+      "path": "/cookie-policy",
       "status": 200,
-      "title": "Indian Agricultural Export Insights for Buyers | GOPU Exports",
-      "canonical": "https://gopuexports.com/blog",
-      "schemas": [
-        "Organization"
-      ]
-    },
-    {
-      "path": "/privacy-policy",
-      "status": 200,
-      "title": "Privacy Policy | GOPU Exports",
-      "canonical": "https://gopuexports.com/privacy-policy",
-      "schemas": [
-        "Organization"
-      ]
-    },
-    {
-      "path": "/terms-and-conditions",
-      "status": 200,
-      "title": "Terms &amp; Conditions | GOPU Exports",
-      "canonical": "https://gopuexports.com/terms-and-conditions",
-      "schemas": [
-        "Organization"
-      ]
-    },
-    {
-      "path": "/gallery",
-      "status": 200,
-      "title": "GOPU Exports Product &amp; Operations Gallery | GOPU Exports",
-      "canonical": "https://gopuexports.com/gallery",
-      "schemas": [
-        "Organization"
-      ]
-    },
-    {
-      "path": "/resources",
-      "status": 200,
-      "title": "Export Guides, Markets &amp; Insights for Importers | GOPU Exports",
-      "canonical": "https://gopuexports.com/resources",
-      "schemas": [
-        "Organization"
-      ]
-    },
-    {
-      "path": "/shipping-policy",
-      "status": 200,
-      "title": "Shipping Policy | GOPU Exports",
-      "canonical": "https://gopuexports.com/shipping-policy",
+      "title": "Cookie Policy | GOPU Exports",
+      "canonical": "https://gopuexports.com/cookie-policy",
       "schemas": [
         "Organization"
       ]
@@ -129,25 +75,6 @@
       ]
     },
     {
-      "path": "/export/spice-powder-exporter-india",
-      "status": 200,
-      "title": "Spice Powder Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/export/spice-powder-exporter-india",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList"
-      ]
-    },
-    {
-      "path": "/cookie-policy",
-      "status": 200,
-      "title": "Cookie Policy | GOPU Exports",
-      "canonical": "https://gopuexports.com/cookie-policy",
-      "schemas": [
-        "Organization"
-      ]
-    },
-    {
       "path": "/export/andhra-pradesh-chilli-rice-exports",
       "status": 200,
       "title": "Andhra Pradesh Chilli &amp; Rice Exports | GOPU Exports",
@@ -158,10 +85,30 @@
       ]
     },
     {
-      "path": "/export/rice-exporters-from-india",
+      "path": "/export/apeda-products-exporters-india",
       "status": 200,
-      "title": "Rice Exporters from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/export/rice-exporters-from-india",
+      "title": "Agricultural Product Categories: APEDA Buyer Guide | GOPU Exports",
+      "canonical": "https://gopuexports.com/export/apeda-products-exporters-india",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/export/fresh-vegetables-exporters-india",
+      "status": 200,
+      "title": "Fresh Vegetables Exporters India | GOPU Exports",
+      "canonical": "https://gopuexports.com/export/fresh-vegetables-exporters-india",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/export/indian-agricultural-products-exporters",
+      "status": 200,
+      "title": "Indian Agricultural Products Exporters | GOPU Exports",
+      "canonical": "https://gopuexports.com/export/indian-agricultural-products-exporters",
       "schemas": [
         "Organization",
         "BreadcrumbList"
@@ -178,10 +125,10 @@
       ]
     },
     {
-      "path": "/export/fresh-vegetables-exporters-india",
+      "path": "/export/rice-exporters-from-india",
       "status": 200,
-      "title": "Fresh Vegetables Exporters India | GOPU Exports",
-      "canonical": "https://gopuexports.com/export/fresh-vegetables-exporters-india",
+      "title": "Rice Exporters from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/export/rice-exporters-from-india",
       "schemas": [
         "Organization",
         "BreadcrumbList"
@@ -208,156 +155,49 @@
       ]
     },
     {
-      "path": "/export/indian-agricultural-products-exporters",
+      "path": "/export/spice-powder-exporter-india",
       "status": 200,
-      "title": "Indian Agricultural Products Exporters | GOPU Exports",
-      "canonical": "https://gopuexports.com/export/indian-agricultural-products-exporters",
+      "title": "Spice Powder Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/export/spice-powder-exporter-india",
       "schemas": [
         "Organization",
         "BreadcrumbList"
       ]
     },
     {
-      "path": "/export/apeda-products-exporters-india",
+      "path": "/gallery",
       "status": 200,
-      "title": "Agricultural Product Categories: APEDA Buyer Guide | GOPU Exports",
-      "canonical": "https://gopuexports.com/export/apeda-products-exporters-india",
+      "title": "GOPU Exports Product &amp; Operations Gallery | GOPU Exports",
+      "canonical": "https://gopuexports.com/gallery",
       "schemas": [
-        "Organization",
-        "BreadcrumbList"
+        "Organization"
       ]
     },
     {
-      "path": "/resources/packaging-standards",
+      "path": "/markets",
       "status": 200,
-      "title": "Packaging Standards | Export Buyer Resources | GOPU Exports",
-      "canonical": "https://gopuexports.com/resources/packaging-standards",
+      "title": "Indian Food Exports for International Buyers | GOPU Exports",
+      "canonical": "https://gopuexports.com/markets",
       "schemas": [
-        "Organization",
-        "FAQPage"
+        "Organization"
       ]
     },
     {
-      "path": "/resources/quality-control",
+      "path": "/privacy-policy",
       "status": 200,
-      "title": "Quality Control | Export Buyer Resources | GOPU Exports",
-      "canonical": "https://gopuexports.com/resources/quality-control",
+      "title": "Privacy Policy | GOPU Exports",
+      "canonical": "https://gopuexports.com/privacy-policy",
       "schemas": [
-        "Organization",
-        "FAQPage"
+        "Organization"
       ]
     },
     {
-      "path": "/resources/export-process",
+      "path": "/products",
       "status": 200,
-      "title": "Export Process | Export Buyer Resources | GOPU Exports",
-      "canonical": "https://gopuexports.com/resources/export-process",
+      "title": "Indian Agricultural Export Products | GOPU Exports",
+      "canonical": "https://gopuexports.com/products",
       "schemas": [
-        "Organization",
-        "FAQPage"
-      ]
-    },
-    {
-      "path": "/resources/documentation-support",
-      "status": 200,
-      "title": "Documentation Support | Export Buyer Resources | GOPU Exports",
-      "canonical": "https://gopuexports.com/resources/documentation-support",
-      "schemas": [
-        "Organization",
-        "FAQPage"
-      ]
-    },
-    {
-      "path": "/resources/logistics-shipping",
-      "status": 200,
-      "title": "Logistics &amp; Shipping | Export Buyer Resources | GOPU Exports",
-      "canonical": "https://gopuexports.com/resources/logistics-shipping",
-      "schemas": [
-        "Organization",
-        "FAQPage"
-      ]
-    },
-    {
-      "path": "/resources/buyer-faq",
-      "status": 200,
-      "title": "Buyer FAQ | Export Buyer Resources | GOPU Exports",
-      "canonical": "https://gopuexports.com/resources/buyer-faq",
-      "schemas": [
-        "Organization",
-        "FAQPage"
-      ]
-    },
-    {
-      "path": "/resources/export-enquiry-support",
-      "status": 200,
-      "title": "Export Enquiry Support | Export Buyer Resources | GOPU Exports",
-      "canonical": "https://gopuexports.com/resources/export-enquiry-support",
-      "schemas": [
-        "Organization",
-        "FAQPage"
-      ]
-    },
-    {
-      "path": "/resources/private-label-services",
-      "status": 200,
-      "title": "Private Label Services | Export Buyer Resources | GOPU Exports",
-      "canonical": "https://gopuexports.com/resources/private-label-services",
-      "schemas": [
-        "Organization",
-        "FAQPage"
-      ]
-    },
-    {
-      "path": "/resources/bulk-orders",
-      "status": 200,
-      "title": "Bulk Orders | Export Buyer Resources | GOPU Exports",
-      "canonical": "https://gopuexports.com/resources/bulk-orders",
-      "schemas": [
-        "Organization",
-        "FAQPage"
-      ]
-    },
-    {
-      "path": "/resources/global-supply-network",
-      "status": 200,
-      "title": "Indian Export Supply Chain | Export Buyer Resources | GOPU Exports",
-      "canonical": "https://gopuexports.com/resources/global-supply-network",
-      "schemas": [
-        "Organization",
-        "FAQPage"
-      ]
-    },
-    {
-      "path": "/products/turmeric-fingers",
-      "status": 200,
-      "title": "Turmeric Fingers Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/turmeric-fingers",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/pomegranate",
-      "status": 200,
-      "title": "Pomegranate Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/pomegranate",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/mango",
-      "status": 200,
-      "title": "Alphonso Mango Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/mango",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
+        "Organization"
       ]
     },
     {
@@ -365,237 +205,6 @@
       "status": 200,
       "title": "Banana (Cavendish) Exporter from India | GOPU Exports",
       "canonical": "https://gopuexports.com/products/banana",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/basmati-rice",
-      "status": 200,
-      "title": "Basmati Rice Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/basmati-rice",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/fennel-seeds",
-      "status": 200,
-      "title": "Fennel Seeds Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/fennel-seeds",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/cinnamon",
-      "status": 200,
-      "title": "Cinnamon (Dalchini) Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/cinnamon",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/non-basmati-rice",
-      "status": 200,
-      "title": "Non-Basmati Rice Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/non-basmati-rice",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/cloves",
-      "status": 200,
-      "title": "Cloves Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/cloves",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/turmeric-powder",
-      "status": 200,
-      "title": "Turmeric Powder Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/turmeric-powder",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/red-chilli",
-      "status": 200,
-      "title": "Red Chilli (Whole) Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/red-chilli",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/cumin-seeds",
-      "status": 200,
-      "title": "Cumin Seeds Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/cumin-seeds",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/black-pepper",
-      "status": 200,
-      "title": "Black Pepper Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/black-pepper",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/coriander-seeds",
-      "status": 200,
-      "title": "Coriander Seeds Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/coriander-seeds",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/toor-dal",
-      "status": 200,
-      "title": "Toor Dal Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/toor-dal",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/pearl-millet",
-      "status": 200,
-      "title": "Pearl Millet Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/pearl-millet",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/finger-millet",
-      "status": 200,
-      "title": "Finger Millet Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/finger-millet",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/moong-dal",
-      "status": 200,
-      "title": "Moong Dal Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/moong-dal",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/chickpeas",
-      "status": 200,
-      "title": "Chickpeas Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/chickpeas",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/green-cardamom",
-      "status": 200,
-      "title": "Green Cardamom Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/green-cardamom",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/sesame-seeds",
-      "status": 200,
-      "title": "Sesame Seeds Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/sesame-seeds",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/ginger-powder",
-      "status": 200,
-      "title": "Ginger Powder Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/ginger-powder",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/garam-masala",
-      "status": 200,
-      "title": "Garam Masala Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/garam-masala",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/mustard-seeds",
-      "status": 200,
-      "title": "Mustard Seeds Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/mustard-seeds",
-      "schemas": [
-        "Organization",
-        "BreadcrumbList",
-        "Product"
-      ]
-    },
-    {
-      "path": "/products/dehydrated-onion-flakes",
-      "status": 200,
-      "title": "Dehydrated Onion Flakes Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/dehydrated-onion-flakes",
       "schemas": [
         "Organization",
         "BreadcrumbList",
@@ -614,10 +223,10 @@
       ]
     },
     {
-      "path": "/products/sona-masoori-rice",
+      "path": "/products/basmati-rice",
       "status": 200,
-      "title": "Sona Masoori Rice Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/sona-masoori-rice",
+      "title": "Basmati Rice Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/basmati-rice",
       "schemas": [
         "Organization",
         "BreadcrumbList",
@@ -625,10 +234,10 @@
       ]
     },
     {
-      "path": "/products/foxtail-millet",
+      "path": "/products/black-pepper",
       "status": 200,
-      "title": "Foxtail Millet Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/foxtail-millet",
+      "title": "Black Pepper Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/black-pepper",
       "schemas": [
         "Organization",
         "BreadcrumbList",
@@ -636,10 +245,10 @@
       ]
     },
     {
-      "path": "/products/curry-powder",
+      "path": "/products/cashew-kernels",
       "status": 200,
-      "title": "Curry Powder Blend Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/curry-powder",
+      "title": "Cashew Kernels Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/cashew-kernels",
       "schemas": [
         "Organization",
         "BreadcrumbList",
@@ -647,10 +256,32 @@
       ]
     },
     {
-      "path": "/products/red-chilli-powder",
+      "path": "/products/chickpeas",
       "status": 200,
-      "title": "Red Chilli Powder Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/red-chilli-powder",
+      "title": "Chickpeas Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/chickpeas",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/cinnamon",
+      "status": 200,
+      "title": "Cinnamon (Dalchini) Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/cinnamon",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/cloves",
+      "status": 200,
+      "title": "Cloves Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/cloves",
       "schemas": [
         "Organization",
         "BreadcrumbList",
@@ -669,10 +300,10 @@
       ]
     },
     {
-      "path": "/products/garlic-powder",
+      "path": "/products/coriander-seeds",
       "status": 200,
-      "title": "Garlic Powder Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/garlic-powder",
+      "title": "Coriander Seeds Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/coriander-seeds",
       "schemas": [
         "Organization",
         "BreadcrumbList",
@@ -680,10 +311,65 @@
       ]
     },
     {
-      "path": "/products/fresh-tomato",
+      "path": "/products/cumin-seeds",
       "status": 200,
-      "title": "Fresh Tomato Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/fresh-tomato",
+      "title": "Cumin Seeds Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/cumin-seeds",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/curry-powder",
+      "status": 200,
+      "title": "Curry Powder Blend Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/curry-powder",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/dehydrated-onion-flakes",
+      "status": 200,
+      "title": "Dehydrated Onion Flakes Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/dehydrated-onion-flakes",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/fennel-seeds",
+      "status": 200,
+      "title": "Fennel Seeds Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/fennel-seeds",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/finger-millet",
+      "status": 200,
+      "title": "Finger Millet Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/finger-millet",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/foxtail-millet",
+      "status": 200,
+      "title": "Foxtail Millet Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/foxtail-millet",
       "schemas": [
         "Organization",
         "BreadcrumbList",
@@ -713,10 +399,10 @@
       ]
     },
     {
-      "path": "/products/okra-ladies-finger",
+      "path": "/products/fresh-tomato",
       "status": 200,
-      "title": "Okra (Ladies Finger) Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/okra-ladies-finger",
+      "title": "Fresh Tomato Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/fresh-tomato",
       "schemas": [
         "Organization",
         "BreadcrumbList",
@@ -724,10 +410,43 @@
       ]
     },
     {
-      "path": "/products/groundnut-kernels",
+      "path": "/products/garam-masala",
       "status": 200,
-      "title": "Groundnut Kernels Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/groundnut-kernels",
+      "title": "Garam Masala Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/garam-masala",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/garlic-powder",
+      "status": 200,
+      "title": "Garlic Powder Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/garlic-powder",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/ginger-powder",
+      "status": 200,
+      "title": "Ginger Powder Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/ginger-powder",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/green-cardamom",
+      "status": 200,
+      "title": "Green Cardamom Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/green-cardamom",
       "schemas": [
         "Organization",
         "BreadcrumbList",
@@ -746,10 +465,10 @@
       ]
     },
     {
-      "path": "/products/cashew-kernels",
+      "path": "/products/groundnut-kernels",
       "status": 200,
-      "title": "Cashew Kernels Exporter from India | GOPU Exports",
-      "canonical": "https://gopuexports.com/products/cashew-kernels",
+      "title": "Groundnut Kernels Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/groundnut-kernels",
       "schemas": [
         "Organization",
         "BreadcrumbList",
@@ -768,6 +487,61 @@
       ]
     },
     {
+      "path": "/products/mango",
+      "status": 200,
+      "title": "Alphonso Mango Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/mango",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/moong-dal",
+      "status": 200,
+      "title": "Moong Dal Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/moong-dal",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/mustard-seeds",
+      "status": 200,
+      "title": "Mustard Seeds Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/mustard-seeds",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/non-basmati-rice",
+      "status": 200,
+      "title": "Non-Basmati Rice Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/non-basmati-rice",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/okra-ladies-finger",
+      "status": 200,
+      "title": "Okra (Ladies Finger) Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/okra-ladies-finger",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
       "path": "/products/onion",
       "status": 200,
       "title": "Red Onion Exporter from India | GOPU Exports",
@@ -776,6 +550,232 @@
         "Organization",
         "BreadcrumbList",
         "Product"
+      ]
+    },
+    {
+      "path": "/products/pearl-millet",
+      "status": 200,
+      "title": "Pearl Millet Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/pearl-millet",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/pomegranate",
+      "status": 200,
+      "title": "Pomegranate Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/pomegranate",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/red-chilli",
+      "status": 200,
+      "title": "Red Chilli (Whole) Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/red-chilli",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/red-chilli-powder",
+      "status": 200,
+      "title": "Red Chilli Powder Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/red-chilli-powder",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/sesame-seeds",
+      "status": 200,
+      "title": "Sesame Seeds Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/sesame-seeds",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/sona-masoori-rice",
+      "status": 200,
+      "title": "Sona Masoori Rice Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/sona-masoori-rice",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/toor-dal",
+      "status": 200,
+      "title": "Toor Dal Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/toor-dal",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/turmeric-fingers",
+      "status": 200,
+      "title": "Turmeric Fingers Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/turmeric-fingers",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/products/turmeric-powder",
+      "status": 200,
+      "title": "Turmeric Powder Exporter from India | GOPU Exports",
+      "canonical": "https://gopuexports.com/products/turmeric-powder",
+      "schemas": [
+        "Organization",
+        "BreadcrumbList",
+        "Product"
+      ]
+    },
+    {
+      "path": "/resources",
+      "status": 200,
+      "title": "Export Guides, Markets &amp; Insights for Importers | GOPU Exports",
+      "canonical": "https://gopuexports.com/resources",
+      "schemas": [
+        "Organization"
+      ]
+    },
+    {
+      "path": "/resources/bulk-orders",
+      "status": 200,
+      "title": "Bulk Orders | Export Buyer Resources | GOPU Exports",
+      "canonical": "https://gopuexports.com/resources/bulk-orders",
+      "schemas": [
+        "Organization",
+        "FAQPage"
+      ]
+    },
+    {
+      "path": "/resources/buyer-faq",
+      "status": 200,
+      "title": "Buyer FAQ | Export Buyer Resources | GOPU Exports",
+      "canonical": "https://gopuexports.com/resources/buyer-faq",
+      "schemas": [
+        "Organization",
+        "FAQPage"
+      ]
+    },
+    {
+      "path": "/resources/documentation-support",
+      "status": 200,
+      "title": "Documentation Support | Export Buyer Resources | GOPU Exports",
+      "canonical": "https://gopuexports.com/resources/documentation-support",
+      "schemas": [
+        "Organization",
+        "FAQPage"
+      ]
+    },
+    {
+      "path": "/resources/export-enquiry-support",
+      "status": 200,
+      "title": "Export Enquiry Support | Export Buyer Resources | GOPU Exports",
+      "canonical": "https://gopuexports.com/resources/export-enquiry-support",
+      "schemas": [
+        "Organization",
+        "FAQPage"
+      ]
+    },
+    {
+      "path": "/resources/export-process",
+      "status": 200,
+      "title": "Export Process | Export Buyer Resources | GOPU Exports",
+      "canonical": "https://gopuexports.com/resources/export-process",
+      "schemas": [
+        "Organization",
+        "FAQPage"
+      ]
+    },
+    {
+      "path": "/resources/global-supply-network",
+      "status": 200,
+      "title": "Indian Export Supply Chain | Export Buyer Resources | GOPU Exports",
+      "canonical": "https://gopuexports.com/resources/global-supply-network",
+      "schemas": [
+        "Organization",
+        "FAQPage"
+      ]
+    },
+    {
+      "path": "/resources/logistics-shipping",
+      "status": 200,
+      "title": "Logistics &amp; Shipping | Export Buyer Resources | GOPU Exports",
+      "canonical": "https://gopuexports.com/resources/logistics-shipping",
+      "schemas": [
+        "Organization",
+        "FAQPage"
+      ]
+    },
+    {
+      "path": "/resources/packaging-standards",
+      "status": 200,
+      "title": "Packaging Standards | Export Buyer Resources | GOPU Exports",
+      "canonical": "https://gopuexports.com/resources/packaging-standards",
+      "schemas": [
+        "Organization",
+        "FAQPage"
+      ]
+    },
+    {
+      "path": "/resources/private-label-services",
+      "status": 200,
+      "title": "Private Label Services | Export Buyer Resources | GOPU Exports",
+      "canonical": "https://gopuexports.com/resources/private-label-services",
+      "schemas": [
+        "Organization",
+        "FAQPage"
+      ]
+    },
+    {
+      "path": "/resources/quality-control",
+      "status": 200,
+      "title": "Quality Control | Export Buyer Resources | GOPU Exports",
+      "canonical": "https://gopuexports.com/resources/quality-control",
+      "schemas": [
+        "Organization",
+        "FAQPage"
+      ]
+    },
+    {
+      "path": "/shipping-policy",
+      "status": 200,
+      "title": "Shipping Policy | GOPU Exports",
+      "canonical": "https://gopuexports.com/shipping-policy",
+      "schemas": [
+        "Organization"
+      ]
+    },
+    {
+      "path": "/terms-and-conditions",
+      "status": 200,
+      "title": "Terms &amp; Conditions | GOPU Exports",
+      "canonical": "https://gopuexports.com/terms-and-conditions",
+      "schemas": [
+        "Organization"
       ]
     }
   ],

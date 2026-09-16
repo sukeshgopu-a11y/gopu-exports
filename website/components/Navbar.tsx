@@ -21,7 +21,7 @@ const MAIN_LINKS = [
 const RESOURCE_LINKS = [
   { label: "All resources", href: "/resources", description: "Start here for buyer information" },
   { label: "Export guides", href: "/resources#export-guides", description: "Orders, packing and documentation" },
-  { label: "Export markets", href: "/markets", description: "Explore international destinations" },
+  { label: "Markets we support", href: "/markets", description: "Explore international destinations" },
   { label: "Insights", href: "/blog", description: "Articles for international buyers" },
 ];
 
@@ -234,4 +234,3 @@ export default function Navbar() {
     </header>
   );
 }
-
