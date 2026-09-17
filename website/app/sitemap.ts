@@ -9,6 +9,13 @@ import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
 const BASE_URL = "https://gopuexports.com";
 // Date of this reviewed content revision; never generated from request time.
 const CONTENT_REVISED = "2026-09-16";
+const STATIC_LAST_MODIFIED: Record<string, string> = {
+  "": "2026-09-17",
+  "/about": CONTENT_REVISED,
+  "/products": CONTENT_REVISED,
+  "/company-verification": CONTENT_REVISED,
+  "/contact": CONTENT_REVISED,
+};
 
 export const revalidate = 30;
 
@@ -30,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/shipping-policy",
   ].map((path) => ({
     url: `${BASE_URL}${path}`,
-
+    lastModified: STATIC_LAST_MODIFIED[path],
     changeFrequency: path === "" ? "weekly" : "monthly",
     priority: path === "" ? 1 : 0.7,
   }));
