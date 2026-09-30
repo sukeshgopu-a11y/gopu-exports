@@ -7,24 +7,32 @@ import {
   DEFAULT_BLOG_IMAGE,
   getPublicBlogPostBySlug,
 } from "@/lib/blogStore";
+import { serializeJsonLd } from "@/lib/jsonLd";
 
 export const revalidate = 30;
 
 type Props = { params: Promise<{ slug: string }> };
 
 async function getPost(slug: string) {
-  try {
-    return { post: await getPublicBlogPostBySlug(slug), error: "" };
-  } catch (error) {
-    console.error("Public blog detail failed", error);
-    return { post: null, error: "This article is temporarily unavailable. Please try again shortly." };
-  }
+  return getPublicBlogPostBySlug(slug);
+}
+
+function publicationDate(post: { publishedAt?: string; createdAt: string }) {
+  return post.publishedAt || post.createdAt;
+}
+
+function formatPublicationDate(value: string) {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(value));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const { post, error } = await getPost(slug);
-  if (error) return { title: "Article Unavailable" };
+  const post = await getPost(slug);
   if (!post) notFound();
 
   const title = (post.metaTitle || post.title).replace(/\s*\|\s*GOPU Exports\s*$/i, "");
@@ -37,25 +45,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function BlogErrorState({ message }: { message: string }) {
-  return (
-    <main className="min-h-screen bg-[#F5F7FA] px-6 py-16 text-[#0F172A] sm:px-8">
-      <div className="mx-auto max-w-3xl rounded-2xl border border-red-200 bg-white p-8 text-center text-red-700">
-        <h1 className="text-[28px] font-black tracking-[-0.03em]">Unable to load this article.</h1>
-        <p className="mt-3 text-[15px] leading-7">{message}</p>
-        <Link href="/blog" className="mt-6 inline-flex rounded-lg bg-[#0E7490] px-5 py-3 text-[13px] font-bold text-white">
-          Back to Insights
-        </Link>
-      </div>
-    </main>
-  );
-}
-
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const { post, error } = await getPost(slug);
-  if (error) return <BlogErrorState message={error} />;
+  const post = await getPost(slug);
   if (!post) notFound();
+
+  const publishedAt = publicationDate(post);
 
   const paragraphs = (post.content || post.excerpt || "")
     .split(/\n{2,}/)
@@ -68,16 +63,18 @@ export default async function BlogPostPage({ params }: Props) {
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: serializeJsonLd({
             "@context": "https://schema.org",
             "@type": "BlogPosting",
             headline: post.title,
             description: post.metaDescription || post.excerpt,
-            author: { "@type": "Organization", name: post.author || "GOPU Exports" },
-            publisher: { "@type": "Organization", name: "GOPU Exports" },
+            author: post.author && post.author !== "GOPU Exports"
+              ? { "@type": "Person", name: post.author }
+              : { "@id": "https://gopuexports.com/#organization" },
+            publisher: { "@id": "https://gopuexports.com/#organization" },
             image: post.image || DEFAULT_BLOG_IMAGE,
-            datePublished: post.createdAt,
-            dateModified: post.updatedAt || post.createdAt,
+            datePublished: publishedAt,
+            dateModified: post.updatedAt || publishedAt,
             mainEntityOfPage: `https://gopuexports.com/blog/${post.slug}`,
             mainEntity: post.faqs?.length
               ? post.faqs.map((faq) => ({
@@ -94,7 +91,7 @@ export default async function BlogPostPage({ params }: Props) {
           BACK TO BLOG
         </Link>
         <p className="mt-6 text-[11px] font-black uppercase tracking-[0.22em] text-[#0E7490]">
-          {post.author || "GOPU Exports"} · {new Date(post.createdAt).toLocaleDateString()}
+          {post.author || "GOPU Exports"} · <time dateTime={publishedAt}>{formatPublicationDate(publishedAt)}</time>
         </p>
         <h1 className="mt-4 text-[42px] font-black leading-tight tracking-[-0.05em] lg:text-[58px]">
           {post.title}
