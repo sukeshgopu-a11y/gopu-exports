@@ -175,7 +175,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProduct(slug);
-  if (!product) return { title: "Product Not Found" };
+  if (!product) notFound();
   const title = product.metaTitle && /export|import/i.test(product.metaTitle)
     ? product.metaTitle.replace(/\s*\|\s*GOPU Exports\s*$/i, "")
     : `${product.title} Exporter from India`;
