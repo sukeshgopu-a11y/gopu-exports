@@ -1,9 +1,8 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { ArrowRight, Search, Star, X } from "lucide-react";
 import { formatCommercialMoq } from "@/lib/moq";
 
@@ -54,20 +53,12 @@ function sortCategories(a: string, b: string) {
   return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi) || a.localeCompare(b);
 }
 
-function CategoryFromUrl({ onChange }: { onChange: (category: string) => void }) {
-  const searchParams = useSearchParams();
-  const category = searchParams.get("category") || "All";
-  useEffect(() => { onChange(category); }, [category, onChange]);
-  return null;
-}
-
 export default function ProductsGrid({ initialProducts = [] }: { initialProducts?: Product[] }) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [loading, setLoading] = useState(initialProducts.length === 0);
   const [active, setActive] = useState("All");
   const [featuredOnly, setFeaturedOnly] = useState(false);
   const [query, setQuery] = useState("");
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (initialProducts.length > 0) return;
@@ -79,6 +70,51 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
   }, [initialProducts.length]);
 
   const categories = useMemo(() => ["All", ...Array.from(new Set(products.map((p) => p.category))).sort(sortCategories)], [products]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const syncFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      const requestedCategory = params.get("category") || "All";
+      setActive(categories.includes(requestedCategory) ? requestedCategory : "All");
+      setQuery(params.get("q") || "");
+      setFeaturedOnly(params.get("featured") === "1");
+    };
+
+    syncFromUrl();
+    window.addEventListener("popstate", syncFromUrl);
+    return () => window.removeEventListener("popstate", syncFromUrl);
+  }, [categories]);
+
+  function updateFilters(
+    next: { active?: string; query?: string; featuredOnly?: boolean },
+    historyMode: "push" | "replace" = "push",
+  ) {
+    const nextActive = next.active ?? active;
+    const nextQuery = next.query ?? query;
+    const nextFeaturedOnly = next.featuredOnly ?? featuredOnly;
+
+    setActive(nextActive);
+    setQuery(nextQuery);
+    setFeaturedOnly(nextFeaturedOnly);
+
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+
+    if (nextActive === "All") url.searchParams.delete("category");
+    else url.searchParams.set("category", nextActive);
+
+    if (nextQuery.trim()) url.searchParams.set("q", nextQuery.trim());
+    else url.searchParams.delete("q");
+
+    if (nextFeaturedOnly) url.searchParams.set("featured", "1");
+    else url.searchParams.delete("featured");
+
+    const target = `${url.pathname}${url.search}${url.hash}`;
+    if (historyMode === "replace") window.history.replaceState(null, "", target);
+    else window.history.pushState(null, "", target);
+  }
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
     return products.filter((p) => (
@@ -103,7 +139,6 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
 
   return (
     <div>
-      <Suspense fallback={null}><CategoryFromUrl onChange={setActive} /></Suspense>
       <div className="rounded-xl border border-[#D9E2EC] bg-white p-5 shadow-sm">
         <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
           <div className="relative max-w-xl">
@@ -112,19 +147,19 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
               type="search"
               aria-label="Search export products"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => updateFilters({ query: e.target.value }, "replace")}
               placeholder="Search products or origin…"
               className="w-full rounded-xl border border-[#D9E2EC] bg-[#F8FAFC] py-3 pl-10 pr-10 text-sm outline-none focus:border-[#0E7490] focus:ring-2 focus:ring-[#0E7490]/20"
             />
             {query && (
-              <button type="button" onClick={() => setQuery("")} aria-label="Clear product search" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#374151]">
+              <button type="button" onClick={() => updateFilters({ query: "" }, "replace")} aria-label="Clear product search" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#374151]">
                 <X size={14} />
               </button>
             )}
           </div>
           <button
             type="button"
-            onClick={() => setFeaturedOnly((value) => !value)}
+            onClick={() => updateFilters({ featuredOnly: !featuredOnly })}
             aria-pressed={featuredOnly}
             className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition ${featuredOnly ? "bg-amber-400 text-[#0F172A]" : "border border-[#D9E2EC] bg-white text-[#374151] hover:border-amber-400"}`}
           >
@@ -135,7 +170,7 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
 
         <select
           value={active}
-          onChange={(event) => setActive(event.target.value)}
+          onChange={(event) => updateFilters({ active: event.target.value })}
           className="mt-4 w-full rounded-xl border border-[#D9E2EC] bg-white px-4 py-3 text-sm font-bold text-[#374151] outline-none focus:border-[#0E7490] focus:ring-2 focus:ring-[#0E7490]/20 sm:hidden"
           aria-label="Filter products by category"
         >
@@ -149,7 +184,7 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
             <button
               key={cat}
               type="button"
-              onClick={() => setActive(cat)}
+              onClick={() => updateFilters({ active: cat })}
               aria-pressed={active === cat}
               className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-[13px] font-bold transition ${active === cat ? "bg-[#0E7490] text-white" : "border border-[#D9E2EC] bg-white text-[#374151] hover:border-[#0E7490] hover:text-[#0E7490]"}`}
             >
@@ -162,7 +197,7 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
       <div className="mt-5 flex items-center justify-between text-sm text-[#64748B]">
         <span role="status" aria-live="polite"><strong className="text-[#0F172A]">{filtered.length}</strong> export products{active !== "All" ? ` in ${active}` : ""}</span>
         {(query || active !== "All" || featuredOnly) && (
-          <button type="button" onClick={() => { setQuery(""); setActive("All"); setFeaturedOnly(false); }} className="font-bold text-[#0E7490]">
+          <button type="button" onClick={() => updateFilters({ query: "", active: "All", featuredOnly: false })} className="font-bold text-[#0E7490]">
             Clear filters
           </button>
         )}
@@ -175,8 +210,7 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
       ) : (
         <div className="mt-8 space-y-10">
           {grouped.map(({ category, products: categoryProducts }) => {
-            const visible = expanded[category] || query || active !== "All" || featuredOnly ? categoryProducts : categoryProducts.slice(0, 8);
-            const hasMore = categoryProducts.length > visible.length;
+            const visible = categoryProducts;
             return (
               <section key={category} className="scroll-mt-28">
                 <div className="mb-5 flex flex-col gap-3 border-b border-[#D9E2EC] pb-4 sm:flex-row sm:items-end sm:justify-between">
@@ -190,11 +224,6 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {visible.map((product) => <ProductCard key={product.slug} product={product} />)}
                 </div>
-                {hasMore && (
-                  <button type="button" onClick={() => setExpanded((prev) => ({ ...prev, [category]: true }))} className="mt-5 rounded-xl border border-[#D9E2EC] bg-white px-5 py-2.5 text-sm font-bold text-[#0E7490] transition hover:border-[#0E7490]">
-                    View more {category}
-                  </button>
-                )}
               </section>
             );
           })}
