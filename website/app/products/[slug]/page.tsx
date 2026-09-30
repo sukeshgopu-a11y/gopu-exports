@@ -9,6 +9,8 @@ import { productToApi, type ProductRow } from "@/src/lib/supabase/data";
 import { getProductBySlug, PRODUCTS } from "@/lib/products";
 import { formatCommercialMoq } from "@/lib/moq";
 import { cleanPublicProduct } from "@/lib/publicProductCopy";
+import { serializeJsonLd } from "@/lib/jsonLd";
+import { buildPublicSpecificationGroups } from "@/lib/publicSpecifications";
 
 export const revalidate = 300;
 
@@ -122,10 +124,10 @@ const getProduct = cache(async (slug: string): Promise<Product | null> => {
     .eq("slug", slug)
     .eq("is_active", true)
     .maybeSingle<ProductRow>();
-  if (error || !data) {
-    const fallback = getProductBySlug(slug);
-    return fallback ? cleanPublicProduct({ ...fallback, _id: fallback.slug } as Product) : null;
+  if (error) {
+    throw new Error(`Public product lookup failed for ${slug}: ${error.message}`);
   }
+  if (!data) return null;
   return cleanPublicProduct(productToApi(data) as Product);
 });
 
@@ -150,29 +152,30 @@ const getRelated = cache(async (slugs: string[]): Promise<Product[]> => {
 });
 
 export async function generateStaticParams() {
-  const slugs = new Set<string>();
-  PRODUCTS.forEach((product) => slugs.add(product.slug));
-
-  if (hasPublicSupabaseConfig()) {
-    const supabase = createPublicClient();
-    const { data } = await supabase
-      .from("products")
-      .select("slug")
-      .eq("is_active", true)
-      .returns<Array<{ slug: string }>>();
-
-    (data ?? []).forEach((product) => {
-      if (product.slug) slugs.add(product.slug);
-    });
+  if (!hasPublicSupabaseConfig()) {
+    return PRODUCTS.map((product) => ({ slug: product.slug }));
   }
 
-  return Array.from(slugs).map((slug) => ({ slug }));
+  const supabase = createPublicClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select("slug")
+    .eq("is_active", true)
+    .returns<Array<{ slug: string }>>();
+
+  if (error) {
+    throw new Error(`Could not generate active product routes: ${error.message}`);
+  }
+
+  return (data ?? [])
+    .filter((product) => Boolean(product.slug))
+    .map((product) => ({ slug: product.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProduct(slug);
-  if (!product) return { title: "Product Not Found" };
+  if (!product) return { title: "Product Not Found", robots: { index: false, follow: false } };
   const title = product.metaTitle && /export|import/i.test(product.metaTitle)
     ? product.metaTitle.replace(/\s*\|\s*GOPU Exports\s*$/i, "")
     : `${product.title} Exporter from India`;
@@ -210,7 +213,15 @@ export default async function ProductDetailsPage({ params }: Props) {
   const exportPorts = product.exportPorts ?? [];
   const commercialMoq = formatCommercialMoq(product);
   const heroMoq = compactMoq(product, commercialMoq);
-  const midpoint = Math.ceil(specs.length / 2);
+  const specGroups = buildPublicSpecificationGroups({
+    specs,
+    commercialMoq,
+    packaging: product.packaging,
+    lead: product.lead,
+    origin: product.origin,
+    hs: product.hs,
+    shelfLife: product.shelfLife,
+  });
   const productUrl = `${SITE_URL}/products/${product.slug}`;
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -236,19 +247,11 @@ export default async function ProductDetailsPage({ params }: Props) {
     category: product.category,
     sku: product.slug,
     url: productUrl,
-    additionalProperty: [
-      product.hs ? { "@type": "PropertyValue", name: "HS Code", value: product.hs } : null,
-      product.origin ? { "@type": "PropertyValue", name: "Origin", value: product.origin } : null,
-      commercialMoq ? { "@type": "PropertyValue", name: "MOQ", value: commercialMoq } : null,
-      product.packaging ? { "@type": "PropertyValue", name: "Packaging", value: product.packaging } : null,
-      product.shelfLife ? { "@type": "PropertyValue", name: "Shelf Life", value: product.shelfLife } : null,
-      product.lead ? { "@type": "PropertyValue", name: "Lead Time", value: product.lead } : null,
-      ...specs.slice(0, 12).map((spec) => ({
-        "@type": "PropertyValue",
-        name: spec.label,
-        value: spec.value,
-      })),
-    ].filter(Boolean),
+    additionalProperty: specGroups.all.slice(0, 18).map((spec) => ({
+      "@type": "PropertyValue",
+      name: spec.label,
+      value: spec.value,
+    })),
     potentialAction: {
       "@type": "CommunicateAction",
       name: "Request product quotation",
@@ -258,8 +261,8 @@ export default async function ProductDetailsPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
-      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
+      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }} />
+      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: serializeJsonLd(productSchema) }} />
 
       <div className="border-b border-[#E2E8F0] bg-white">
         <div className="mx-auto max-w-[1450px] px-6 py-3 sm:px-8">
@@ -387,16 +390,12 @@ export default async function ProductDetailsPage({ params }: Props) {
             </div>
           </div>
 
-          {specs.length > 0 && (
+          {specGroups.all.length > 0 && (
             <div id="product-specifications" className="grid gap-8 px-6 pb-6 sm:px-8 sm:pb-8 lg:grid-cols-2 lg:px-10">
-              <SpecTable title="Physical / Quality Specifications" rows={specs.slice(0, midpoint)} />
-              <SpecTable
-                title="Commercial Specifications"
-                rows={specs.slice(midpoint).map((spec) => ({
-                  ...spec,
-                  value: spec.label.toLowerCase() === "moq" ? commercialMoq : spec.value,
-                }))}
-              />
+              <SpecTable title="Product Information" rows={specGroups.product} />
+              <SpecTable title="Physical / Quality Specifications" rows={specGroups.quality} />
+              <SpecTable title="Commercial & Packing Specifications" rows={specGroups.commercial} />
+              <SpecTable title="Additional Product Information" rows={specGroups.additional} />
             </div>
           )}
 
