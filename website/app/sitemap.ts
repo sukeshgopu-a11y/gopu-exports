@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getPublicProducts } from "@/lib/publicCatalogue";
+import { getPublicGalleryImages } from "@/lib/publicGallery";
 
 import { getPublicBlogPosts } from "@/lib/blogStore";
 import { CATEGORY_LANDING_PAGES } from "@/lib/categoryLandingPages";
@@ -27,7 +28,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/markets",
     "/certifications",
     "/company-verification",
-    "/gallery",
     "/resources",
     "/blog",
     "/contact",
@@ -42,6 +42,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: path === "" ? 1 : 0.7,
   }));
 
+  let galleryRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const galleryImages = await getPublicGalleryImages();
+    if (galleryImages.length > 0) {
+      galleryRoutes = [{
+        url: `${BASE_URL}/gallery`,
+        changeFrequency: "monthly",
+        priority: 0.6,
+      }];
+    }
+  } catch {
+    galleryRoutes = [];
+  }
+
   const resourceRoutes: MetadataRoute.Sitemap = EXPORT_OPERATION_PAGES.map((page) => ({
     url: `${BASE_URL}/resources/${page.slug}`,
     lastModified: ["export-enquiry-support", "bulk-orders", "global-supply-network"].includes(page.slug) ? CONTENT_REVISED : undefined,
@@ -52,7 +66,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const categoryRoutes: MetadataRoute.Sitemap = CATEGORY_LANDING_PAGES.map((page) => ({
     url: `${BASE_URL}/export/${page.slug}`,
-    lastModified: ["spice-powder-exporter-india", "spice-exporters-from-india", "agricultural-exporter-hyderabad-telangana", "apeda-products-exporters-india", "spice-board-products-exporters-india"].includes(page.slug) ? CONTENT_REVISED : undefined,
+    lastModified: page.slug === "agricultural-exporter-hyderabad-telangana"
+      ? "2026-09-18"
+      : ["spice-powder-exporter-india", "spice-exporters-from-india", "apeda-products-exporters-india", "spice-board-products-exporters-india"].includes(page.slug)
+        ? CONTENT_REVISED
+        : undefined,
 
     changeFrequency: "monthly",
     priority: 0.75,
@@ -79,6 +97,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-  return [...staticRoutes, ...categoryRoutes, ...resourceRoutes, ...productRoutes, ...blogRoutes];
+  return [...staticRoutes, ...galleryRoutes, ...categoryRoutes, ...resourceRoutes, ...productRoutes, ...blogRoutes];
 }
 
