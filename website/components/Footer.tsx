@@ -10,6 +10,7 @@ type IconComponent = (props: IconProps) => React.ReactElement;
 const NAVIGATION = [
   ["About", "/about"],
   ["Export Operations", "/about#operations"],
+  ["Hyderabad Export Office", "/export/agricultural-exporter-hyderabad-telangana"],
   ["Company Verification", "/company-verification"],
   ["Quality & Compliance", "/certifications"],
 ];
