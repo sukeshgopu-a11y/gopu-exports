@@ -232,37 +232,9 @@ export default async function ProductDetailsPage({ params }: Props) {
       { "@type": "ListItem", position: 3, name: product.title, item: productUrl },
     ],
   };
-  const productSchema = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.title,
-    image: absoluteUrl(product.image) ? [absoluteUrl(product.image)] : undefined,
-    description:
-      product.description ||
-      `${product.title} available for B2B export enquiry from GOPU Exports.`,
-    brand: {
-      "@type": "Brand",
-      name: "GOPU Exports",
-    },
-    category: product.category,
-    sku: product.slug,
-    url: productUrl,
-    additionalProperty: specGroups.all.slice(0, 18).map((spec) => ({
-      "@type": "PropertyValue",
-      name: spec.label,
-      value: spec.value,
-    })),
-    potentialAction: {
-      "@type": "CommunicateAction",
-      name: "Request product quotation",
-      target: `${SITE_URL}/contact?product=${encodeURIComponent(product.title)}`,
-    },
-  };
-
-  return (
+  // Product rich-result markup is intentionally omitted for quote-only B2B catalogue pages.\n  // Google requires a genuine offer, review, or aggregateRating for Product snippets; none is fabricated here.\n\n  return (
     <main className="min-h-screen bg-[#F5F7FA]">
       <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }} />
-      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: serializeJsonLd(productSchema) }} />
 
       <div className="border-b border-[#E2E8F0] bg-white">
         <div className="mx-auto max-w-[1450px] px-6 py-3 sm:px-8">
