@@ -232,7 +232,10 @@ export default async function ProductDetailsPage({ params }: Props) {
       { "@type": "ListItem", position: 3, name: product.title, item: productUrl },
     ],
   };
-  // Product rich-result markup is intentionally omitted for quote-only B2B catalogue pages.\n  // Google requires a genuine offer, review, or aggregateRating for Product snippets; none is fabricated here.\n\n  return (
+  // Product rich-result markup is intentionally omitted for quote-only B2B catalogue pages.
+  // Google requires a genuine offer, review, or aggregateRating for Product snippets; none is fabricated here.
+
+  return (
     <main className="min-h-screen bg-[#F5F7FA]">
       <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }} />
 
