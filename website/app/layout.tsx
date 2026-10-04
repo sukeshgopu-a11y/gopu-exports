@@ -78,7 +78,7 @@ const organizationJsonLd = {
     "GOPU Exports is a Hyderabad-based Indian agricultural export company supplying spices, rice and selected food products to international importers, distributors and B2B buyers.",
   address: {
     "@type": "PostalAddress",
-    streetAddress: COMPANY.registeredAddress,
+    streetAddress: "2nd Floor, Surya Arcade, Door No. 1-9-388, Kushaiguda Road, ECIL",
     addressLocality: "Hyderabad",
     postalCode: "500062",
     addressRegion: "Telangana",
