@@ -114,7 +114,7 @@ export default function CompanyVerificationPage() {
                 <p className="text-xs text-slate-400">{COMPANY.contactTitle}</p>
               </div>
               <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                Registered address: {COMPANY.registeredAddress}
+                Head Office: {COMPANY.hq.address}
               </div>
             </div>
             <Link href="/contact?verification=true" className="mt-6 inline-flex w-full justify-center rounded-xl bg-white px-5 py-3 text-sm font-black text-[#071624]">
