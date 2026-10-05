@@ -10,11 +10,13 @@ import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
 const BASE_URL = "https://gopuexports.com";
 // Date of this reviewed content revision; never generated from request time.
 const CONTENT_REVISED = "2026-09-16";
+const PRODUCT_TEMPLATE_REVISED = "2026-10-02";
+const COMPANY_VERIFICATION_REVISED = "2026-10-04";
 const STATIC_LAST_MODIFIED: Record<string, string> = {
   "": "2026-09-17",
   "/about": CONTENT_REVISED,
   "/products": CONTENT_REVISED,
-  "/company-verification": CONTENT_REVISED,
+  "/company-verification": COMPANY_VERIFICATION_REVISED,
   "/contact": CONTENT_REVISED,
 };
 
@@ -78,7 +80,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const productRoutes: MetadataRoute.Sitemap = (await getPublicProducts()).map(product => ({
     url: BASE_URL + "/products/" + product.slug,
-    lastModified: product.updatedAt && Date.parse(product.updatedAt) > Date.parse(CONTENT_REVISED) ? product.updatedAt : CONTENT_REVISED,
+    lastModified: product.updatedAt && Date.parse(product.updatedAt) > Date.parse(PRODUCT_TEMPLATE_REVISED) ? product.updatedAt : PRODUCT_TEMPLATE_REVISED,
     changeFrequency: "weekly",
     priority: ["red-chilli", "turmeric-powder", "red-chilli-powder"].includes(product.slug) ? 0.9 : 0.7,
   }));
