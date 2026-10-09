@@ -35,10 +35,10 @@ export default async function BlogPage() {
             <p className="text-[11px] font-black tracking-[0.26em] text-[#0E7490]">EXPORT INSIGHTS</p>
           </div>
           <h1 className="mt-4 text-[48px] font-black leading-none tracking-[-0.05em] text-[#0F172A] lg:text-[64px]">
-            Insights
+            Export Buyer Insights
           </h1>
           <p className="mt-4 max-w-2xl text-[17px] leading-[1.8] text-[#64748B]">
-            Practical updates for importers importing Indian spices, rice, grains, and agricultural commodities.
+            Practical guides to importing Indian spices, rice and agricultural products, from product specifications to packing and shipment documents.
           </p>
         </div>
       </section>

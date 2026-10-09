@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Search, Star, X } from "lucide-react";
 import { formatCommercialMoq } from "@/lib/moq";
+import { matchesProductSearch } from "@/lib/productSearch";
 
 type Product = {
   _id: string;
@@ -120,7 +121,7 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
     return products.filter((p) => (
       (active === "All" || p.category === active) &&
       (!featuredOnly || p.featured) &&
-      (!q || [p.title, p.tagline, p.category, p.origin, p.description].some((value) => (value ?? "").toLowerCase().includes(q)))
+      matchesProductSearch([p.title, p.tagline, p.category, p.origin, p.description], q)
     ));
   }, [active, featuredOnly, products, query]);
 
@@ -204,8 +205,11 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
       </div>
 
       {filtered.length === 0 ? (
-        <div className="mt-8 rounded-3xl border border-dashed border-[#D9E2EC] bg-white py-16 text-center text-[#94A3B8]">
-          No products found for this search.
+        <div className="mt-8 rounded-2xl border border-dashed border-[#D9E2EC] bg-white px-6 py-12 text-center text-[#475569]">
+          <h2 className="text-xl font-semibold text-[#0F172A]">No matching products</h2>
+          <p className="mt-3">Try a product name, origin or a different category.</p>
+          <button type="button" onClick={() => updateFilters({ query: "", active: "All", featuredOnly: false })} className="mt-5 font-semibold text-[#0E7490] underline underline-offset-4">Show all products</button>
+          <p className="mt-4 text-sm">Have a specific requirement? <Link href="/contact" className="font-semibold text-[#0E7490] underline underline-offset-4">Ask our export team</Link>.</p>
         </div>
       ) : (
         <div className="mt-8 space-y-10">

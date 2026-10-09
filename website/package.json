@@ -10,7 +10,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:seo": "node tests/seo.mjs"
   },
   "dependencies": {
     "@sentry/nextjs": "^10.53.1",
