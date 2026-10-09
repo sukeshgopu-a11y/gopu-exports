@@ -11,9 +11,13 @@ export const metadata = publicMetadata("Company Identifiers & Export Documents",
 
 export default async function CertificationsPage() {
   let documents: CertificationRow[] = [];
+  let documentsUnavailable = false;
   if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
     const { data, error } = await createPublicClient().from("certifications").select("*").eq("is_active", true).order("sort_order").returns<CertificationRow[]>();
-    if (error) throw new Error("Unable to load export documents");
+    if (error) {
+      console.error("Published document references unavailable", { code: error.code });
+      documentsUnavailable = true;
+    }
     documents = data ?? [];
   }
   return (
@@ -91,6 +95,7 @@ export default async function CertificationsPage() {
           </div>
         </div>
       </section>
+      {documentsUnavailable && <p className="mx-auto max-w-[1450px] px-6 pb-8">Published document references are temporarily unavailable. Please contact our team for current copies.</p>}
       {documents.length > 0 && <section className="mx-auto max-w-[1450px] px-6 pb-16">
         <h2 className="text-2xl font-bold">Published document references</h2>
         <p className="mt-3">Confirm validity, scope and destination acceptance with the issuing body before relying on a document.</p>
