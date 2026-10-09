@@ -69,7 +69,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const categoryRoutes: MetadataRoute.Sitemap = CATEGORY_LANDING_PAGES.map((page) => ({
     url: `${BASE_URL}/export/${page.slug}`,
     lastModified: page.slug === "agricultural-exporter-hyderabad-telangana"
-      ? "2026-09-18"
+      ? "2026-10-07"
       : ["spice-powder-exporter-india", "spice-exporters-from-india", "apeda-products-exporters-india", "spice-board-products-exporters-india"].includes(page.slug)
         ? CONTENT_REVISED
         : undefined,
