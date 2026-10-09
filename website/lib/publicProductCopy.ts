@@ -41,6 +41,11 @@ export function cleanPublicProduct<T extends Record<string, unknown>>(product: T
   for (const [key, revision] of Object.entries(revisions ?? {})) {
     if (JSON.stringify(next[key] ?? null) === JSON.stringify(revision.before)) next[key] = revision.after;
   }
+  // Also revise the previously published potato copy if it was saved by an admin.
+  // Exact matching keeps later custom descriptions intact.
+  if (product.slug === "fresh-potato" && next.description === "GOPU Exports supplies Indian fresh potato to international importers, distributors, wholesalers and food businesses. Specify size or grade, packing, destination and shipment timing. Availability and handling requirements depend on the season and route. Availability and export terms are confirmed during quotation.") {
+    next.description = revisions.description.after;
+  }
 
   for (const key of ["tagline", "description", "shortDescription", "metaTitle", "metaDescription"]) {
     if (typeof next[key] === "string") next[key] = cleanPublicProductText(next[key] as string);

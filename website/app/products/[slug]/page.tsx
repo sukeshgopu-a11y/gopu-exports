@@ -58,6 +58,7 @@ function DetailRow({ label, value }: { label: string; value?: string }) {
 }
 
 function compactMoq(product: Product, commercialMoq: string) {
+  if (product.slug === "fresh-potato") return commercialMoq;
   const category = product.category.toLowerCase();
   if (category.includes("spice") || category.includes("rice")) return "Bulk orders accepted";
   if (category.includes("fruit") || category.includes("vegetable")) return "LCL/FCL by route";
@@ -200,6 +201,8 @@ export default async function ProductDetailsPage({ params }: Props) {
   const product = await getProduct(slug);
   if (!product) notFound();
 
+  const isFreshPotato = product.slug === "fresh-potato";
+
   const related = await getRelated(product.related ?? []);
   const specs = product.specs ?? [];
   const benefits = product.benefits ?? [];
@@ -305,9 +308,9 @@ export default async function ProductDetailsPage({ params }: Props) {
           </div>
 
           <div className="grid gap-4 border-t border-[#E2E8F0] bg-[#F8FAFC] p-6 sm:grid-cols-2 lg:grid-cols-4 lg:p-8">
-            <BuyerStep icon={ClipboardCheck} title="Specification Review" text="Share grade, form, packing, quantity, and destination for a practical export review." />
-            <BuyerStep icon={PackageCheck} title="Packing Options" text="Discuss PP bags, jute bags, cartons, retail packs, or private-label formats where suitable." />
-            <BuyerStep icon={Ship} title="Shipment Planning" text="Plan LCL or FCL availability around product category, route, and buyer timeline." />
+            <BuyerStep icon={ClipboardCheck} title="Specification Review" text={isFreshPotato ? "Share the required potato variety, size range, intended use, and acceptable limits for defects, sprouting and greening." : "Share grade, form, packing, quantity, and destination for a practical export review."} />
+            <BuyerStep icon={PackageCheck} title="Packing Options" text={isFreshPotato ? "Discuss jute or mesh bags, required bag weight, labelling and ventilation needs before confirming the order." : "Discuss PP bags, jute bags, cartons, retail packs, or private-label formats where suitable."} />
+            <BuyerStep icon={Ship} title="Shipment Planning" text={isFreshPotato ? "Confirm harvest availability, transit time, handling conditions and destination requirements before booking shipment." : "Plan LCL or FCL availability around product category, route, and buyer timeline."} />
             <BuyerStep icon={FileText} title="Documentation Support" text="Documentation availability depends on the product, destination, buyer requirements and issuing authorities." />
           </div>
 
