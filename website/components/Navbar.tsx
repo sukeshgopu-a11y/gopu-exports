@@ -173,7 +173,7 @@ export default function Navbar() {
 
       <div className="mx-auto flex max-w-[1450px] items-center justify-between gap-4 px-4 py-3 sm:px-6 xl:py-3">
         <Link href="/" prefetch={false} aria-label="GOPU Exports Home" className="shrink-0">
-          <BrandLogo priority className="h-12 w-auto" />
+          <BrandLogo priority sizes="96px" className="h-12 w-auto" />
         </Link>
 
         <nav aria-label="Main navigation" className="hidden items-center gap-1 xl:ml-auto xl:flex">
