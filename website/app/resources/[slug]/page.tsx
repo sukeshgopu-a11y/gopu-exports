@@ -2,8 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { publicMetadata } from "@/lib/seo";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { EXPORT_OPERATION_PAGES, getExportOperationPage } from "@/lib/exportOperationPages";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -39,9 +40,7 @@ export default async function ResourceDetailPage({ params }: Props) {
       <article>
         <section className="bg-[#071624] px-5 py-16 text-white">
           <div className="mx-auto max-w-4xl">
-            <Link href="/resources" className="inline-flex items-center gap-2 text-sm font-bold text-[#67C9D8] hover:text-white">
-              <ArrowLeft className="h-4 w-4" /> Buyer Resources
-            </Link>
+            <Breadcrumbs inverse items={[{ name: "Home", href: "/" }, { name: "Buyer resources", href: "/resources" }, { name: page.title, href: `/resources/${page.slug}` }]} />
             <h1 className="mt-6 text-4xl font-black leading-tight sm:text-5xl">{page.title}</h1>
             <p className="mt-5 text-lg leading-8 text-slate-300">{page.description}</p>
           </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { publicMetadata } from "@/lib/seo";
+import { publicMetadata, editorialSearchTitle } from "@/lib/seo";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPost(slug);
   if (!post) notFound();
 
-  const title = (post.metaTitle || post.title).replace(/\s*\|\s*GOPU Exports\s*$/i, "");
+  const title = editorialSearchTitle(post.metaTitle || post.title);
   const description = post.metaDescription || post.excerpt || "GOPU Exports article.";
   const metadata = publicMetadata(title, description, `/blog/${post.slug}`);
   return {
@@ -87,9 +88,7 @@ export default async function BlogPostPage({ params }: Props) {
         }}
       />
       <article className="mx-auto max-w-4xl px-6 py-14 sm:px-8">
-        <Link href="/blog" className="text-[13px] font-bold text-[#0E7490] hover:text-[#0A5A70]">
-          BACK TO BLOG
-        </Link>
+        <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Insights", href: "/blog" }, { name: post.title, href: `/blog/${post.slug}` }]} />
         <p className="mt-6 text-[11px] font-black uppercase tracking-[0.22em] text-[#0E7490]">
           {post.author || "GOPU Exports"} · <time dateTime={publishedAt}>{formatPublicationDate(publishedAt)}</time>
         </p>

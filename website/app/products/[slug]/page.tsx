@@ -235,12 +235,12 @@ export default async function ProductDetailsPage({ params }: Props) {
 
       <div className="border-b border-[#E2E8F0] bg-white">
         <div className="mx-auto max-w-[1450px] px-6 py-3 sm:px-8">
-          <nav className="flex items-center gap-2 text-[13px] text-[#94A3B8]">
+          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-[13px] text-[#64748B]">
             <Link href="/" className="hover:text-[#0E7490]">Home</Link>
             <span>/</span>
             <Link href="/products" className="hover:text-[#0E7490]">Products</Link>
             <span>/</span>
-            <span className="font-semibold text-[#0F172A]">{product.title}</span>
+            <span aria-current="page" className="font-semibold text-[#0F172A]">{product.title}</span>
           </nav>
         </div>
       </div>

@@ -11,7 +11,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node tests/security.cjs && node tests/lead-regressions.cjs && node tests/database.mjs"
+    "test": "node tests/security.cjs && node tests/lead-regressions.cjs && node tests/database.mjs",
+    "test:seo": "node tests/seo.mjs"
   },
   "dependencies": {
     "@sentry/nextjs": "^10.53.1",
