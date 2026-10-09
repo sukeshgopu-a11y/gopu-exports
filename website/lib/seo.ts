@@ -2,6 +2,18 @@ import type { Metadata } from "next";
 
 export const SITE_URL = "https://gopuexports.com";
 
+// Exact revisions keep future editor-written titles intact.
+const EDITORIAL_TITLES: Record<string, string> = {
+  "How to Choose a Reliable Agricultural Exporter from India": "Choosing an Agricultural Exporter in India",
+  "Export Packaging Standards for Spices, Rice, Fruits and Vegetables": "Export Packaging for Spices, Rice & Fresh Produce",
+  "Fresh Fruits and Vegetables Export from India | Buyer Guide": "Fresh Produce Exports from India: Buyer Guide",
+  "Documents Required for Importing Food Products from India": "Food Imports from India: Required Documents",
+};
+export function editorialSearchTitle(title: string): string {
+  const clean = title.replace(/\s*\|\s*GOPU Exports\s*$/i, "");
+  return EDITORIAL_TITLES[clean] ?? clean;
+}
+
 /** Keep canonical, search and sharing copy aligned on each public route. */
 export function publicMetadata(title: string, description: string, path: string): Metadata {
   return {

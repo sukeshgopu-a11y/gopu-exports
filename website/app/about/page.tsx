@@ -23,7 +23,7 @@ const STRENGTHS = [
   },
   {
     icon: PackageCheck,
-    title: "Export-Compliant Packaging",
+    title: "Product-Specific Packaging",
     desc: "Packaging options are planned around product handling, buyer requirements, and export documentation needs.",
   },
   {
@@ -57,7 +57,7 @@ export default function AboutPage() {
         <div className="absolute inset-0">
           <Image
             src="/images/hero-bg.webp"
-            alt="GOPU Exports Operations"
+            alt="Cargo ship at an international container terminal"
             fill
             preload
             sizes="100vw"
@@ -121,7 +121,7 @@ export default function AboutPage() {
             <div>
               <p className="text-[11px] font-black tracking-[0.24em] text-[#0E7490]">OUR STORY</p>
               <h2 className="mt-3 text-[38px] font-black leading-[1.05] tracking-[-0.04em] text-[#0F172A]">
-                Built on Trust, Quality<br />and Trade Expertise
+                Clear specifications.<br />Practical export planning.
               </h2>
               <p className="mt-5 text-[15px] leading-[1.9] text-[#64748B]">
                 GOPU Exports was established to help international buyers import Indian
