@@ -46,7 +46,6 @@ export function getEmailRuntimeConfig() {
   const resendKey = process.env.RESEND_API_KEY || "";
   return {
     hasResendKey: Boolean(resendKey),
-    resendKeyPrefix: resendKey ? resendKey.slice(0, 6) : "",
     adminEmail: process.env.ADMIN_EMAIL || DEFAULT_ADMIN_EMAIL,
     emailFrom: process.env.EMAIL_FROM || process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL,
   };
@@ -283,25 +282,3 @@ export async function sendCustomerAutoReply(payload: LeadEmailPayload) {
     idempotencyKey: `gopu-customer-${payload.id || `${payload.kind}-${Date.now()}`}`,
   });
 }
-
-export async function sendTestEmail() {
-  const config = getEmailRuntimeConfig();
-  return sendResendEmail({
-    to: config.adminEmail,
-    subject: "GOPU Exports email delivery test",
-    text: [
-      "GOPU Exports email delivery test.",
-      "If you received this message, Resend is configured correctly in production.",
-      `Sent at: ${new Date().toISOString()}`,
-    ].join("\n"),
-    html: `
-      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#334155">
-        <h2 style="color:#0f172a">GOPU Exports email delivery test</h2>
-        <p>If you received this message, Resend is configured correctly in production.</p>
-        <p><strong>Sent at:</strong> ${escapeHtml(new Date().toISOString())}</p>
-      </div>
-    `,
-    idempotencyKey: `gopu-test-${Date.now()}`,
-  });
-}
-
