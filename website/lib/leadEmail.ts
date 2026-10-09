@@ -13,8 +13,8 @@ export type LeadEmailDeliveryResult = {
   customer: EmailAttemptResult;
 };
 
-export async function sendLeadEmails(payload: LeadEmailPayload): Promise<LeadEmailDeliveryResult> {
-  const admin = await sendAdminLeadEmail(payload);
+export async function sendLeadEmails(payload: LeadEmailPayload, previous?: LeadEmailDeliveryResult): Promise<LeadEmailDeliveryResult> {
+  const admin = previous?.admin.sent ? previous.admin : await sendAdminLeadEmail(payload);
 
   if (admin.sent) {
     console.log("Admin email sent successfully", { leadId: payload.id, kind: payload.kind });
@@ -22,7 +22,7 @@ export async function sendLeadEmails(payload: LeadEmailPayload): Promise<LeadEma
     console.error("Admin email failed", admin.error, admin.resendResponse);
   }
 
-  const customer = await sendCustomerAutoReply(payload);
+  const customer = previous?.customer.sent ? previous.customer : await sendCustomerAutoReply(payload);
 
   if (customer.sent) {
     console.log("Customer auto-reply sent successfully", { leadId: payload.id, kind: payload.kind });

@@ -1,3 +1,5 @@
+import { consumeRateLimit } from "./rateLimit";
+import { readBoundedJson, BodyTooLargeError } from "./requestBody";
 export type LeadInput = Record<string, unknown>;
 
 import {
@@ -9,35 +11,17 @@ import {
 import { z } from "zod";
 
 const MAX_LEAD_PAYLOAD_BYTES = 32 * 1024;
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
-const RATE_LIMIT_MAX_REQUESTS = 8;
+
+
 const MAX_FIELD_LENGTH = 4000;
 const SUSPICIOUS_USER_AGENT =
   /(sqlmap|nikto|acunetix|nessus|nmap|masscan|zgrab|dirbuster|gobuster|wpscan|python-requests|go-http-client|java\/|libwww-perl)/i;
 
-type RateBucket = { count: number; resetAt: number };
 
-const leadPayloadSchema = z
-  .object({})
-  .catchall(
-    z.union([
-      z.string().max(MAX_FIELD_LENGTH, "Field is too long"),
-      z.number(),
-      z.boolean(),
-      z.null(),
-      z.undefined(),
-    ])
-  );
 
-function getRateStore(): Map<string, RateBucket> {
-  const globalForRateLimit = globalThis as typeof globalThis & {
-    __gopuLeadRateLimit?: Map<string, RateBucket>;
-  };
-  if (!globalForRateLimit.__gopuLeadRateLimit) {
-    globalForRateLimit.__gopuLeadRateLimit = new Map();
-  }
-  return globalForRateLimit.__gopuLeadRateLimit;
-}
+const leadPayloadSchema = z.object(Object.fromEntries(
+  "submission_id name fullName full_name company companyName company_name email phone phoneNumber phone_number country destination destination_country product_name product productInterested quantity incoterm message notes frequency product_id source_url sourceUrl page_url pageUrl country_name phone_country_name country_code phone_country_code local_phone localPhone full_phone_e164 whatsapp_number_e164 whatsapp dial_code website url company_website cf_turnstile_token turnstileToken cf-turnstile-response phoneCountryName phoneCountryCode phoneDialCode whatsappNumber countryOther port productOther specification packing frequencyOther".split(" ").map(key => [key, z.string().max(MAX_FIELD_LENGTH).nullable().optional()])
+)).strict();
 
 function clientIp(req: Request) {
   return (
@@ -46,21 +30,6 @@ function clientIp(req: Request) {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     "unknown"
   );
-}
-
-function isRateLimited(req: Request) {
-  const now = Date.now();
-  const store = getRateStore();
-  const key = `${clientIp(req)}:${new URL(req.url).pathname}`;
-  const current = store.get(key);
-
-  if (!current || current.resetAt <= now) {
-    store.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return false;
-  }
-
-  current.count += 1;
-  return current.count > RATE_LIMIT_MAX_REQUESTS;
 }
 
 function sanitizeText(value: string, maxLength = MAX_FIELD_LENGTH) {
@@ -138,7 +107,8 @@ export function rejectSpam(body: LeadInput) {
 async function verifyTurnstile(req: Request, body: LeadInput) {
   const secret = process.env.TURNSTILE_SECRET_KEY;
   const required = process.env.TURNSTILE_REQUIRED === "true";
-  if (!secret || !required) return null;
+  if (!required) return null;
+  if (!secret) return "Security verification is unavailable. Please try again later.";
 
   const token = stringField(body, "cf_turnstile_token", "turnstileToken", "cf-turnstile-response");
   if (!token) return "Security verification is required. Please refresh and try again.";
@@ -152,8 +122,11 @@ async function verifyTurnstile(req: Request, body: LeadInput) {
     const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
       method: "POST",
       body: formData,
+      signal: AbortSignal.timeout(8000),
     });
-    const result = (await response.json()) as { success?: boolean };
+    const result = (await response.json()) as { success?: boolean; hostname?: string };
+    const expectedHostname = new URL(process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "https://gopuexports.com").hostname;
+    if (!response.ok || result.hostname !== expectedHostname) return "Security verification failed. Please try again.";
     return result.success ? null : "Security verification failed. Please try again.";
   } catch {
     return "Security verification could not be completed. Please try again.";
@@ -181,14 +154,17 @@ export async function prepareLeadRequest(req: Request): Promise<LeadRequestGuard
     return { ok: false, status: 403, error: "Submission could not be accepted." };
   }
 
-  if (isRateLimited(req)) {
-    return { ok: false, status: 429, error: "Too many submissions. Please try again later." };
+  try {
+    if (!(await consumeRateLimit(req, "leads", 8, 600))) return { ok: false, status: 429, error: "Too many submissions. Please try again later." };
+  } catch {
+    return { ok: false, status: 503, error: "Submissions are temporarily unavailable. Please contact us by email." };
   }
 
   let body: unknown;
   try {
-    body = await req.json();
-  } catch {
+    body = await readBoundedJson(req, MAX_LEAD_PAYLOAD_BYTES);
+  } catch (error) {
+    if (error instanceof BodyTooLargeError) return { ok: false, status: 413, error: "Submission is too large." };
     return { ok: false, status: 400, error: "Invalid submission body." };
   }
 

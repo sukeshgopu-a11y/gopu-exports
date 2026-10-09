@@ -7,10 +7,10 @@ const OPT_OUT_KEY = "gopu-analytics-opt-out";
 const SESSION_KEY = "gopu-analytics-session";
 
 function getSessionId() {
-  let sessionId = window.localStorage.getItem(SESSION_KEY);
+  let sessionId = window.sessionStorage.getItem(SESSION_KEY);
   if (!sessionId) {
     sessionId = crypto.randomUUID();
-    window.localStorage.setItem(SESSION_KEY, sessionId);
+    window.sessionStorage.setItem(SESSION_KEY, sessionId);
   }
   return sessionId;
 }
@@ -34,6 +34,7 @@ function detectBrowser() {
 async function trackEvent(eventType: string, metadata: Record<string, unknown> = {}) {
   if (window.localStorage.getItem(OPT_OUT_KEY) === "true") return;
   if (navigator.doNotTrack === "1") return;
+  if (/^\/(admin|dashboard)(\/|$)/.test(window.location.pathname)) return;
 
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), 4000);
@@ -71,7 +72,7 @@ export default function AnalyticsTracker() {
     }
     trackEvent("page_view", {
       title: document.title,
-      search: window.location.search,
+
     });
   }, [pathname, routeKey]);
 

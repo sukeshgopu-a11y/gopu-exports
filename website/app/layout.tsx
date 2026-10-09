@@ -1,3 +1,5 @@
+import { getPublicCompany } from "@/lib/publicCompany";
+import { CompanyProvider } from "@/components/CompanyProvider";
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -96,19 +98,21 @@ const organizationJsonLd = {
   // Add sameAs only after ownership of the official profile URLs is verified.
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const company = await getPublicCompany();
+  const organization = { ...organizationJsonLd, name: company.name, email: company.email, telephone: company.phone, address: { "@type": "PostalAddress", streetAddress: company.hq.address, addressCountry: "IN" }, contactPoint: [{ "@type": "ContactPoint", contactType: "sales", email: company.email, telephone: company.phone }] };
   return (
     <html lang="en">
       <body>
-        <ConditionalLayout>{children}</ConditionalLayout>
+        <CompanyProvider company={company}><ConditionalLayout>{children}</ConditionalLayout></CompanyProvider>
         <script
           type="application/ld+json"
           suppressHydrationWarning
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c") }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organization).replace(/</g, "\\u003c") }}
         />
         <Analytics />
         <SpeedInsights />

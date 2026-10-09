@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/seo";
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFImage, type PDFPage, type RGB } from "pdf-lib";
@@ -152,28 +153,38 @@ async function embedProductImage(pdf: PDFDocument, imageSrc: string | undefined,
 
   try {
     const imageUrl = imageSrc.startsWith("/") ? `${origin}${imageSrc}` : imageSrc;
+    const parsed = new URL(imageUrl);
+    const hosts = new Set([new URL(SITE_URL).hostname, "images.unsplash.com"]);
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL) hosts.add(new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname);
+    if (parsed.protocol !== "https:" || parsed.port || parsed.username || parsed.password || !hosts.has(parsed.hostname)) return null;
     const response = await fetch(imageUrl, {
+      redirect: "error",
+      signal: AbortSignal.timeout(8000),
       headers: { Accept: "image/jpeg,image/png,image/webp,image/avif,*/*" },
       cache: "no-store",
     });
     if (!response.ok) return null;
 
     const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
-    const bytes = new Uint8Array(await response.arrayBuffer());
-
-    try {
-      if (contentType.includes("jpeg") || contentType.includes("jpg") || /\.jpe?g($|\?)/i.test(imageUrl)) {
-        return await pdf.embedJpg(bytes);
-      }
-      if (contentType.includes("png") || /\.png($|\?)/i.test(imageUrl)) {
-        return await pdf.embedPng(bytes);
-      }
-    } catch {
-      // Some storage objects have a .jpg extension but contain WebP/AVIF bytes.
-      // Convert below so dashboard-uploaded product images still render in PDFs.
+    if (!/^image\/(jpeg|png|webp|avif|gif)(;|$)/.test(contentType)) return null;
+    const reader = response.body?.getReader();
+    if (!reader) return null;
+    const chunks: Uint8Array[] = [];
+    let length = 0;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      length += value.length;
+      if (length > 4 * 1024 * 1024) { await reader.cancel(); return null; }
+      chunks.push(value);
     }
+    const bytes = Buffer.concat(chunks);
 
-    const jpeg = await sharp(bytes)
+    const signature = bytes.subarray(0, 16).toString("latin1");
+    const raster = (bytes[0] === 0xff && bytes[1] === 0xd8) || signature.startsWith("\x89PNG") || signature.startsWith("GIF8") || (signature.startsWith("RIFF") && signature.slice(8,12) === "WEBP") || signature.slice(4,12) === "ftypavif";
+    if (!raster) return null;
+
+    const jpeg = await sharp(bytes, { limitInputPixels: 16000000 })
       .rotate()
       .resize({ width: 1200, height: 900, fit: "inside", withoutEnlargement: true })
       .jpeg({ quality: 84 })
@@ -279,10 +290,10 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
   const pdf = await PDFDocument.create();
   const font = await pdf.embedFont(StandardFonts.Helvetica);
   const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
-  const image = await embedProductImage(pdf, product.image, req.nextUrl.origin);
+  const image = await embedProductImage(pdf, product.image, SITE_URL);
   const commercialMoq = formatCommercialMoq(product);
-  const productUrl = `${req.nextUrl.origin}/products/${product.slug}`;
-  const inquiryUrl = `${req.nextUrl.origin}/contact?product=${encodeURIComponent(product.title)}`;
+  const productUrl = `${SITE_URL}/products/${product.slug}`;
+  const inquiryUrl = `${SITE_URL}/contact?product=${encodeURIComponent(product.title)}`;
   const specs = (product.specs ?? []).filter((spec) => cleanText(spec.label) && cleanText(spec.value));
 
   let page = pdf.addPage(PAGE_SIZE);

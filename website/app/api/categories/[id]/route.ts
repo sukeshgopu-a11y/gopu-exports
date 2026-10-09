@@ -1,25 +1,6 @@
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
-import { createPublicClient } from "@/src/lib/supabase/public";
 import { NextRequest, NextResponse } from "next/server";
-import type { SupabaseClient } from "@supabase/supabase-js";
-
-type Category = { _id: string; [key: string]: unknown };
-
-async function getCategories(): Promise<Category[]> {
-  const supabase = createPublicClient();
-  const { data } = await supabase
-    .from("site_settings")
-    .select("value")
-    .eq("key", "categories")
-    .maybeSingle();
-  return Array.isArray(data?.value) ? data.value as Category[] : [];
-}
-
-async function saveCategories(supabase: SupabaseClient, categories: Category[]) {
-  await supabase
-    .from("site_settings")
-    .upsert({ key: "categories", value: categories }, { onConflict: "key" });
-}
+import { revalidatePath } from "next/cache";
 
 export async function PATCH(
   req: NextRequest,
@@ -29,13 +10,9 @@ export async function PATCH(
   if (!supabase) return unauthorized();
   const { id } = await params;
   const body = await req.json();
-  const categories = await getCategories();
-  const updated = categories.map((category) =>
-    category._id === id ? { ...category, ...body } : category
-  );
-  await saveCategories(supabase, updated);
-  const category = updated.find((item) => item._id === id);
-  if (!category) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  const { data: category, error } = await supabase.rpc("mutate_category", { p_action: "update", p_id: id, p_body: body });
+  if (error) return NextResponse.json({ error: "Category could not be updated" }, { status: 400 });
+  revalidatePath("/products");
   return NextResponse.json(category);
 }
 
@@ -46,6 +23,8 @@ export async function DELETE(
   const supabase = await requireAdminClient();
   if (!supabase) return unauthorized();
   const { id } = await params;
-  await saveCategories(supabase, (await getCategories()).filter((category) => category._id !== id));
+  const { error } = await supabase.rpc("mutate_category", { p_action: "delete", p_id: id });
+  if (error) return NextResponse.json({ error: "Category could not be deleted" }, { status: 400 });
+  revalidatePath("/products");
   return NextResponse.json({ success: true });
 }

@@ -182,6 +182,7 @@ function mutationToRow(input: JsonRecord, existing?: BlogPostRow) {
   const post = normalizeBlogPost({
     ...(existingPost ?? {}),
     ...input,
+    ...(typeof input.content === "string" && input.content !== existingPost?.content && !("sections" in input) ? { sections: undefined } : {}),
     _id: existingPost?._id ?? input._id,
     createdAt: existingPost?.createdAt ?? input.createdAt,
     updatedAt: now,

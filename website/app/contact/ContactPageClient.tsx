@@ -1,9 +1,9 @@
 "use client";
 
-import { createContext, useContext, useCallback, useState } from "react";
+import { createContext, useContext, useCallback, useState, useRef } from "react";
 import { InternationalPhoneInput, type InternationalPhoneValue } from "@/components/InternationalPhoneInput";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { COMPANY } from "@/lib/company";
+import { useCompany } from "@/components/CompanyProvider";
 
 const INCOTERMS = ["EXW", "FOB", "CFR", "CIF", "Other / Discuss"];
 const OTHER = "Others";
@@ -147,6 +147,8 @@ function OfficeCard({
 }
 
 export default function ContactPageClient({ initialProduct = "", catalogue = false }: { initialProduct?: string; catalogue?: boolean }) {
+  const company = useCompany();
+  const submissionId = useRef("");
   const [selectedInco, setSelectedInco] = useState("FOB");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -229,11 +231,13 @@ export default function ContactPageClient({ initialProduct = "", catalogue = fal
       const country = form.country === OTHER ? form.countryOther : form.country;
       const product = form.product === OTHER ? form.productOther : form.product;
       const frequency = form.frequency === OTHER ? form.frequencyOther : form.frequency;
+      if (!submissionId.current) submissionId.current = crypto.randomUUID();
       const res = await fetch("/api/inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
+          submission_id: submissionId.current,
           source_url: window.location.href,
           country,
           country_name: form.phoneCountryName,
@@ -367,7 +371,7 @@ export default function ContactPageClient({ initialProduct = "", catalogue = fal
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5 bg-[#F8FAFC] p-5 sm:p-6">
                 <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-900">
-                  Fill all required buyer fields so our team can respond with correct product, packing, destination, and shipment assumptions. For urgent requirements, call <a href={COMPANY.phoneHref} className="font-black underline">{COMPANY.phone}</a>.
+                  Fill all required buyer fields so our team can respond with correct product, packing, destination, and shipment assumptions. For urgent requirements, call <a href={company.phoneHref} className="font-black underline">{company.phone}</a>.
                 </div>
 
                 <FormSection title="Step 1 - Buyer" note="Who should our export team contact?">
@@ -535,7 +539,7 @@ export default function ContactPageClient({ initialProduct = "", catalogue = fal
                   <div className="mt-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
                     {error}
                     <div className="mt-2 font-semibold">
-                      Urgent support: <a href={COMPANY.phoneHref} className="underline">{COMPANY.phone}</a>
+                      Urgent support: <a href={company.phoneHref} className="underline">{company.phone}</a>
                     </div>
                   </div>
                 )}
@@ -577,7 +581,7 @@ export default function ContactPageClient({ initialProduct = "", catalogue = fal
                   Thank you, {form.name}. Your enquiry has been saved and our team will review it.
                 </p>
                 <div className="mt-4 rounded-2xl bg-[#FFF7ED] px-4 py-3 text-sm text-[#9A3412]">
-                  Urgent requirement? Call <a href={COMPANY.phoneHref} className="font-black underline">{COMPANY.phone}</a>.
+                  Urgent requirement? Call <a href={company.phoneHref} className="font-black underline">{company.phone}</a>.
                 </div>
                 <button
                   onClick={() => { setSubmitted(false); setReference(""); setForm(EMPTY_FORM); setFieldErrors({}); setTurnstileToken(""); setTurnstileResetKey((key) => key + 1); }}
@@ -595,15 +599,15 @@ export default function ContactPageClient({ initialProduct = "", catalogue = fal
               map="https://maps.google.com/?q=Surya+Arcade+Kushaiguda+Road+ECIL+Hyderabad+500062"
               flag="IN"
               title="Head Office 🇮🇳"
-              badge={COMPANY.hq.label}
+              badge={company.hq.label}
               badgeColor="bg-[#E6F4F7] text-[#0A5A70]"
-              lines={[COMPANY.hq.address, COMPANY.landmark, COMPANY.email, COMPANY.phone]}
+              lines={[company.hq.address, company.landmark, company.email, company.phone]}
             />
             <OfficeCard
               map="https://maps.app.goo.gl/hakZVt1CE2Rg42Bm9?g_st=ic"
               flag="IN"
               title="Partner Operations"
-              lines={["Visits by prior arrangement; confirm the operating location with our team.", COMPANY.factory.address]}
+              lines={["Visits by prior arrangement; confirm the operating location with our team.", company.factory.address]}
             />
             <OfficeCard
               map="https://maps.google.com/?q=Surya+Arcade+Kushaiguda+Road+ECIL+Hyderabad+500062"
@@ -612,8 +616,8 @@ export default function ContactPageClient({ initialProduct = "", catalogue = fal
               badge="Buyer Support"
               badgeColor="bg-[#EFF6FF] text-[#1D4ED8]"
               lines={[
-                <><strong className="text-[#0F172A]">{COMPANY.contactPerson}</strong> — <strong className="text-[#0F172A]">{COMPANY.contactTitle}</strong></>,
-                `For buyer verification and export enquiries, contact ${COMPANY.contactPerson}.`,
+                <><strong className="text-[#0F172A]">{company.contactPerson}</strong> — <strong className="text-[#0F172A]">{company.contactTitle}</strong></>,
+                `For buyer verification and export enquiries, contact ${company.contactPerson}.`,
                 "Request available verification documents",
                 "Use official email for verification requests",
               ]}
@@ -625,10 +629,10 @@ export default function ContactPageClient({ initialProduct = "", catalogue = fal
               badge="ABN Lookup"
               badgeColor="bg-[#F0FDF4] text-[#166534]"
               lines={[
-                `${COMPANY.australia.entityName} — ABN ${COMPANY.australia.abn}`,
-                `${COMPANY.australia.status}; ${COMPANY.australia.entityType}`,
-                `Main business location: ${COMPANY.australia.location}`,
-                COMPANY.australia.note,
+                `${company.australia.entityName} — ABN ${company.australia.abn}`,
+                `${company.australia.status}; ${company.australia.entityType}`,
+                `Main business location: ${company.australia.location}`,
+                company.australia.note,
               ]}
             />
           </div>
