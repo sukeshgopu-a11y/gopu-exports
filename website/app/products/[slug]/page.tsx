@@ -172,12 +172,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProduct(slug);
   if (!product) return { title: "Product Not Found", robots: { index: false, follow: false } };
-  const title = product.metaTitle && /export|import/i.test(product.metaTitle)
+  const title = slug === "fresh-potato" ? "Fresh Potato Exporter from India" : product.metaTitle && /export|import/i.test(product.metaTitle)
     ? product.metaTitle.replace(/\s*\|\s*GOPU Exports\s*$/i, "")
     : `${product.title} Exporter from India`;
-  const description = product.metaDescription || `${product.title} from India for international importers and distributors. Review product specifications, packaging and bulk export quotation options.`;
+  const description = slug === "fresh-potato" ? "Source fresh potatoes from India for wholesale distribution. Discuss variety, grade, sizing, packing, quantity, destination and export documents with GOPU Exports." : product.metaDescription || `${product.title} from India for international importers and distributors. Review product specifications, packaging and bulk export quotation options.`;
   return {
-    title,
+    title: slug === "fresh-potato" ? { absolute: "Fresh Potato Exporter from India | GOPU Exports" } : title,
     description,
     alternates: { canonical: `/products/${product.slug}` },
     openGraph: {
@@ -262,7 +262,7 @@ export default async function ProductDetailsPage({ params }: Props) {
 
               <div className="mt-8">
                 <h1 className="text-[40px] font-black leading-[0.98] tracking-[-0.055em] text-[#0F172A] sm:text-[56px] lg:text-[68px]">
-                  {product.title}
+                  {isFreshPotato ? "Fresh Potato Exporter from India" : product.title}
                 </h1>
                 {product.tagline && <p className="mt-3 text-[18px] italic text-[#64748B]">{product.tagline}</p>}
                 {product.description && <p className="mt-6 max-w-3xl text-[15px] leading-[1.9] text-[#475569]">{product.description}</p>}
@@ -307,6 +307,22 @@ export default async function ProductDetailsPage({ params }: Props) {
             </div>
           </div>
 
+          {isFreshPotato && (
+            <section aria-label="Fresh potato export buying guide" className="border-t border-[#E2E8F0] px-6 py-8 sm:px-8 lg:px-10">
+              <h2 className="text-[24px] font-black tracking-[-0.03em] text-[#0F172A]">Fresh Potato Bulk Export Enquiries</h2>
+              <p className="mt-3 max-w-4xl text-[15px] leading-8 text-[#475569]">
+                International potato buyers can request a quotation based on intended use, variety, grade, tuber size, quantity and destination. Confirm requirements for skin condition, defects, sprouting, greening, packing weight and labelling before a shipment is agreed. Available origin, harvest timing, supply quantity and packing options must be confirmed for the specific order.
+              </p>
+              <p className="mt-3 max-w-4xl text-[15px] leading-8 text-[#475569]">
+                Fresh potatoes require route-specific planning for ventilation, handling, storage conditions and transit duration. Destination import rules and any phytosanitary or inspection documents should be reviewed before booking. Lead times and minimum order quantities are quotation-dependent, not guaranteed.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-4 text-[14px] font-bold text-[#0E7490]">
+                <Link href="/products">Explore export products</Link>
+                <Link href="/company-verification">Verify our company</Link>
+                <Link href={`/contact?product=${encodeURIComponent(product.title)}`}>Request a potato export quote</Link>
+              </div>
+            </section>
+          )}
           <div className="grid gap-4 border-t border-[#E2E8F0] bg-[#F8FAFC] p-6 sm:grid-cols-2 lg:grid-cols-4 lg:p-8">
             <BuyerStep icon={ClipboardCheck} title="Specification Review" text={isFreshPotato ? "Share the required potato variety, size range, intended use, and acceptable limits for defects, sprouting and greening." : "Share grade, form, packing, quantity, and destination for a practical export review."} />
             <BuyerStep icon={PackageCheck} title="Packing Options" text={isFreshPotato ? "Discuss jute or mesh bags, required bag weight, labelling and ventilation needs before confirming the order." : "Discuss PP bags, jute bags, cartons, retail packs, or private-label formats where suitable."} />
@@ -323,7 +339,7 @@ export default async function ProductDetailsPage({ params }: Props) {
                 <DetailRow label="Origin" value={product.origin} />
                 <DetailRow label="MOQ" value={commercialMoq} />
                 <DetailRow label="Packaging" value={product.packaging} />
-                <DetailRow label="Lead Time" value={product.lead} />
+                <DetailRow label="Lead Time" value={isFreshPotato ? "Confirmed for each quotation based on availability and destination" : product.lead} />
                 <DetailRow label="HS Code" value={product.hs} />
                 <DetailRow label="Shelf Life" value={product.shelfLife} />
               </dl>
