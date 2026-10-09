@@ -101,7 +101,7 @@ export default function Footer() {
         <div className="grid items-start gap-7 lg:grid-cols-[1fr_1.4fr_1fr] lg:gap-8">
           <div className="min-w-0">
             <Link href="/" prefetch={false} aria-label="GOPU Exports Home" className="inline-flex w-[180px] max-w-full rounded-md bg-[#FFF9EF] px-3 py-2">
-              <BrandLogo variant="light" className="h-auto w-full" />
+              <BrandLogo variant="light" sizes="156px" className="h-auto w-full" />
             </Link>
             <p className="mt-3 max-w-xs text-[13px] leading-5 text-slate-400">
               Indian spices, rice and agricultural products for international buyers.
@@ -160,7 +160,7 @@ export default function Footer() {
       </div>
 
       <div className="relative border-t border-white/[0.08]">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-3 text-[12px] text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-3 text-[12px] text-slate-400 sm:flex-row sm:items-center sm:justify-between sm:px-8">
           <p>© 2026 <span className="font-semibold text-slate-300">Gopu Exports Private Limited</span>. All rights reserved.</p>
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             {POLICY_LINKS.map(([label, href]) => <FooterLink key={href} href={href}>{label}</FooterLink>)}

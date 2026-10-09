@@ -73,7 +73,7 @@ function BuyerStep({ icon: Icon, title, text }: { icon: typeof ClipboardCheck; t
       <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E6F4F7] text-[#0E7490]">
         <Icon size={19} />
       </div>
-      <h3 className="mt-4 text-[15px] font-black tracking-[-0.02em] text-[#0F172A]">{title}</h3>
+      <h2 className="mt-4 text-[15px] font-black tracking-[-0.02em] text-[#0F172A]">{title}</h2>
       <p className="mt-2 text-[13px] leading-6 text-[#64748B]">{text}</p>
     </div>
   );
@@ -383,7 +383,7 @@ export default async function ProductDetailsPage({ params }: Props) {
                 <Link href={`/contact?product=${encodeURIComponent(product.title)}`} className="rounded-xl bg-[#0E7490] px-6 py-3 text-[13px] font-bold text-white transition hover:bg-[#0A5A70]">
                   Request Quote
                 </Link>
-                <a href={`https://wa.me/919618991917?text=Hi%2C%20I%27m%20interested%20in%20${encodeURIComponent(product.title)}%20from%20GOPU%20Exports.`} target="_blank" rel="noreferrer" className="rounded-xl border border-[#22C55E]/50 bg-[#F0FDF4] px-6 py-3 text-[13px] font-bold text-[#16A34A] transition hover:bg-[#DCFCE7]">
+                <a href={`https://wa.me/919618991917?text=Hi%2C%20I%27m%20interested%20in%20${encodeURIComponent(product.title)}%20from%20GOPU%20Exports.`} target="_blank" rel="noreferrer" className="rounded-xl border border-[#22C55E]/50 bg-[#F0FDF4] px-6 py-3 text-[13px] font-bold text-[#166534] transition hover:bg-[#DCFCE7]">
                   WhatsApp Enquiry
                 </a>
               </div>

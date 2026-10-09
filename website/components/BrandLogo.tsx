@@ -4,6 +4,7 @@ type BrandLogoProps = {
   className?: string;
   markOnly?: boolean;
   priority?: boolean;
+  sizes?: string;
   variant?: "default" | "light";
 };
 
@@ -11,6 +12,7 @@ export default function BrandLogo({
   className = "",
   markOnly = false,
   priority = false,
+  sizes,
   variant = "default",
 }: BrandLogoProps) {
   const src = markOnly
@@ -26,7 +28,8 @@ export default function BrandLogo({
       loading={priority ? "eager" : "lazy"}
       decoding="async"
       width={markOnly ? 512 : variant === "light" ? 900 : 520}
-      height={markOnly ? 512 : variant === "light" ? 613 : 309}
+      height={markOnly ? 512 : variant === "light" ? 555 : 267}
+      sizes={sizes}
       className={`${className || (markOnly ? "h-14 w-14" : "h-16 w-auto")} object-contain`}
     />
   );

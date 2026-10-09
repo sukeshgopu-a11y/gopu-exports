@@ -96,6 +96,7 @@ function OfficeCard({
   badgeColor,
   lines,
   map,
+  linkLabel = "📍 View on Google Maps",
 }: {
   flag: string;
   title: string;
@@ -103,6 +104,7 @@ function OfficeCard({
   badgeColor?: string;
   lines: React.ReactNode[];
   map: string;
+  linkLabel?: string;
 }) {
   return (
     <div className="bg-white rounded-[20px] border border-[#D9E2EC] shadow-sm overflow-hidden transition hover:-translate-y-1 duration-300">
@@ -139,7 +141,7 @@ function OfficeCard({
           rel="noreferrer"
           className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#F5F7FA] hover:bg-[#E6F4F7] transition px-4 py-2.5 text-[13px] font-semibold text-[#0F172A]"
         >
-          📍 View on Google Maps
+          {linkLabel}
         </a>
       </div>
     </div>
@@ -532,7 +534,7 @@ export default function ContactPageClient({ initialProduct = "", catalogue = fal
                 </FormSection>
 
                 {error && (
-                  <div className="mt-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+                  <div role="alert" className="mt-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
                     {error}
                     <div className="mt-2 font-semibold">
                       Urgent support: <a href={COMPANY.phoneHref} className="underline">{COMPANY.phone}</a>
@@ -619,7 +621,8 @@ export default function ContactPageClient({ initialProduct = "", catalogue = fal
               ]}
             />
             <OfficeCard
-              map="https://maps.google.com/?q=NSW+2010,Australia"
+              map={COMPANY.australia.sourceUrl}
+              linkLabel="Verify ABN record"
               flag="AU"
               title="Australia Business Presence"
               badge="ABN Lookup"
