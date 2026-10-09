@@ -74,7 +74,7 @@ Production tables include products, inquiries, quotes, certifications, gallery, 
 - Public update/delete: denied.
 - Storage: product/gallery images may be publicly readable, but write/update/delete must be restricted to authenticated admins.
 
-Apply migrations from `supabase/migrations/` and keep `supabase/schema.sql` aligned with production.
+For a fresh Supabase project, apply `supabase/schema.sql` once; it is the complete current snapshot. Do not replay older migrations on that snapshot. For an existing project, apply only migrations newer than its recorded migration history. See `docs/AUDIT_FIXES.md` for the coordinated server-ingress rollout.
 
 ## Email / Resend Setup
 

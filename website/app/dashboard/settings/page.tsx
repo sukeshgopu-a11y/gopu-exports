@@ -60,6 +60,7 @@ export default function SettingsPage() {
       .then((data) => {
         if (data?.value) setContact({ ...DEFAULTS, ...data.value });
       })
+      .catch(() => window.alert("Settings could not be loaded."))
       .finally(() => setLoading(false));
   }, []);
 
@@ -82,13 +83,16 @@ export default function SettingsPage() {
     if (phoneError) return;
     setSaving(true);
     try {
-      await fetch("/api/site-settings", {
+      const response = await fetch("/api/site-settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key: "contact", value: contact }),
       });
+      if (!response.ok) throw new Error("Settings could not be saved. Please try again.");
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "Could not save settings");
     } finally {
       setSaving(false);
     }
@@ -130,10 +134,12 @@ export default function SettingsPage() {
               <p className="mt-1.5 text-xs text-gray-500">Current saved phone: {contact.phone}</p>
             </Field>
             <Field label="Website URL">
-              <Input value={contact.website} onChange={set("website")} />
+              <Input value="https://gopuexports.com" readOnly />
+              <p className="text-xs text-gray-500">Canonical domain is managed in deployment configuration.</p>
             </Field>
             <Field label="IEC / Registration Number">
-              <Input value={contact.iec} onChange={set("iec")} placeholder="IEC Number" />
+              <Input value="AAMCG8793P" readOnly />
+              <p className="text-xs text-gray-500">Verified legal identifiers require a reviewed source change.</p>
             </Field>
           </div>
           <div className="mt-5">

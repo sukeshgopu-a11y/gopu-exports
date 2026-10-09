@@ -53,7 +53,7 @@ function sortCategories(a: string, b: string) {
   return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi) || a.localeCompare(b);
 }
 
-export default function ProductsGrid({ initialProducts = [] }: { initialProducts?: Product[] }) {
+export default function ProductsGrid({ initialProducts = [], managedCategories = [] }: { initialProducts?: Product[]; managedCategories?: { name: string; description?: string; active?: boolean }[] }) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [loading, setLoading] = useState(initialProducts.length === 0);
   const [active, setActive] = useState("All");
@@ -69,7 +69,10 @@ export default function ProductsGrid({ initialProducts = [] }: { initialProducts
       .finally(() => setLoading(false));
   }, [initialProducts.length]);
 
-  const categories = useMemo(() => ["All", ...Array.from(new Set(products.map((p) => p.category))).sort(sortCategories)], [products]);
+  const categories = useMemo(() => ["All", ...Array.from(new Set([
+    ...managedCategories.filter(category => category.active !== false).map(category => category.name),
+    ...products.map(product => product.category).filter(name => !managedCategories.some(category => category.name === name && category.active === false)).sort(sortCategories),
+  ]))], [products, managedCategories]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;

@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { NextRequest, NextResponse } from "next/server";
@@ -44,5 +45,6 @@ export async function PUT(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  revalidatePath("/", "layout");
   return NextResponse.json(data);
 }

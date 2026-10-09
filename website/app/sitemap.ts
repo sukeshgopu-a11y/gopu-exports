@@ -85,12 +85,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: ["red-chilli", "turmeric-powder", "red-chilli-powder"].includes(product.slug) ? 0.9 : 0.7,
   }));
 
-  let posts: Awaited<ReturnType<typeof getPublicBlogPosts>> = [];
-  try {
-    posts = await getPublicBlogPosts();
-  } catch {
-    posts = [];
-  }
+  const posts = await getPublicBlogPosts();
   const blogRoutes: MetadataRoute.Sitemap = posts
     .map((post) => ({
       url: `${BASE_URL}/blog/${post.slug}`,

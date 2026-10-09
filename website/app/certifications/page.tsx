@@ -1,3 +1,5 @@
+import { createPublicClient } from "@/src/lib/supabase/public";
+import type { CertificationRow } from "@/src/lib/supabase/data";
 import { publicMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { CheckCircle2, FileText, ShieldCheck } from "lucide-react";
@@ -8,6 +10,12 @@ export const revalidate = 60;
 export const metadata = publicMetadata("Company Identifiers & Export Documents", "Verify GOPU Exports using IEC, CIN and GST. Review the separate product-testing and shipment-document requirements for your export order.", "/certifications");
 
 export default async function CertificationsPage() {
+  let documents: CertificationRow[] = [];
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    const { data, error } = await createPublicClient().from("certifications").select("*").eq("is_active", true).order("sort_order").returns<CertificationRow[]>();
+    if (error) throw new Error("Unable to load export documents");
+    documents = data ?? [];
+  }
   return (
     <main className="bg-[#F5F7FA] text-[#0F172A]">
       <section className="relative overflow-hidden bg-[#071624]">
@@ -83,6 +91,13 @@ export default async function CertificationsPage() {
           </div>
         </div>
       </section>
+      {documents.length > 0 && <section className="mx-auto max-w-[1450px] px-6 pb-16">
+        <h2 className="text-2xl font-bold">Published document references</h2>
+        <p className="mt-3">Confirm validity, scope and destination acceptance with the issuing body before relying on a document.</p>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">{documents.map(document => <article key={document.id} className="rounded-xl bg-white p-6">
+          <h3 className="font-bold">{document.name}</h3><p>{document.issuer}</p><p className="mt-2">{document.description}</p>
+        </article>)}</div>
+      </section>}
     </main>
   );
 }

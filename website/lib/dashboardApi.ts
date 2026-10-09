@@ -82,3 +82,14 @@ export function redirectIfAuthError(error: unknown) {
   }
   return false;
 }
+
+/** Load every page; never silently export only the newest 100 leads. */
+export async function dashboardFetchAll<T>(path: string): Promise<T[]> {
+  const rows: T[] = [];
+  for (let offset = 0; ; offset += 250) {
+    const batch = await dashboardFetch<T[]>(`${path}?limit=250&offset=${offset}`);
+    if (!Array.isArray(batch)) throw new Error("Invalid list response");
+    rows.push(...batch);
+    if (batch.length < 250) return rows;
+  }
+}

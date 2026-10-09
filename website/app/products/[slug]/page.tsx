@@ -46,12 +46,6 @@ type Props = { params: Promise<{ slug: string }> };
 
 const SITE_URL = "https://gopuexports.com";
 
-function absoluteUrl(value?: string) {
-  if (!value) return undefined;
-  if (value.startsWith("http://") || value.startsWith("https://")) return value;
-  return `${SITE_URL}${value.startsWith("/") ? value : `/${value}`}`;
-}
-
 function DetailRow({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
   return (

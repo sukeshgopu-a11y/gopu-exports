@@ -46,7 +46,6 @@ export function getEmailRuntimeConfig() {
   const resendKey = process.env.RESEND_API_KEY || "";
   return {
     hasResendKey: Boolean(resendKey),
-    resendKeyPrefix: resendKey ? resendKey.slice(0, 6) : "",
     adminEmail: process.env.ADMIN_EMAIL || DEFAULT_ADMIN_EMAIL,
     emailFrom: process.env.EMAIL_FROM || process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL,
   };
@@ -95,21 +94,16 @@ function phoneWithoutPlus(payload: LeadEmailPayload) {
   return value.replace(/\D/g, "");
 }
 
-function getOrigin(payload: LeadEmailPayload) {
-  const configured = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL;
-  if (configured) return configured.replace(/\/$/, "");
-  if (payload.sourceUrl) {
-    try {
-      return new URL(payload.sourceUrl).origin;
-    } catch {
-      return DEFAULT_SITE_URL;
-    }
-  }
-  return DEFAULT_SITE_URL;
+function getOrigin() {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || DEFAULT_SITE_URL;
+  try {
+    const url = new URL(configured);
+    return url.protocol === "https:" && !url.username && !url.password ? url.origin : DEFAULT_SITE_URL;
+  } catch { return DEFAULT_SITE_URL; }
 }
 
 function dashboardLink(payload: LeadEmailPayload) {
-  const origin = getOrigin(payload);
+  const origin = getOrigin();
   if (payload.kind === "quote") {
     return payload.id ? `${origin}/dashboard/quotes/${payload.id}` : `${origin}/dashboard/quotes`;
   }
@@ -233,6 +227,15 @@ function autoReplyHtml(payload: LeadEmailPayload) {
   `;
 }
 
+async function withTimeout<T>(operation: Promise<T>): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([operation, new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(new Error("Email provider timed out; delivery queued for retry")), 10000);
+    })]);
+  } finally { if (timer) clearTimeout(timer); }
+}
+
 async function sendResendEmail(input: {
   to: string | string[];
   subject: string;
@@ -244,7 +247,7 @@ async function sendResendEmail(input: {
   if (!resend) return { sent: false, error: "RESEND_API_KEY is not configured" };
 
   try {
-    const { data, error } = await resend.emails.send(
+    const { data, error } = await withTimeout(resend.emails.send(
       {
         from: getEmailRuntimeConfig().emailFrom,
         to: input.to,
@@ -253,7 +256,7 @@ async function sendResendEmail(input: {
         html: input.html,
       },
       { idempotencyKey: input.idempotencyKey }
-    );
+    ));
 
     if (error) return { sent: false, error: stringifyError(error), resendResponse: stringifyError(error) };
 
@@ -281,27 +284,6 @@ export async function sendCustomerAutoReply(payload: LeadEmailPayload) {
     text: autoReplyText(payload),
     html: autoReplyHtml(payload),
     idempotencyKey: `gopu-customer-${payload.id || `${payload.kind}-${Date.now()}`}`,
-  });
-}
-
-export async function sendTestEmail() {
-  const config = getEmailRuntimeConfig();
-  return sendResendEmail({
-    to: config.adminEmail,
-    subject: "GOPU Exports email delivery test",
-    text: [
-      "GOPU Exports email delivery test.",
-      "If you received this message, Resend is configured correctly in production.",
-      `Sent at: ${new Date().toISOString()}`,
-    ].join("\n"),
-    html: `
-      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#334155">
-        <h2 style="color:#0f172a">GOPU Exports email delivery test</h2>
-        <p>If you received this message, Resend is configured correctly in production.</p>
-        <p><strong>Sent at:</strong> ${escapeHtml(new Date().toISOString())}</p>
-      </div>
-    `,
-    idempotencyKey: `gopu-test-${Date.now()}`,
   });
 }
 
