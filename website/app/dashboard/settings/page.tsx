@@ -53,16 +53,25 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [phoneError, setPhoneError] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [legacyContact, setLegacyContact] = useState(false);
 
-  useEffect(() => {
+  const loadSettings = useCallback(() => {
     fetch("/api/site-settings?key=contact")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data?.value) setContact({ ...DEFAULTS, ...data.value });
+      .then((r) => {
+        if (!r.ok) throw new Error("Settings could not be loaded. Retry before editing.");
+        return r.json();
       })
-      .catch(() => window.alert("Settings could not be loaded."))
+      .then((data) => {
+        if (data?.value) {
+          setContact({ ...DEFAULTS, ...data.value });
+          setLegacyContact(data.value.publicContactVersion !== 1);
+        }
+      })
+      .catch(() => setLoadError("Settings could not be loaded. Retry before editing."))
       .finally(() => setLoading(false));
   }, []);
+  useEffect(() => { loadSettings(); }, [loadSettings]);
 
   const set = (key: keyof ContactSettings) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -80,7 +89,7 @@ export default function SettingsPage() {
 
   const handleSave = async (e: { preventDefault(): void }) => {
     e.preventDefault();
-    if (phoneError) return;
+    if (phoneError || loadError || loading) return;
     setSaving(true);
     try {
       const response = await fetch("/api/site-settings", {
@@ -89,6 +98,7 @@ export default function SettingsPage() {
         body: JSON.stringify({ key: "contact", value: contact }),
       });
       if (!response.ok) throw new Error("Settings could not be saved. Please try again.");
+      setLegacyContact(false);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (error) {
@@ -106,6 +116,13 @@ export default function SettingsPage() {
     );
   }
 
+  if (loadError) {
+    return <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-6 text-red-800">
+      <p>{loadError}</p>
+      <button type="button" onClick={() => { setLoading(true); setLoadError(""); loadSettings(); }} className="mt-3 font-semibold underline">Retry loading settings</button>
+    </div>;
+  }
+
   return (
     <div>
       <div className="mb-8">
@@ -114,6 +131,9 @@ export default function SettingsPage() {
       </div>
 
       <form onSubmit={handleSave} className="space-y-6 max-w-3xl">
+        {legacyContact && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+          These are older saved details. The website currently uses its existing public contact details. Check the phone and address below before saving to publish them.
+        </p>}
         {/* Company Info */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-7">
           <h2 className="text-base font-bold text-[#0F172A] mb-5">Company Information</h2>

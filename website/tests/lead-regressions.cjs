@@ -10,6 +10,30 @@ function load(file, mocks={}, env={}) {
   return exports;
 }
 (async()=>{
+  const rateKeys=[];
+  const rateMocks={'server-only':{},'@/src/lib/supabase/admin':{createAdminClient:()=>({rpc:async(_name,args)=>{rateKeys.push(args.p_key);return {data:true,error:null};}})}};
+  const rate=load('lib/rateLimit.ts',rateMocks,{VERCEL:'1'});
+  const rateRequest=(ip,spoof='198.51.100.90')=>new Request('https://gopuexports.com/api/inquiries',{headers:{'x-vercel-forwarded-for':ip,'x-forwarded-for':spoof}});
+  await rate.consumeRateLimit(rateRequest('192.0.2.1'),'leads',8,600);
+  await rate.consumeRateLimit(rateRequest('192.0.2.2'),'leads',8,600);
+  await rate.consumeRateLimit(rateRequest('192.0.2.1','198.51.100.91'),'leads',8,600);
+  assert.notEqual(rateKeys[0],rateKeys[1]);assert.equal(rateKeys[0],rateKeys[2]);
+  const unknown=load('lib/rateLimit.ts',rateMocks);
+  await unknown.consumeRateLimit(rateRequest('192.0.2.1'),'leads',8,600);
+  await unknown.consumeRateLimit(rateRequest('192.0.2.2'),'leads',8,600);
+  assert.equal(rateKeys[3],rateKeys[4]);
+  await rate.consumeRateLimit(rateRequest('forged-one'),'leads',8,600);
+  await rate.consumeRateLimit(rateRequest('forged-two'),'leads',8,600);
+  assert.equal(rateKeys[5],rateKeys[6]);
+  const company=load('lib/company.ts').COMPANY;
+  let contact={phone:'+918712816876',address:'Old saved address'};
+  const companyMocks={'server-only':{},react:{cache:fn=>fn},'./company':{COMPANY:company},'@/src/lib/supabase/public':{createPublicClient:()=>({from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>({data:{value:contact},error:null})})})})})}};
+  const publicCompany=load('lib/publicCompany.ts',companyMocks,{NEXT_PUBLIC_SUPABASE_URL:'https://example.supabase.co'});
+  assert.equal((await publicCompany.getPublicCompany()).phone,company.phone);
+  contact={...contact,publicContactVersion:1};
+  const published=await publicCompany.getPublicCompany();
+  assert.equal(published.phone,contact.phone);assert.equal(published.hq.address,contact.address);
+  assert.equal(published.registeredAddress,company.registeredAddress);
   const body=load('lib/requestBody.ts');
   let hits=0;
   const mocks={'./requestBody':body,'./rateLimit':{consumeRateLimit:async(_req,scope)=>{assert.equal(scope,'leads');return ++hits<=8;}}};
@@ -40,5 +64,5 @@ function load(file, mocks={}, env={}) {
   const original = {sent:true,sentAt:'2026-10-09T00:00:00Z'};
   const retried = await delivery.sendLeadEmails({id:'test',kind:'inquiry'}, {admin:original,customer:{sent:false}});
   assert.equal(adminCalls,0);assert.equal(customerCalls,1);assert.equal(retried.admin.sentAt,original.sentAt);
-  console.log('Lead alias limits, CAPTCHA configuration, payload allowlist, public email route and trusted email links passed');
+  console.log('Ingress trust, contact publication, lead limits, CAPTCHA, payload validation and email regressions passed');
 })().catch(error=>{console.error(error);process.exitCode=1});
