@@ -1571,7 +1571,7 @@ export const PRODUCTS: Product[] = [
     "category": "Fresh Vegetables",
     "image": "https://fqepkwnjdlmauskofafd.supabase.co/storage/v1/object/public/products/1779192826686-4xsg47u4f7.jpg",
     "tagline": "Indian fresh potato for international B2B buyers",
-    "description": "GOPU Exports supplies Indian fresh potato to international importers, distributors, wholesalers and food businesses. Specify size or grade, packing, destination and shipment timing. Availability and handling requirements depend on the season and route. Availability and export terms are confirmed during quotation.",
+    "description": "Discuss Indian fresh potatoes for wholesale, retail packing or food-service requirements. Share the variety, size range, quantity, bag weight and destination port. Availability, handling conditions and shipment terms are confirmed during quotation.",
     "origin": "Gujarat / Uttar Pradesh, India",
     "moq": "1 x 20 ft container",
     "packaging": "Jute / mesh bags",
