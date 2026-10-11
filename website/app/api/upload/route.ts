@@ -120,7 +120,7 @@ export async function POST(req: Request) {
 
     const { data } = supabase.storage.from(uploadBucket).getPublicUrl(storagePath);
     if (bucket === "gallery") {
-      await sessionClient.from("gallery_images").insert({
+      const { error: metadataError } = await sessionClient.from("gallery_images").insert({
         title: file.name.replace(/\.[^.]+$/, ""),
         alt_text: file.name.replace(/\.[^.]+$/, ""),
         image_url: data.publicUrl,
@@ -128,6 +128,10 @@ export async function POST(req: Request) {
         bucket: uploadBucket,
         is_active: true,
       });
+      if (metadataError) {
+        await supabase.storage.from(uploadBucket).remove([storagePath]);
+        return NextResponse.json({ error: "Could not save gallery image" }, { status: 500 });
+      }
     }
     return NextResponse.json({ url: data.publicUrl, bucket: uploadBucket, path: storagePath });
   } catch (err) {

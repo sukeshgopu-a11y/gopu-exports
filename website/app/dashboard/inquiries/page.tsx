@@ -1,5 +1,8 @@
 "use client";
 
+import { dashboardFetchAll } from "@/lib/dashboardApi";
+import { encodeCsv } from "@/lib/csv";
+
 import { useEffect, useState } from "react";
 import { Copy, Download, Mail, MessageCircle, Phone, RefreshCw, Save, Search, Trash2 } from "lucide-react";
 import { DashboardSkeleton, InlineError } from "@/components/dashboard/LoadingStates";
@@ -125,7 +128,7 @@ export default function InquiriesPage() {
     setLoading(true);
     setError("");
     try {
-      const data = await dashboardFetch<Inquiry[]>("/api/inquiries?limit=100");
+      const data = await dashboardFetchAll<Inquiry>("/api/inquiries");
       setInquiries(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(getErrorMessage(err, "Inquiries could not be loaded."));
@@ -210,7 +213,7 @@ export default function InquiriesPage() {
       i.country ?? "", i.quantity ?? "", i.incoterm ?? "", i.status,
       new Date(i.createdAt).toLocaleDateString(),
     ]);
-    const csv = [headers, ...rows].map((r) => r.map((c) => `"${c}"`).join(",")).join("\n");
+    const csv = encodeCsv([headers, ...rows]);
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a"); a.href = url; a.download = "inquiries.csv"; a.click();

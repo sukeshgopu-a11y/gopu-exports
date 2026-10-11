@@ -75,9 +75,14 @@ export async function PATCH(
   if (!supabase) return unauthorized();
   const { id } = await params;
   const body = await req.json();
+  const { data: previous, error: readError } = await supabase.from("products").select("*").eq("id", id).single<ProductRow>();
+  if (readError || !previous) return NextResponse.json({ error: "Product not found" }, { status: 404 });
+  const patch = productBodyToUpdate(body);
+  if (patch.specifications) patch.specifications = { ...previous.specifications, ...patch.specifications as Record<string, unknown> };
   const { data, error } = await supabase
     .from("products")
-    .update(productBodyToUpdate(body))
+    .update(patch)
+    .eq("updated_at", previous.updated_at)
     .eq("id", id)
     .select("*")
     .single<ProductRow>();
@@ -85,7 +90,9 @@ export async function PATCH(
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   revalidatePath("/");
   revalidatePath("/products");
+  revalidatePath("/products/[slug]", "page");
   revalidatePath(`/products/${data.slug}`);
+  revalidatePath(`/products/${previous.slug}`);
   revalidatePath("/sitemap.xml");
   return NextResponse.json(productToApi(data));
 }
@@ -101,6 +108,7 @@ export async function DELETE(
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
   revalidatePath("/");
   revalidatePath("/products");
+  revalidatePath("/products/[slug]", "page");
   revalidatePath("/sitemap.xml");
   return NextResponse.json({ success: true });
 }

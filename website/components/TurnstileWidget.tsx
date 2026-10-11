@@ -32,6 +32,8 @@ type Props = {
 export function TurnstileWidget({ siteKey, onToken, onExpire }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
+  const callbacks = useRef({ onToken, onExpire });
+  useEffect(() => { callbacks.current = { onToken, onExpire }; }, [onToken, onExpire]);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -40,14 +42,14 @@ export function TurnstileWidget({ siteKey, onToken, onExpire }: Props) {
     widgetIdRef.current = window.turnstile.render(containerRef.current, {
       sitekey: siteKey,
       theme: "light",
-      callback: onToken,
+      callback: (token) => callbacks.current.onToken(token),
       "expired-callback": () => {
-        onToken("");
-        onExpire?.();
+        callbacks.current.onToken("");
+        callbacks.current.onExpire?.();
       },
       "error-callback": () => {
-        onToken("");
-        onExpire?.();
+        callbacks.current.onToken("");
+        callbacks.current.onExpire?.();
       },
     });
 
@@ -57,7 +59,7 @@ export function TurnstileWidget({ siteKey, onToken, onExpire }: Props) {
         widgetIdRef.current = null;
       }
     };
-  }, [loaded, onExpire, onToken, siteKey]);
+  }, [loaded, siteKey]);
 
   if (!siteKey) return null;
 

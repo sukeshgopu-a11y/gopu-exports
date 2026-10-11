@@ -4,22 +4,17 @@ import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { slugify } from "@/src/lib/supabase/data";
 import { NextRequest, NextResponse } from "next/server";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { revalidatePath } from "next/cache";
 
 async function getCategories() {
   const supabase = createPublicClient();
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("site_settings")
     .select("value")
     .eq("key", "categories")
     .maybeSingle();
+  if (error) throw new Error("Could not load categories");
   return Array.isArray(data?.value) ? data.value : [];
-}
-
-async function saveCategories(supabase: SupabaseClient, categories: unknown[]) {
-  await supabase
-    .from("site_settings")
-    .upsert({ key: "categories", value: categories }, { onConflict: "key" });
 }
 
 export async function GET() {
@@ -33,7 +28,6 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   if (!body.name) return NextResponse.json({ error: "name is required" }, { status: 400 });
 
-  const categories = await getCategories();
   const category = {
     _id: crypto.randomUUID(),
     name: body.name,
@@ -43,6 +37,8 @@ export async function POST(req: NextRequest) {
     active: body.active ?? true,
     order: Number(body.order ?? 0),
   };
-  await saveCategories(supabase, [...categories, category]);
+  const { error } = await supabase.rpc("mutate_category", { p_action: "create", p_id: category._id, p_body: category });
+  if (error) return NextResponse.json({ error: "Category could not be saved" }, { status: 400 });
+  revalidatePath("/products");
   return NextResponse.json(category, { status: 201 });
 }

@@ -46,7 +46,6 @@ type Props = { params: Promise<{ slug: string }> };
 
 const SITE_URL = "https://gopuexports.com";
 
-
 function DetailRow({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
   return (

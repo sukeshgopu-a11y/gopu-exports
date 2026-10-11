@@ -78,6 +78,7 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
     fetch(`/api/quotes/${id}`)
       .then((res) => res.json())
       .then((data) => setQuote(data.error ? null : data))
+      .catch(() => alert("Quote could not be loaded"))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -88,13 +89,15 @@ export default function QuoteDetailPage({ params }: { params: Promise<{ id: stri
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
     });
+    if (!res.ok) { alert("Quote update failed. Please try again."); return; }
     const updated = await res.json();
     setQuote(updated);
   };
 
   const deleteQuote = async () => {
     if (!quote || !confirm("Delete this quote request?")) return;
-    await fetch(`/api/quotes/${quote._id}`, { method: "DELETE" });
+    const response = await fetch(`/api/quotes/${quote._id}`, { method: "DELETE" });
+    if (!response.ok) { alert("Quote deletion failed. Please try again."); return; }
     router.push("/dashboard/quotes");
   };
 

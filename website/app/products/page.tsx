@@ -1,3 +1,4 @@
+import { getPublicCategories } from "@/lib/publicCategories";
 import { publicMetadata } from "@/lib/seo";
 import ProductsGrid from "@/components/ProductsGrid";
 import { getPublicProducts } from "@/lib/publicCatalogue";
@@ -16,7 +17,7 @@ export const metadata = publicMetadata(
 );
 
 export default async function ProductsPage() {
-  const products = await getPublicProducts();
+  const [products, managedCategories] = await Promise.all([getPublicProducts(), getPublicCategories()]);
   const categories = Array.from(new Set(products.map((product) => product.category).filter(Boolean)));
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
@@ -39,7 +40,7 @@ export default async function ProductsPage() {
 
       {/* ── GRID WITH FILTERS ────────────────────────────────── */}
       <section id="catalogue" className="mx-auto max-w-[1280px] px-6 py-8 sm:px-8">
-        <ProductsGrid initialProducts={products} />
+        <ProductsGrid initialProducts={products} managedCategories={managedCategories} />
       </section>
 
       <section className="mx-auto max-w-[1450px] px-6 pb-14 sm:px-8">

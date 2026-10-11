@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
 import { createPublicClient } from "@/src/lib/supabase/public";
 import { NextRequest, NextResponse } from "next/server";
@@ -37,12 +38,18 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "key is required" }, { status: 400 });
   }
 
+  if (key === "contact" && (!value || typeof value !== "object" || Array.isArray(value))) {
+    return NextResponse.json({ error: "Contact settings must be an object" }, { status: 400 });
+  }
+  const publishedValue = key === "contact" ? { ...value, publicContactVersion: 1 } : value;
+
   const { data, error } = await supabase
     .from("site_settings")
-    .upsert({ key, value }, { onConflict: "key" })
+    .upsert({ key, value: publishedValue }, { onConflict: "key" })
     .select("*")
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  revalidatePath("/", "layout");
   return NextResponse.json(data);
 }

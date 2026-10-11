@@ -8,7 +8,7 @@ This project now uses Next.js, Supabase Auth, Supabase PostgreSQL, and Supabase 
 
 | Requirement | Version / Source |
 |---|---|
-| Node.js | 20 LTS recommended |
+| Node.js | 24.x required |
 | npm | Bundled with Node |
 | Supabase | Linked project `gopu-exports` |
 | Vercel | Recommended host |
