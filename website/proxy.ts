@@ -4,6 +4,10 @@ import { createServerClient } from "@supabase/ssr";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  // Only these entry points move to the central CRM. Never forward caller-supplied URLs or tokens.
+  if (pathname === "/admin" || pathname === "/dashboard") {
+    return NextResponse.redirect(new URL("https://www.gopufoods.com/admin"));
+  }
   let response = NextResponse.next({ request });
 
   if (pathname === "/dashboard/login") {
@@ -56,5 +60,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/login"],
+  matcher: ["/dashboard/:path*", "/admin/login", "/admin"],
 };
