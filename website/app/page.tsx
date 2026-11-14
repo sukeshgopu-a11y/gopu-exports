@@ -29,7 +29,7 @@ const primary = "inline-flex items-center justify-center gap-2 rounded-lg bg-[#0
 
 export default async function HomePage() {
   const products = await getPublicProducts();
-  const priority = ["red-chilli", "turmeric-fingers", "cumin-seeds", "basmati-rice", "turmeric-powder", "red-chilli-powder"];
+  const priority = ["red-chilli", "turmeric-fingers", "cumin-seeds", "basmati-1121-rice", "turmeric-powder", "red-chilli-powder"];
   const featured = priority.flatMap(slug => products.filter(product => product.slug === slug));
   return <main className="bg-[#F5F7FA] text-[#0F172A]">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd({
