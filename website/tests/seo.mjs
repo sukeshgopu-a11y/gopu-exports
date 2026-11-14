@@ -21,3 +21,8 @@ assert.equal(editorialSearchTitle('How to Choose a Reliable Agricultural Exporte
 assert.equal(editorialSearchTitle('A future editor title'), 'A future editor title');
 assert.equal(editorialSearchTitle('A future editor title | GOPU Exports'), 'A future editor title');
 console.log('10 search and editorial-title regression checks passed');
+
+const homePage = fs.readFileSync("app/page.tsx", "utf8");
+const featuredPriority = homePage.match(/const priority = \[([^\]]+)\]/)?.[1] ?? "";
+assert.match(featuredPriority, /"basmati-1121-rice"/, "Homepage featured products should include 1121 Basmati Rice");
+assert.doesNotMatch(featuredPriority, /"basmati-rice"/, "Homepage should not substitute generic Basmati Rice for the priority 1121 product");
