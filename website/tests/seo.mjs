@@ -26,3 +26,5 @@ const homePage = fs.readFileSync("app/page.tsx", "utf8");
 const featuredPriority = homePage.match(/const priority = \[([^\]]+)\]/)?.[1] ?? "";
 assert.match(featuredPriority, /"basmati-1121-rice"/, "Homepage featured products should include 1121 Basmati Rice");
 assert.doesNotMatch(featuredPriority, /"basmati-rice"/, "Homepage should not substitute generic Basmati Rice for the priority 1121 product");
+const sitemapSource = fs.readFileSync("app/sitemap.ts", "utf8");
+assert.match(sitemapSource, /"": "2026-11-14"/, "Homepage sitemap lastModified should reflect the 14 Nov 2026 homepage update");

@@ -13,7 +13,7 @@ const CONTENT_REVISED = "2026-09-16";
 const PRODUCT_TEMPLATE_REVISED = "2026-10-02";
 const COMPANY_VERIFICATION_REVISED = "2026-10-04";
 const STATIC_LAST_MODIFIED: Record<string, string> = {
-  "": "2026-10-09",
+  "": "2026-11-14",
   "/about": "2026-10-09",
   "/products": "2026-10-09",
   "/blog": "2026-10-09",
