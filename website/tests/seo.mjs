@@ -20,7 +20,16 @@ const { editorialSearchTitle } = load('lib/seo.ts');
 assert.equal(editorialSearchTitle('How to Choose a Reliable Agricultural Exporter from India | GOPU Exports'), 'Choosing an Agricultural Exporter in India');
 assert.equal(editorialSearchTitle('A future editor title'), 'A future editor title');
 assert.equal(editorialSearchTitle('A future editor title | GOPU Exports'), 'A future editor title');
-console.log('10 search and editorial-title regression checks passed');
+const { hsDisplayLabel } = load('lib/publicSpecifications.ts');
+assert.equal(hsDisplayLabel('1006'), 'HS Heading (4-digit)');
+assert.equal(hsDisplayLabel('1006 30 20'), 'HS Code');
+assert.equal(hsDisplayLabel('0904 21 10'), 'HS Code');
+const productPageSource = fs.readFileSync('app/products/[slug]/page.tsx', 'utf8');
+assert.match(productPageSource, /hsDisplayLabel/);
+assert.match(productPageSource, /four-digit HS heading/i);
+const specificationRouteSource = fs.readFileSync('app/api/products/[id]/specification/route.ts', 'utf8');
+assert.match(specificationRouteSource, /hsDisplayLabel/);
+console.log('10 search/editorial checks and 5 HS-heading clarity regressions passed');
 
 const homePage = fs.readFileSync("app/page.tsx", "utf8");
 const featuredPriority = homePage.match(/const priority = \[([^\]]+)\]/)?.[1] ?? "";
