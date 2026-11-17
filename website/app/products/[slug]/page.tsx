@@ -10,7 +10,7 @@ import { getProductBySlug, PRODUCTS } from "@/lib/products";
 import { formatCommercialMoq } from "@/lib/moq";
 import { cleanPublicProduct } from "@/lib/publicProductCopy";
 import { serializeJsonLd } from "@/lib/jsonLd";
-import { buildPublicSpecificationGroups } from "@/lib/publicSpecifications";
+import { buildPublicSpecificationGroups, hsDisplayLabel } from "@/lib/publicSpecifications";
 
 export const revalidate = 300;
 
@@ -272,7 +272,7 @@ export default async function ProductDetailsPage({ params }: Props) {
                 {[
                   ["MOQ", heroMoq],
                   ["Origin", product.origin?.split(",")[0]],
-                  ["HS Code", product.hs],
+                  [hsDisplayLabel(product.hs), product.hs],
                 ].map(([label, value]) => value && (
                   <div key={label} className="rounded-2xl border border-[#D9E2EC] bg-[#F8FAFC] p-4">
                     <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#0E7490]">{label}</p>
@@ -280,6 +280,11 @@ export default async function ProductDetailsPage({ params }: Props) {
                   </div>
                 ))}
               </div>
+              {product.hs && hsDisplayLabel(product.hs) !== "HS Code" && (
+                <p className="mt-3 max-w-3xl text-[12px] leading-5 text-[#64748B]">
+                  This is the four-digit HS heading. The full tariff item depends on the product form and applicable customs schedule; confirm it before customs filing.
+                </p>
+              )}
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href={`/contact?product=${encodeURIComponent(product.title)}`} className="inline-flex items-center gap-2 rounded-xl bg-[#0E7490] px-6 py-3.5 text-[13px] font-black uppercase tracking-wide text-white transition hover:bg-[#0A5A70]">
@@ -340,7 +345,7 @@ export default async function ProductDetailsPage({ params }: Props) {
                 <DetailRow label="MOQ" value={commercialMoq} />
                 <DetailRow label="Packaging" value={product.packaging} />
                 <DetailRow label="Lead Time" value={isFreshPotato ? "Confirmed for each quotation based on availability and destination" : product.lead} />
-                <DetailRow label="HS Code" value={product.hs} />
+                <DetailRow label={hsDisplayLabel(product.hs)} value={product.hs} />
                 <DetailRow label="Shelf Life" value={product.shelfLife} />
               </dl>
             </div>
