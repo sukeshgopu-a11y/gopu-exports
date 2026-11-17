@@ -4,6 +4,7 @@ import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFImage, type PDFP
 import { COMPANY } from "@/lib/company";
 import { formatCommercialMoq } from "@/lib/moq";
 import { getPublicProducts } from "@/lib/publicCatalogue";
+import { hsDisplayLabel } from "@/lib/publicSpecifications";
 
 
 
@@ -333,7 +334,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
   const detailRows: Array<[string, string | undefined]> = [
     ["Product Name", product.title],
     ["Category", product.category],
-    ["HS Code", product.hs || "Available on request / confirmed during quotation"],
+    [hsDisplayLabel(product.hs), product.hs || "Available on request / confirmed during quotation"],
     ["Origin", product.origin || "India"],
     ["MOQ", commercialMoq],
     ["Packaging", product.packaging || "Food-grade export packing options reviewed by product and destination"],
