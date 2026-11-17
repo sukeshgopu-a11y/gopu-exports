@@ -18,12 +18,17 @@ export type PublicSpecificationGroups = {
   additional: PublicSpecification[];
 };
 
-function canonicalLabel(label: string) {
+export function hsDisplayLabel(value?: string) {
+  const digits = String(value ?? "").replace(/\D/g, "");
+  return digits.length === 4 ? "HS Heading (4-digit)" : "HS Code";
+}
+
+function canonicalLabel(label: string, value?: string) {
   const key = label.trim().toLowerCase().replace(/\s+/g, " ");
   if (["moq", "minimum order", "minimum order quantity"].includes(key)) return "MOQ";
   if (["packing", "packaging"].includes(key)) return "Packaging";
   if (["lead time", "leadtime"].includes(key)) return "Lead Time";
-  if (["hs", "hs code", "hscode"].includes(key)) return "HS Code";
+  if (["hs", "hs code", "hscode", "hs heading", "hs heading (4-digit)"].includes(key)) return hsDisplayLabel(value);
   if (key === "origin") return "Origin";
   if (["shelf life", "shelflife"].includes(key)) return "Shelf Life";
   return label.trim();
@@ -40,7 +45,7 @@ function groupFor(label: string): keyof Omit<PublicSpecificationGroups, "all"> {
     return "quality";
   }
 
-  if (/origin|variety|form|hs code|shelf life|product/.test(key)) {
+  if (/origin|variety|form|hs code|hs heading|shelf life|product/.test(key)) {
     return "product";
   }
 
@@ -49,7 +54,7 @@ function groupFor(label: string): keyof Omit<PublicSpecificationGroups, "all"> {
 
 export function buildPublicSpecificationGroups(input: SpecificationInput): PublicSpecificationGroups {
   const preferred: PublicSpecification[] = [
-    input.hs ? { label: "HS Code", value: input.hs } : null,
+    input.hs ? { label: hsDisplayLabel(input.hs), value: input.hs } : null,
     input.origin ? { label: "Origin", value: input.origin } : null,
     input.commercialMoq ? { label: "MOQ", value: input.commercialMoq } : null,
     input.packaging ? { label: "Packaging", value: input.packaging } : null,
@@ -62,7 +67,7 @@ export function buildPublicSpecificationGroups(input: SpecificationInput): Publi
 
   for (const raw of [...preferred, ...(input.specs ?? [])]) {
     if (!raw?.label || !raw?.value) continue;
-    const label = canonicalLabel(raw.label);
+    const label = canonicalLabel(raw.label, raw.value);
     const key = label.toLowerCase();
     if (seen.has(key)) continue;
     seen.add(key);
