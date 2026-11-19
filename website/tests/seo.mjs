@@ -37,3 +37,4 @@ assert.match(featuredPriority, /"basmati-1121-rice"/, "Homepage featured product
 assert.doesNotMatch(featuredPriority, /"basmati-rice"/, "Homepage should not substitute generic Basmati Rice for the priority 1121 product");
 const sitemapSource = fs.readFileSync("app/sitemap.ts", "utf8");
 assert.match(sitemapSource, /"": "2026-11-14"/, "Homepage sitemap lastModified should reflect the 14 Nov 2026 homepage update");
+assert.match(sitemapSource, /const PRODUCT_TEMPLATE_REVISED = "2026-11-17"/, "Product sitemap lastModified should reflect the 17 Nov 2026 product-page and specification update");
