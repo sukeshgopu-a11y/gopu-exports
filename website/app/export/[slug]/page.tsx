@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { publicMetadata } from "@/lib/seo";
+import { formatCommercialMoq } from "@/lib/moq";
 import { getPublicProducts } from "@/lib/publicCatalogue";
 import { COMPANY } from "@/lib/company";
 import Link from "next/link";
@@ -127,7 +128,7 @@ export default async function ExportCategoryPage({ params }: Props) {
                   <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#0E7490]">{product.category}</p>
                   <h3 className="mt-2 text-[17px] font-black">{product.title}</h3>
                   {product.tagline && <p className="mt-2 text-[13px] leading-6 text-[#64748B]">{product.tagline}</p>}
-                  {product.moq && <p className="mt-4 text-[12px] font-bold text-[#94A3B8]">MOQ: {product.moq}</p>}
+                  <p className="mt-4 text-[12px] font-bold text-[#94A3B8]">MOQ: {formatCommercialMoq(product)}</p>
                 </Link>
               ))}
             </div>
