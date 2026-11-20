@@ -1,5 +1,8 @@
 "use client";
 
+import { dashboardFetchAll } from "@/lib/dashboardApi";
+import { encodeCsv } from "@/lib/csv";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Download, Eye, Mail, MessageCircle, Phone, RefreshCw, Search, Trash2 } from "lucide-react";
@@ -77,7 +80,7 @@ export default function QuotesPage() {
     setLoading(true);
     setError("");
     try {
-      const data = await dashboardFetch<Quote[]>("/api/quotes?limit=100");
+      const data = await dashboardFetchAll<Quote>("/api/quotes");
       setQuotes(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(getErrorMessage(err, "Quote requests could not be loaded."));
@@ -131,7 +134,7 @@ export default function QuotesPage() {
       q.status,
       new Date(q.createdAt).toLocaleDateString(),
     ]);
-    const csv = [headers, ...rows].map((r) => r.map((c) => `"${c}"`).join(",")).join("\n");
+    const csv = encodeCsv([headers, ...rows]);
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
     const a = document.createElement("a");
     a.href = url;

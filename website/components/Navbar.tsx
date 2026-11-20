@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import BrandLogo from "./BrandLogo";
-import { COMPANY } from "@/lib/company";
+import { useCompany } from "@/components/CompanyProvider";
 
 type IconProps = { size?: number; className?: string };
 type IconComponent = (props: IconProps) => React.ReactElement;
@@ -59,12 +59,6 @@ function ResourceNavigation({ active, mobile = false, onNavigate }: { active: bo
   );
 }
 
-const SOCIAL_LINKS = [
-  { label: "LinkedIn", href: COMPANY.social.linkedin, icon: LinkedinIcon },
-  { label: "Facebook", href: COMPANY.social.facebook, icon: FacebookIcon },
-  { label: "Instagram", href: COMPANY.social.instagram, icon: InstagramIcon },
-].filter((item) => Boolean(item.href));
-
 function SvgIcon({ size = 18, className = "", children }: IconProps & { children: React.ReactNode }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
@@ -118,6 +112,14 @@ function WhatsAppIcon() {
 }
 
 export default function Navbar() {
+  const COMPANY = useCompany();
+  const SOCIAL_LINKS = [
+  { label: "LinkedIn", href: COMPANY.social.linkedin, icon: LinkedinIcon },
+  { label: "Facebook", href: COMPANY.social.facebook, icon: FacebookIcon },
+  { label: "Instagram", href: COMPANY.social.instagram, icon: InstagramIcon },
+].filter((item) => Boolean(item.href));
+
+
   const pathname = usePathname() || "/";
   const [menuOpen, setMenuOpen] = useState(false);
 
