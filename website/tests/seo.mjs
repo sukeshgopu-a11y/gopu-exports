@@ -62,4 +62,5 @@ assert.equal(
   'The configured fresh-potato minimum must remain unchanged'
 );
 const categoryPageSource = fs.readFileSync('app/export/[slug]/page.tsx', 'utf8');
-assert.match(categoryPageSource, /formatCommercialMoq\(product\)/, 'Category product cards must use the shared commercial MOQ formatter');
+assert.match(categoryPageSource, /MOQ: \{formatCommercialMoq\(product\)\}/, 'Category product cards must use the shared commercial MOQ formatter');
+assert.doesNotMatch(categoryPageSource, /product\.moq\s*&&[^\n]*formatCommercialMoq/, 'Category MOQ fallback must not be hidden when the stored MOQ is blank');
