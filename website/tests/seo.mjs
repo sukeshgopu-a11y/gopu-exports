@@ -38,6 +38,8 @@ assert.doesNotMatch(featuredPriority, /"basmati-rice"/, "Homepage should not sub
 const sitemapSource = fs.readFileSync("app/sitemap.ts", "utf8");
 assert.match(sitemapSource, /"": "2026-11-14"/, "Homepage sitemap lastModified should reflect the 14 Nov 2026 homepage update");
 assert.match(sitemapSource, /const PRODUCT_TEMPLATE_REVISED = "2026-11-17"/, "Product sitemap lastModified should reflect the 17 Nov 2026 product-page and specification update");
+assert.match(sitemapSource, /const CATEGORY_TEMPLATE_REVISED = "2026-11-20"/, "Product-category sitemap lastModified should reflect the 20 Nov 2026 buyer-facing MOQ consistency update");
+assert.match(sitemapSource, /lastModified: page\.productCategory\s*\? CATEGORY_TEMPLATE_REVISED/, "Category pages with product cards should use the category-template revision date");
 
 const { formatCommercialMoq } = load('lib/moq.ts');
 const spiceMoq = "Bulk orders accepted; final quantity depends on packaging, destination, and availability";
