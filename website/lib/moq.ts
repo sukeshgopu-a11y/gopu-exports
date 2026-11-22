@@ -8,20 +8,21 @@ export function formatCommercialMoq(input: {
   const category = (input.category ?? "").toLowerCase();
   const raw = (input.moq ?? "").toLowerCase();
 
-  // Keep this product's configured minimum consistent on the page and PDF.
-  // LCL/FCL describes a shipping mode, not an order quantity.
+  // LCL/FCL describes a shipment mode, not an order quantity; keep it out of MOQ copy.
   if (input.slug === "fresh-potato") {
-    return input.moq?.trim() || "Confirm minimum quantity when requesting a quote";
+    return input.moq?.trim() || "Minimum quantity confirmed in quotation";
+  }
+
+  if (category.includes("rice") || title.includes("rice")) {
+    return "Bulk order; minimum quantity confirmed in quotation";
   }
 
   if (category.includes("fruit") || category.includes("vegetable") || raw.includes("fcl") || raw.includes("container")) {
-    return "LCL/FCL available based on destination and product category";
+    return "Minimum quantity confirmed in quotation";
   }
 
   if (
     category.includes("spice") ||
-    category.includes("rice") ||
-    title.includes("rice") ||
     title.includes("chilli") ||
     title.includes("turmeric") ||
     title.includes("cumin") ||

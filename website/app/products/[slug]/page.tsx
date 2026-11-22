@@ -60,8 +60,8 @@ function DetailRow({ label, value }: { label: string; value?: string }) {
 function compactMoq(product: Product, commercialMoq: string) {
   if (product.slug === "fresh-potato") return commercialMoq;
   const category = product.category.toLowerCase();
-  if (category.includes("spice") || category.includes("rice")) return "Bulk orders accepted";
-  if (category.includes("fruit") || category.includes("vegetable")) return "LCL/FCL by route";
+  if (category.includes("spice")) return "Bulk orders accepted";
+  if (category.includes("rice") || category.includes("fruit") || category.includes("vegetable")) return commercialMoq;
   return product.moq || commercialMoq;
 }
 

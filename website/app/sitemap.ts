@@ -11,8 +11,8 @@ const BASE_URL = "https://gopuexports.com";
 // Date of this reviewed content revision; never generated from request time.
 const CONTENT_REVISED = "2026-09-16";
 // Product pages and specification PDFs were revised for HS-heading clarity on 17 Nov 2026.
-const PRODUCT_TEMPLATE_REVISED = "2026-11-17";
-const CATEGORY_TEMPLATE_REVISED = "2026-11-20";
+const PRODUCT_TEMPLATE_REVISED = "2026-11-22";
+const CATEGORY_TEMPLATE_REVISED = "2026-11-22";
 const COMPANY_VERIFICATION_REVISED = "2026-10-04";
 const STATIC_LAST_MODIFIED: Record<string, string> = {
   "": "2026-11-14",
