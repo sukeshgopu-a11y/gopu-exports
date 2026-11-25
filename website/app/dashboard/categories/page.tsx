@@ -1,5 +1,7 @@
 "use client";
 
+import { encodeCsv } from "@/lib/csv";
+
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, X, Check, GripVertical, Download, Database } from "lucide-react";
 
@@ -110,6 +112,7 @@ export default function CategoriesPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
+        if (!res.ok) throw new Error("Category update failed");
         const updated = await res.json();
         setCategories((prev) =>
           prev.map((c) => (c._id === editing._id ? updated : c))
@@ -120,10 +123,13 @@ export default function CategoriesPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
+        if (!res.ok) throw new Error("Category creation failed");
         const created = await res.json();
         setCategories((prev) => [...prev, created]);
       }
       setShowForm(false);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Category operation failed");
     } finally {
       setSaving(false);
     }
@@ -135,13 +141,15 @@ export default function CategoriesPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ active: !c.active }),
     });
+    if (!res.ok) { alert("Category update failed"); return; }
     const updated = await res.json();
     setCategories((prev) => prev.map((x) => (x._id === c._id ? updated : x)));
   };
 
   const remove = async (id: string) => {
     if (!confirm("Delete this category?")) return;
-    await fetch(`/api/categories/${id}`, { method: "DELETE" });
+    const response = await fetch(`/api/categories/${id}`, { method: "DELETE" });
+    if (!response.ok) { alert("Category deletion failed"); return; }
     setCategories((prev) => prev.filter((c) => c._id !== id));
   };
 
@@ -161,6 +169,8 @@ export default function CategoriesPage() {
       }
       await load();
       if (created === 0) alert("Website categories are already imported.");
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Category operation failed");
     } finally {
       setSaving(false);
     }
@@ -169,9 +179,7 @@ export default function CategoriesPage() {
   const exportCSV = () => {
     const headers = ["Name", "Slug", "Description", "Image", "Active", "Order"];
     const rows = categories.map((c) => [c.name, c.slug, c.description, c.image, c.active, c.order]);
-    const csv = [headers, ...rows]
-      .map((row) => row.map((cell) => `"${String(cell ?? "").replaceAll('"', '""')}"`).join(","))
-      .join("\n");
+    const csv = encodeCsv([headers, ...rows]);
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
     const a = document.createElement("a");
     a.href = url;

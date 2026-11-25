@@ -1,5 +1,7 @@
 "use client";
 
+import { encodeCsv } from "@/lib/csv";
+
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { Plus, Pencil, Trash2, X, Check, Upload, Download, Database } from "lucide-react";
@@ -222,9 +224,7 @@ export default function CertificationsPage() {
   const exportCSV = () => {
     const headers = ["Name", "Issuer", "Logo", "Description", "Active", "Order"];
     const rows = certs.map((c) => [c.name, c.issuer, c.logo, c.description, c.active, c.order]);
-    const csv = [headers, ...rows]
-      .map((row) => row.map((cell) => `"${String(cell ?? "").replaceAll('"', '""')}"`).join(","))
-      .join("\n");
+    const csv = encodeCsv([headers, ...rows]);
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
     const a = document.createElement("a");
     a.href = url;

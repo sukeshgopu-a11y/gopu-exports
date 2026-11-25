@@ -1,5 +1,7 @@
 "use client";
 
+import { csvEscape } from "@/lib/csv";
+
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Plus, Pencil, Trash2, X, Check, Search, Upload, Download, FileUp, Save } from "lucide-react";
@@ -168,9 +170,6 @@ function isValidImageSrc(value: string) {
   return src === "" || src.startsWith("/") || src.startsWith("http://") || src.startsWith("https://") || src.startsWith("data:image/");
 }
 
-function csvEscape(value: unknown) {
-  return `"${String(value ?? "").replaceAll('"', '""')}"`;
-}
 
 function parseCsv(text: string) {
   const rows: string[][] = [];

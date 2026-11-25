@@ -1,8 +1,7 @@
 import { requireAdminClient, unauthorized } from "@/lib/adminAuth";
-import { createPublicClient } from "@/src/lib/supabase/public";
 import { createAdminClient } from "@/src/lib/supabase/admin";
 import { quoteToApi, type QuoteRow } from "@/src/lib/supabase/data";
-import { getLeadEmailConfigurationError, sendLeadEmails } from "@/lib/leadEmail";
+import { getLeadEmailConfigurationError, sendLeadEmails, type LeadEmailPayload } from "@/lib/leadEmail";
 import { updateLeadEmailStatus } from "@/lib/leadStatus";
 import { buildSourceUrl, buildTimestamp, normalizeLeadPhone, prepareLeadRequest, rejectSpam, stringField, validateEmail } from "@/lib/leadValidation";
 import { NextRequest, NextResponse } from "next/server";
@@ -11,8 +10,7 @@ import { randomUUID } from "crypto";
 export const dynamic = "force-dynamic";
 
 function getLeadWriteClient() {
-  if (process.env.SUPABASE_SERVICE_ROLE_KEY) return createAdminClient();
-  return createPublicClient();
+  return createAdminClient();
 }
 
 export async function GET(req: NextRequest) {
@@ -24,7 +22,7 @@ export async function GET(req: NextRequest) {
   const { data, error } = await supabase
     .from("quotes")
     .select("*")
-    .order("created_at", { ascending: false })
+    .order("created_at", { ascending: false }).order("id", { ascending: false })
     .range(offset, offset + limit - 1)
     .returns<QuoteRow[]>();
 
@@ -35,11 +33,11 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const supabase = getLeadWriteClient();
   const prepared = await prepareLeadRequest(req);
   if (!prepared.ok) {
     return NextResponse.json({ error: prepared.error }, { status: prepared.status });
   }
+  const supabase = getLeadWriteClient();
   const body = prepared.body;
 
   if (rejectSpam(body)) {
@@ -57,7 +55,9 @@ export async function POST(req: NextRequest) {
   const sourceUrl = buildSourceUrl(req, body);
   const timestamp = buildTimestamp();
   const buyerMessage = stringField(body, "message", "notes");
-  const leadId = randomUUID();
+  const submissionId = stringField(body, "submission_id");
+  if (submissionId && !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(submissionId)) return NextResponse.json({ error: "Invalid submission identifier" }, { status: 400 });
+  const leadId = submissionId || randomUUID();
   const reference = `GE-RFQ-${leadId.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
   const deliveryToken = randomUUID();
 
@@ -99,7 +99,25 @@ export async function POST(req: NextRequest) {
     `Timestamp: ${timestamp}`,
   ].filter(Boolean).join("\n\n");
 
+  const emailPayload: LeadEmailPayload = {
+    id: leadId,
+    kind: "quote",
+    name,
+    company,
+    email,
+    phone,
+    phoneDetails,
+    country,
+    product: productName,
+    quantity,
+    message: buyerMessage,
+    reference,
+    sourceUrl,
+    timestamp,
+  };
+
   const baseInsert = {
+    email_payload: emailPayload,
     id: leadId,
     name,
     email,
@@ -134,37 +152,13 @@ export async function POST(req: NextRequest) {
       whatsapp_number_e164: phoneDetails.whatsapp_number_e164,
     });
 
-  if (error && /country_name|country_code|dial_code|local_phone|full_phone_e164|whatsapp_number_e164|admin_email_sent|customer_auto_reply_sent|delivery_token|schema cache/i.test(error.message)) {
-    const fallbackWithToken = await supabase.from("quotes").insert(baseInsert);
-    if (fallbackWithToken.error) {
-      const fallbackInsert: Record<string, unknown> = { ...baseInsert };
-      delete fallbackInsert.delivery_token;
-      const fallback = await supabase.from("quotes").insert(fallbackInsert);
-      if (fallback.error) return NextResponse.json({ error: fallback.error.message }, { status: 400 });
-    }
-  } else if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
-  }
+  if (error?.code === "23505" && submissionId) return NextResponse.json({ success: true, reference }, { status: 201 });
+  if (error) return NextResponse.json({ error: "Unable to save your enquiry. Please try again." }, { status: 503 });
 
   console.log("Lead saved successfully", { leadId, kind: "quote" });
 
-  const delivery = await sendLeadEmails({
-    id: leadId,
-    kind: "quote",
-    name,
-    company,
-    email,
-    phone,
-    phoneDetails,
-    country,
-    product: productName,
-    quantity,
-    message: buyerMessage,
-    reference,
-    sourceUrl,
-    timestamp,
-  });
-  await updateLeadEmailStatus("quotes", leadId, delivery, deliveryToken);
+  const delivery = await sendLeadEmails(emailPayload);
+  await updateLeadEmailStatus("quotes", leadId, delivery);
 
   return NextResponse.json({ success: true, reference }, { status: 201 });
 }
