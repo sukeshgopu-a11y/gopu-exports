@@ -10,14 +10,14 @@ import { EXPORT_OPERATION_PAGES } from "@/lib/exportOperationPages";
 const BASE_URL = "https://gopuexports.com";
 // Date of this reviewed content revision; never generated from request time.
 const CONTENT_REVISED = "2026-09-16";
-// Product pages and specification PDFs were revised for HS-heading clarity on 17 Nov 2026.
+// Product pages and specification PDFs were revised for MOQ and HS-heading clarity on 22 Nov 2026.
 const PRODUCT_TEMPLATE_REVISED = "2026-11-22";
 const CATEGORY_TEMPLATE_REVISED = "2026-11-22";
 const COMPANY_VERIFICATION_REVISED = "2026-10-04";
 const STATIC_LAST_MODIFIED: Record<string, string> = {
   "": "2026-11-14",
   "/about": "2026-10-09",
-  "/products": "2026-10-09",
+  "/products": "2026-11-22",
   "/blog": "2026-10-09",
   "/company-verification": COMPANY_VERIFICATION_REVISED,
   "/contact": CONTENT_REVISED,
